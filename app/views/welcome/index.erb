@@ -8,6 +8,9 @@
 <%= Cowsay.say("Hello") %>
 </pre>
 
+
+<div id="myholder"></div>
+
 <% @neo = Neography::Rest.new(ENV['NEO4J'])
 paciente = @neo.execute_query("MATCH (n:PERSONA) RETURN n LIMIT 1")
 nombre_paciente = paciente["data"][0][0]["data"]["nombre"]
