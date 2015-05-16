@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.2.2'
+
 gem 'neography'
 gem 'cowsay'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
