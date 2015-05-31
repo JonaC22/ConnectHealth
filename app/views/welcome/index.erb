@@ -5,22 +5,23 @@
 <div id="myholder"></div>
 
 <% @neo = Neography::Rest.new(ENV['NEO4J'])
-paciente = @neo.execute_query("MATCH (n:PERSONA) RETURN n LIMIT 1")
-nombre_paciente = paciente["data"][0][0]["data"]["nombre"]
-cadena = "MATCH (:PERSONA {nombre: '#{nombre_paciente}'})--(n2:ENFERMEDAD) RETURN n2 LIMIT 1"
-enfermedad = @neo.execute_query(cadena)
-nombre_enfermedad = enfermedad["data"][0][0]["data"]["nombre"]
-edad_diagnostico = @neo.execute_query("MATCH (:PERSONA {nombre: '#{nombre_paciente}'})-[r:PADECE]->(n2:ENFERMEDAD {nombre: '#{nombre_enfermedad}'}) RETURN r LIMIT 1")
+
+query_busqueda_pacientes = "MATCH (n:PERSONA) RETURN n LIMIT 5"
+pacientes = @neo.execute_query(query_busqueda_pacientes)
+
 %>
 
 <input placeholder="Ingrese nombre de paciente" type="text"/>
 
-<p><b>Paciente</b> </br>
-Nombre: <%=nombre_paciente%></br>
-Apellido: <%=paciente["data"][0][0]["data"]["apellido"]%></br>
-Edad: <%=paciente["data"][0][0]["data"]["edad"]%></p>
+<p><b>Pacientes</b> </br>
+<%
+  pacientes["data"][0].each do |persona|
+  nombre_paciente = persona["data"]["nombre"]
+%>
 
-<p><b>Enfermedad que padece</b></br>
-<%= nombre_enfermedad %> </br>
-diagnosticado a los: <%= edad_diagnostico["data"][0][0]["data"]["edad_diagnostico"] %>
+<%="Nombre: " + nombre_paciente%></br>
+
+<%
+end
+%>
 </p>
