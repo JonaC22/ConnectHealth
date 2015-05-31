@@ -1,8 +1,6 @@
 <h1>ConnectHealth</h1>
 
-<p>
-  Inicio
-</p>
+<h3>Prototipo Inicial</h3>
 
 <div id="myholder"></div>
 
@@ -14,6 +12,9 @@ enfermedad = @neo.execute_query(cadena)
 nombre_enfermedad = enfermedad["data"][0][0]["data"]["nombre"]
 edad_diagnostico = @neo.execute_query("MATCH (:PERSONA {nombre: '#{nombre_paciente}'})-[r:PADECE]->(n2:ENFERMEDAD {nombre: '#{nombre_enfermedad}'}) RETURN r LIMIT 1")
 %>
+
+<input placeholder="Ingrese nombre de paciente" type="text"/>
+
 <p><b>Paciente</b> </br>
 Nombre: <%=nombre_paciente%></br>
 Apellido: <%=paciente["data"][0][0]["data"]["apellido"]%></br>
