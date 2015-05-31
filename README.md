@@ -1,6 +1,37 @@
 # ConnectHealt
 
+### Herramientas a utlizar
+
+- Ruby 2.2.2
+- MySQL
+- Rails 4.1.8
+- Neo4j 2.2.1
+
 ### Instalación por primera vez
+
+#### Windows
+
+- Instalar ruby 2.2.2 http://rubyinstaller.org/downloads/
+
+- Instalar MySQL
+
+    ` gem install mysql -v '2.9.1' -- '--with-mysql-lib="c:\Program Files\MySQL\MySQL Server 5.6\lib" --with-mysql-include="c:\Program Files\MySQL\MySQL Server 5.6\include" --with-mysql-dir="c:\Program Files\MySQL\MySQL Server 5.6"' `
+
+- Instalar RubyMine (Torrent MagnetLink)[magnet:?xt=urn:btih:4becc6d64bb35eb6c59ebb6d106b0f8f180de6f9&dn=JetBrains+RubyMine+v6+3+3+Incl+KeyMaker-DVT&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969]
+
+- Instalar DevKit http://stackoverflow.com/questions/10694997/gem-install-json-v-1-7-3-gives-please-update-your-path-to-include-build-tools
+http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe
+
+- Instalar OpenSSL https://github.com/hicknhack-software/rails-disco/wiki/Installing-puma-on-windows
+
+- Intalar puma /
+	` gem install puma -v '2.9.1' -- --with-opt-dir=c:\Ruby22-x64/openssl `
+
+- Intalar Heroku Toolbelt
+
+- Bajar config de heroku
+
+    ` heroku config:pull --overwrite --interactive `
 
 #### Ubuntu
 
@@ -16,15 +47,10 @@
 
 - Instalar rubygems
 	- https://rubygems.org/pages/download
+
 - Instalar bundler
 
 	` gem install bundler `
-
-- Instalar pg (si no tira error cuando se arma el bundle, primero instalar Postgresql)
-
-	` sudo apt-get install libpq-dev `
-
-	` gem install pg -v '0.17.1' `
 
 - Clonar repositorio
 
@@ -47,3 +73,9 @@
 - Correr app en localhost
 
 	` foreman start `
+
+#### Librerias
+
+##### JS
+
+- Joint https://github.com/clientIO/joint
