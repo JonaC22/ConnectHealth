@@ -15,8 +15,10 @@ pacientes = @neo.execute_query(query_busqueda_pacientes)
 
 <p><b>Pacientes</b> </br>
 <%
-  pacientes["data"][0].each do |persona|
-  nombre_paciente = persona["data"]["nombre"]
+
+   # puts pacientes.as_json
+  pacientes["data"].each do |persona|
+  nombre_paciente = persona[0]["data"]["nombre"]
 %>
 
 <%="Nombre: " + nombre_paciente%></br>
