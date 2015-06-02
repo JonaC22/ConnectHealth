@@ -41,3 +41,10 @@ gem 'puma'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+group :development, :test do
+  gem 'annotate' # pone anotations del modelo como comentarios en la parte de arriba
+  gem 'rspec-rails' # testing
+  gem 'guard-rspec' # permite testear permanentemente en desarrollo
+  gem 'rubocop'	# controla que se programe con estandares de ruby
+end

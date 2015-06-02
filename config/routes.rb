@@ -8,6 +8,15 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
+
+#Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
+  get '/', to: 'base#index'
+  get '*path', to: 'base#routing_error'
+  delete '*path', to: 'base#routing_error'
+  post '*path', to: 'base#routing_error'
+  put '*path', to: 'base#routing_error'
+  patch '*path', to: 'base#routing_error'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
