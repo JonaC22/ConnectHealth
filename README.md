@@ -13,7 +13,7 @@
 
 - Instalar ruby 2.2.2 http://rubyinstaller.org/downloads/
 
-- Instalar MySQL
+- Instalar MySQL http://corlewsolutions.com/articles/article-23-how-to-install-mysql2-gem-on-windows-7
 
     ` gem install mysql2 --platform="ruby" -- --with-mysql-dir="C:\C-Connector-Dir" `
 
