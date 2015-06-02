@@ -11,32 +11,9 @@
 </head>
 <body>
 
+
 <%= yield %>
 
-<script type="text/javascript">
-    var graph = new joint.dia.Graph;
 
-    var paper = new joint.dia.Paper({
-        el: $('#myholder'),
-        width: window.innerWidth,
-        height: 200,
-        model: graph
-    });
-
-    var nodo1 = new joint.shapes.basic.Circle({
-        position: { x: 100, y: 30 },
-        attrs: { circle: { fill: '#2ECC71' }, text: { text: 'Paciente', fill: 'white' } }
-    });
-
-    var nodo2 = nodo1.clone();
-    nodo2.translate(300);
-
-    var link = new joint.dia.Link({
-        source: { id: nodo1.id },
-        target: { id: nodo2.id }
-    });
-
-    graph.addCells([nodo1, nodo2, link]);
-</script>
 </body>
 </html>

@@ -4,6 +4,32 @@
 
 <div id="myholder"></div>
 
+<script type="text/javascript">
+    var graph = new joint.dia.Graph;
+
+    var paper = new joint.dia.Paper({
+        el: $('#myholder'),
+        width: window.innerWidth,
+        height: 400,
+        model: graph
+    });
+
+    var nodo1 = new joint.shapes.basic.Circle({
+        position: { x: 100, y: 30 },
+        attrs: { circle: { fill: '#2ECC71' }, text: { text: 'Paciente', fill: 'white' } }
+    });
+
+    var nodo2 = nodo1.clone();
+    nodo2.translate(300);
+
+    var link = new joint.dia.Link({
+        source: { id: nodo1.id },
+        target: { id: nodo2.id }
+    });
+
+    graph.addCells([nodo1, nodo2, link]);
+</script>
+
 <% @neo = Neography::Rest.new(ENV['NEO4J'])
 
 query_busqueda_pacientes = "MATCH (n:PERSONA) RETURN n LIMIT 5"
@@ -12,18 +38,29 @@ pacientes = @neo.execute_query(query_busqueda_pacientes)
 %>
 
 <input placeholder="Ingrese nombre de paciente" type="text"/>
-
+<script type="text/javascript">
+    var nodo = [];
+</script>
 <p><b>Pacientes</b> </br>
 <%
 
    # puts pacientes.as_json
-  pacientes["data"].each do |persona|
+  pacientes["data"].each_with_index do |persona,index|
   nombre_paciente = persona[0]["data"]["nombre"]
 %>
-
+<script type="text/javascript">
+    nodo[<%=index%>] =  new joint.shapes.basic.Circle({
+        position: { x: 100 + 50 * <%=index%>, y: 30 + 50 * <%=index%> },
+        attrs: { circle: { fill: '#2ECC71' }, text: { text: '<%=nombre_paciente%>', fill: 'white' } }
+    });
+</script>
 <%="Nombre: " + nombre_paciente%></br>
 
 <%
 end
 %>
+
 </p>
+<script type="text/javascript">
+    graph.addCells(nodo);
+</script>
