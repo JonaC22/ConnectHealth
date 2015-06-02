@@ -15,7 +15,7 @@
 
 - Instalar MySQL
 
-    ` gem install mysql -v '2.9.1' -- '--with-mysql-lib="c:\Program Files\MySQL\MySQL Server 5.6\lib" --with-mysql-include="c:\Program Files\MySQL\MySQL Server 5.6\include" --with-mysql-dir="c:\Program Files\MySQL\MySQL Server 5.6"' `
+    ` gem install mysql2 --platform="ruby" -- --with-mysql-dir="C:\C-Connector-Dir" `
 
 - Instalar RubyMine (Torrent MagnetLink)[magnet:?xt=urn:btih:4becc6d64bb35eb6c59ebb6d106b0f8f180de6f9&dn=JetBrains+RubyMine+v6+3+3+Incl+KeyMaker-DVT&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969]
 
