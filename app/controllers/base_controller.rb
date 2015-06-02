@@ -1,5 +1,5 @@
 class BaseController < ActionController::API
-include ActionController::Serialization #sirve para decirle qué es lo que se va a usar cuando devuelva el json
+# include ActionController::Serialization # sirve para decirle que es lo que se va a usar cuando devuelva el json
 
   def index
     render json: { nick: 'ConnectHealth' }
