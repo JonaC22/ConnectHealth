@@ -1,5 +1,9 @@
 # ConnectHealt
 
+### Endpoints
+
+/pacientes
+
 ### Herramientas a utlizar
 
 - Ruby 2.2.2
