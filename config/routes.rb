@@ -10,7 +10,10 @@ Rails.application.routes.draw do
 
 
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
-  get '/', to: 'base#index'
+  get '/hi', to: 'base#index'
+  post '/', to: 'welcome#delete_paciente'
+  get '/pacientes', to: 'welcome#pacientes'
+  post '/pacientes', to: 'welcome#insert_paciente'
   get '*path', to: 'base#routing_error'
   delete '*path', to: 'base#routing_error'
   post '*path', to: 'base#routing_error'
