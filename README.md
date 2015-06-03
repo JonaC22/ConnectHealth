@@ -60,15 +60,29 @@ http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-14
 
 	` wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh `
 
+- Instalar nodejs
+
+	` sudo apt-get install nodejs `
+
 - Instalar gemas
 
 	` cd ConnectHealth/ `
 
 	` bundle install `
 
-- Instalar nodejs
+- Correr app en localhost
 
-	` sudo apt-get install nodejs `
+	` foreman start `
+
+Ante cualquier error con las gemas, seguir indicaciones del log de errores (seguramente otros apt-get install)
+
+### Para correr en Linux
+
+Una vez instalado, siempre repetir estos pasos
+
+	` cd ConnectHealth/ `
+
+	` bundle install `
 
 - Correr app en localhost
 
@@ -79,3 +93,4 @@ http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-64-4.7.2-20130224-14
 ##### JS
 
 - Joint https://github.com/clientIO/joint
+- Angular https://angularjs.org/
