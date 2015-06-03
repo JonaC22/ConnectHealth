@@ -2,7 +2,7 @@
 
 <h3>Prototipo Inicial</h3>
 
-<div id="myholder"></div>
+<div id="myholder" style="background-color: #1E3E4A"></div>
 
 <script type="text/javascript">
     var graph = new joint.dia.Graph;
@@ -30,14 +30,12 @@
     graph.addCells([nodo1, nodo2, link]);
 </script>
 
-<% @neo = Neography::Rest.new(ENV['NEO4J'])
+<form>
+  <input name="text_box_nombre_paciente" placeholder="Ingrese nombre de paciente" type="text"/>
+  <button type="submit">Consultar</button>
+</form>
 
-query_busqueda_pacientes = "MATCH (n:PERSONA) RETURN n LIMIT 5"
-pacientes = @neo.execute_query(query_busqueda_pacientes)
 
-%>
-
-<input placeholder="Ingrese nombre de paciente" type="text"/>
 <script type="text/javascript">
     var nodo = [];
 </script>
@@ -45,7 +43,7 @@ pacientes = @neo.execute_query(query_busqueda_pacientes)
 <%
 
    # puts pacientes.as_json
-  pacientes["data"].each_with_index do |persona,index|
+  @pacientes["data"].each_with_index do |persona,index|
   nombre_paciente = persona[0]["data"]["nombre"]
 %>
 <script type="text/javascript">
