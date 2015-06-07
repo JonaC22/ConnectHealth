@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/javascripts/joint.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>-->
+</head>
+<body>
+
+<div id="myholder" style="background-color: #1E3E4A"></div>
+
+<script type="text/javascript">
+    var graph = new joint.dia.Graph;
+
+    var paper = new joint.dia.Paper({
+        el: $('#myholder'),
+        width: window.innerWidth,
+        height: window.innerHeight,
+        model: graph
+    });
+
+    $.getJSON( "api/pedigree?name=Francisco", function( data ) {
+        console.log(data);
+        var nodos = {};
+        var relations = [];
+        $.each( data.personas, function( key, val ) {
+            var nodo1 = new joint.shapes.basic.Circle({
+                position: { x: Math.random()*window.innerWidth-40, y: Math.random() * window.innerHeight -40},
+                attrs: { circle: { fill: '#2ECC71' }, text: { text: val.name, fill: 'white' } }
+            });
+            graph.addCells([nodo1]);
+            nodos[val.id] = nodo1;
+        });
+
+        $.each( data.relations, function( key, val ) {
+            var link = new joint.dia.Link({
+                source: { id: nodos[val.from].id },
+                target: { id: nodos[val.to].id }
+            });
+            relations.push(link);
+        });
+        graph.addCells(relations);
+    });
+
+</script>
+
+</body>
+</html>

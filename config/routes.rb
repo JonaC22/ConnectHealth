@@ -8,7 +8,12 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
-
+  scope '/api' do
+    scope '/pedigree' do
+        get '/' => 'pedigree#index'
+        post '/' => 'pedigree#create'
+    end
+  end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
   get '/hi', to: 'base#index'
   post '/', to: 'welcome#delete_paciente'
