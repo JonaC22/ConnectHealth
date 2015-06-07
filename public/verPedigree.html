@@ -12,6 +12,16 @@
 <div id="myholder" style="background-color: #1E3E4A"></div>
 
 <script type="text/javascript">
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+            return null;
+        }
+        else{
+            return results[1] || 0;
+        }
+    }
+
     var graph = new joint.dia.Graph;
 
     var paper = new joint.dia.Paper({
@@ -21,7 +31,7 @@
         model: graph
     });
 
-    $.getJSON( "api/pedigree?name=Francisco", function( data ) {
+    $.getJSON( "api/pedigree?name=" + ($.urlParam('name') || "Francisco"), function( data ) {
         console.log(data);
         var nodos = {};
         var relations = [];
@@ -41,6 +51,7 @@
             });
             relations.push(link);
         });
+
         graph.addCells(relations);
     });
 
