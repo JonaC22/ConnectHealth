@@ -11,7 +11,7 @@ class PedigreeController < BaseController
     #Se extraen personas y relaciones
     patients["data"].each_with_index do |person,index|
       person.each do |per|
-        p = Person.new( per["metadata"]["id"], per['data']['nombre'])
+        p = Person.new( per["metadata"]["id"], per['data']['nombre'], per['data']['sexo'])
         persons[p.id] = p
       end
     end
@@ -22,7 +22,7 @@ class PedigreeController < BaseController
 
       node.rels(:PADRE, :MADRE).outgoing.each { |relat|
 
-        puts YAML::dump(relat)
+        #puts YAML::dump(relat)
 
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)) #{:person => value.name, :person_related => relat.nombre}
