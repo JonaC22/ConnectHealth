@@ -1,11 +1,9 @@
-class BaseController < ActionController::API
+class BaseController < ApplicationController
 # include ActionController::Serialization # sirve para decirle que es lo que se va a usar cuando devuelva el json
+  before_filter :parse_request
 
-  def index
-    render json: { nick: 'ConnectHealth' }
-  end
+    def parse_request
 
-  def routing_error
-    render json: { error: 'resource not found' }, status: params[:path].to_i == 0 ? :not_found : params[:path].to_i
-  end
+    end
+
 end

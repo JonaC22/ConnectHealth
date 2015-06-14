@@ -1,4 +1,4 @@
-class PedigreeController < ApplicationController
+class PedigreeController < BaseController
 
   # GET /api/pedigree
   def index
@@ -36,7 +36,17 @@ class PedigreeController < ApplicationController
     render json:result
   end
 
+  before_filter only: :create do
+    unless @json.has_key?('personas') && @json.has_key?('relations')
+      render nothing: true, status: :bad_request
+    end
+  end
+
 #POST /api/pedigree
   def create
+    @json = JSON.parse(request.body.read)
+    unless @json.has_key?('project') && @json['project'].responds_to?(:[]) && @json['project']['name']
+      render nothing: true, status: :bad_request
+    end
   end
 end
