@@ -4,28 +4,34 @@ class PedigreeController < ApplicationController
   def index
     @neo = Neography::Rest.new(ENV['NEO4J'])
     query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{params[:name]}'})-[*]-(n2:PERSONA) return n, n2"
-    pacientes = @neo.execute_query(query_busqueda_pacientes)
-    personas = Hash.new
-    relaciones = Hash.new
+    patients = @neo.execute_query(query_busqueda_pacientes)
+    persons = Hash.new
+    relations = Hash.new
 
     #Se extraen personas y relaciones
-    pacientes["data"].each_with_index do |persona,index|
-      persona.each do |per|
+    patients["data"].each_with_index do |person,index|
+      person.each do |per|
         p = Person.new( per["metadata"]["id"], per['data']['nombre'])
-        personas[p.id] = p
+        persons[p.id] = p
       end
     end
 
     #Se extraen relaciones
-    personas.each_with_index do |persona, index|
-      nodo = Neography::Node.load(persona.id,@neo)
-      relaciones[index] = nodo.incoming
-    end
+    persons.each {|key, value| puts 
+      node = Neography::Node.load(key, @neo)
+      node.outgoing.each_with_index { |relat, index|
+
+        #puts YAML::dump(relat.nombre)
+
+        #person es el nodo en cuestion y persona_related la persona con la que se relaciona
+        relations[index] = {:person => value.name, :person_related => relat.nombre}
+      }
+    }
 
     result = Hash.new
 
-    result['personas'] =  personas
-    result['relations'] = relaciones
+    result['personas'] =  persons
+    result['relations'] = relations
     render json:result
   end
 

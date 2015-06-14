@@ -1,10 +1,14 @@
 class Person
 
-  attr_accessor :children,:id
+  attr_accessor :id, :name, :father, :mother, :children
 
   def initialize(id,name,father=nil,mother=nil,children=[])
-    attr_accessor :id, :name, :father, :mother, :children
-
+    
+    @id = id
+    @name = name
+    @father = father
+    @mother = mother
+    @children = children
     # unless father==nil
     #   father.children.append(self)
     # end
