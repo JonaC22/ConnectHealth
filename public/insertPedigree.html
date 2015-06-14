@@ -61,6 +61,13 @@
                 data: JSON.stringify(result),
                 // processData: false, // this is optional
                 dataType: 'json'
+        }).done(function( data ) {
+                if ( console && console.log ) {
+                    console.log(data);
+                }
+                alert("Pedigree agregado con Exito")
+        }).fail(function(data){
+                alert("Error:"+data.error)
         });
         }
 
