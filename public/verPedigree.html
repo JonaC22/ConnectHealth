@@ -2,14 +2,14 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>ConnectHealth - Visualizar Pedigree </title>
     <script src="/javascripts/joint.js"></script>
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>-->
 </head>
 <body>
 
-<div id="myholder" style="background-color: #1E3E4A"></div>
+<div id="myholder" style="background-color: #1E3E4A;"></div>
 
 <script type="text/javascript">
     $.urlParam = function(name){
@@ -28,7 +28,13 @@
         el: $('#myholder'),
         width: window.innerWidth,
         height: window.innerHeight,
-        model: graph
+        model: graph,
+        interactive: {
+            vertexAdd: false,
+            vertexMove: false, 
+            vertexRemove: false,
+            arrowheadMove: false,
+        }
     });
 
     $.getJSON( "api/pedigree?name=" + ($.urlParam('name') || "Francisco"), function( data ) {
@@ -47,8 +53,19 @@
         $.each( data.relations, function( key, val ) {
             var link = new joint.dia.Link({
                 source: { id: nodos[val.from]},
-                target: { id: nodos[val.to]}
+                target: { id: nodos[val.to]},
+                labels: [
+                    { position: .5, attrs: { text: { text: val.name, fill: 'white', 'font-family': 'sans-serif' }, rect: { stroke: '#F39C12', 'stroke-width': 20, rx: 5, ry: 5 } }}
+                ],
+                attrs: { 
+                    '.marker-vertices': { display : 'none' },
+                    '.marker-arrowheads': { display: 'none' },
+                    '.connection-wrap': { display: 'none' },
+                    '.link-tools': { display : 'none' },
+                    '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
+                }
             });
+
             relations.push(link);
         });
 

@@ -25,7 +25,7 @@ class PedigreeController < BaseController
         puts YAML::dump(relat)
 
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
-        relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.end_node.nombre)) #{:person => value.name, :person_related => relat.nombre}
+        relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)) #{:person => value.name, :person_related => relat.nombre}
       }
     }
 
