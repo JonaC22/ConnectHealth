@@ -71,7 +71,7 @@
 <form>
     Nombre:<input type="text" id="nombre" name="nombre" placeholder="Inserte el nombre"/><br>
     Edad:<input type="text" id="edad" name="edad" placeholder="Inserte el nombre"/><br>
-    Sexo:<select id="sexo" name="sexo">    <option value="h">Hombre</option>    <option value="m">Mujer</option>    </select>    <br>
+    Sexo:<select id="sexo" name="sexo">    <option value="m">Hombre</option>    <option value="f">Mujer</option>    </select>    <br>
     <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
 </form>
 <br>
@@ -87,7 +87,8 @@
     <ul style="list-style-type:square" id="listPeopleAvailable">
 
     </ul>
-    <input type="text" placeholder="Nombre de la Relación" id="relationName">
+    <select id="relationName">    <option value="MADRE">Madre</option>    <option value="PADRE">Padre</option>    </select>
+    <!--<input type="text" placeholder="Nombre de la Relación" id="relationName">-->
 </div>
 <div id="relations">
     <h3>Relaciones</h3>
