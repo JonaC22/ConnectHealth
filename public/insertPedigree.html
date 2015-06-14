@@ -8,19 +8,62 @@
     <SCRIPT LANGUAGE="JavaScript">
         var personas = [];
         var relations = [];
+        var result = {};
+        result.personas=personas;
+        result.relations=relations;
 
         function agregarNodo (form) {
             var nodo = {};
-            nodo.id = personas.length+1;
+            nodo.id = personas.length;
             nodo.nombre = form.nombre.value;
             nodo.edad = form.edad.value;
             nodo.sexo = form.sexo.value;
             personas.push(nodo);
-            $("#listPeople").append('<li>'+nodo.nombre + " Edad: " + nodo.edad+'</li>');
+            $("#listPeople").append('<li onclick="openRelation(this.value)" id="'+nodo.id+'" value="'+nodo.id+'">'+nodo.nombre + " Edad: " + nodo.edad+'</li>');
             console.log(nodo);
             console.log(personas);
             alert ("Nodo agregado ");
         }
+
+        function openRelation(nodoId){
+            $("#listPeopleAvailable").empty();
+            personas.map(function(nodo){
+                if (nodo.id!=nodoId) {
+                    $("#listPeopleAvailable").append('<li onclick="addRelation(' + nodoId + ',this.value)" id="' + nodo.id + '" value="' + nodo.id + '">' + nodo.nombre + " Edad: " + nodo.edad + '</li>');
+                }
+
+            });
+            console.log(personas[nodoId]);
+        }
+
+        function addRelation(nodoIdFrom,nodoIdTo){
+            var nodoFrom = personas[nodoIdFrom];
+            var nodoTo = personas[nodoIdTo];
+            var relationName = $("#relationName")[0].value;
+            var relation = {};
+            relation.from = nodoIdFrom;
+            relation.to = nodoIdTo;
+            relation.name = relationName;
+            relations.push(relation);
+            $("#listRelations").append('<li >'+nodoFrom.nombre + "--["+relationName+"]-->" + nodoTo.nombre+'</li>');
+            console.log(result);
+        }
+
+        function savePedigree() {
+//            $.post( "api/pedigree", result, function( data ) {
+//                console.log( data );
+//            }, "json");
+            console.log(JSON.stringify(result));
+            $.ajax({
+                url: 'api/pedigree',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(result),
+                // processData: false, // this is optional
+                dataType: 'json'
+        });
+        }
+
     </SCRIPT>
     <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>-->
 </head>
@@ -32,9 +75,26 @@
     <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
 </form>
 <br>
-<ul style="list-style-type:square" id="listPeople">
+<div id="people">
+    <h3>Personas</h3>
+    <ul style="list-style-type:square" id="listPeople">
 
-</ul>
+    </ul>
+</div>
+<div id="selectRelation">
+    <h3>Selecciona otra persona para la relación</h3>
 
+    <ul style="list-style-type:square" id="listPeopleAvailable">
+
+    </ul>
+    <input type="text" placeholder="Nombre de la Relación" id="relationName">
+</div>
+<div id="relations">
+    <h3>Relaciones</h3>
+    <ul style="list-style-type:square" id="listRelations">
+
+    </ul>
+</div>
+<input type="button" value="Guardar Pedigree" onClick="savePedigree()"/>
 </body>
 </html>
