@@ -46,8 +46,8 @@
 
         $.each( data.relations, function( key, val ) {
             var link = new joint.dia.Link({
-                source: { id: nodos[val.from].id },
-                target: { id: nodos[val.to].id }
+                source: { id: nodos[val.from]},
+                target: { id: nodos[val.to]}
             });
             relations.push(link);
         });

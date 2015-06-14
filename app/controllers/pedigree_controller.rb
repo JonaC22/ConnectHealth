@@ -19,12 +19,13 @@ class PedigreeController < ApplicationController
     #Se extraen relaciones
     persons.each {|key, value| puts 
       node = Neography::Node.load(key, @neo)
-      node.outgoing.each_with_index { |relat, index|
 
-        #puts YAML::dump(relat.nombre)
+      node.rels(:PADRE, :MADRE).outgoing.each { |relat|
+
+        puts YAML::dump(relat)
 
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
-        relations[index] = {:person => value.name, :person_related => relat.nombre}
+        relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.end_node.nombre)) #{:person => value.name, :person_related => relat.nombre}
       }
     }
 
