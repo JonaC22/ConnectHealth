@@ -34,8 +34,8 @@ class PedigreeController < BaseController
 
     result = Hash.new
 
-    result['personas'] =  persons
-    result['relations'] = relations
+    result['personas'] =  persons.values
+    result['relations'] = relations.values
     render json:result
   end
 

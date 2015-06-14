@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ConnectHealth - Crear Pedigree </title>
+    <script src="/javascripts/joint.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <SCRIPT LANGUAGE="JavaScript">
+        var personas = [];
+        var relations = [];
+
+        function agregarNodo (form) {
+            var nodo = {};
+            nodo.id = personas.length+1;
+            nodo.nombre = form.nombre.value;
+            nodo.edad = form.edad.value;
+            nodo.sexo = form.sexo.value;
+            personas.push(nodo);
+            $("#listPeople").append('<li>'+nodo.nombre + " Edad: " + nodo.edad+'</li>');
+            console.log(nodo);
+            console.log(personas);
+            alert ("Nodo agregado ");
+        }
+    </SCRIPT>
+    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>-->
+</head>
+<body>
+<form>
+    Nombre:<input type="text" id="nombre" name="nombre" placeholder="Inserte el nombre"/><br>
+    Edad:<input type="text" id="edad" name="edad" placeholder="Inserte el nombre"/><br>
+    Sexo:<select id="sexo" name="sexo">    <option value="h">Hombre</option>    <option value="m">Mujer</option>    </select>    <br>
+    <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
+</form>
+<br>
+<ul style="list-style-type:square" id="listPeople">
+
+</ul>
+
+</body>
+</html>
