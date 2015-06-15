@@ -41,7 +41,7 @@
         console.log(data);
         var nodos = {};
         var relations = [];
-        $.each( data.personas, function( key, val ) {
+        $.each( data.persons, function( key, val ) {
             console.log(val.gender);
             if(val.gender == 'f'){
                 var nodo1 = new joint.shapes.basic.Circle({

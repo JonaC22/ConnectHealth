@@ -1,9 +1,12 @@
 class PedigreeController < BaseController
+
   before_filter :initialize
   skip_before_filter :verify_authenticity_token
+
   def initialize
     @neo = Neography::Rest.new(ENV['NEO4J'])
   end
+
   # GET /api/pedigree
   def index
     query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{params[:name]}'})-[*]-(n2:PERSONA) return n, n2"
@@ -12,7 +15,7 @@ class PedigreeController < BaseController
     relations = Hash.new
 
     #Se extraen personas y relaciones
-    patients["data"].each_with_index do |person,index|
+    patients["data"].each do |person|
       person.each do |per|
         p = Person.new( per["metadata"]["id"], per['data']['nombre'], per['data']['sexo'])
         persons[p.id] = p
@@ -28,14 +31,14 @@ class PedigreeController < BaseController
         #puts YAML::dump(relat)
 
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
-        relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)) #{:person => value.name, :person_related => relat.nombre}
+        relations.store(relations.length, Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type))
       }
     }
 
     result = Hash.new
-
-    result['personas'] =  persons.values
+    result['persons'] =  persons.values
     result['relations'] = relations.values
+
     render json:result
   end
 
@@ -46,7 +49,7 @@ class PedigreeController < BaseController
     end
   end
 
-#POST /api/pedigree
+  #POST /api/pedigree
   def create
 
     persons = Hash.new
@@ -61,10 +64,13 @@ class PedigreeController < BaseController
         return
       end
     }
+    
     @json['relations'].each { |rel|
       @neo.create_relationship(rel['name'], persons[rel['from']], persons[rel['to']])
     }
+
     resultado= Resultado.new('Pedigree ingresado exitosamente',200)
     render json:resultado
   end
+
 end
