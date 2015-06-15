@@ -22,7 +22,7 @@
             $("#listPeople").append('<li onclick="openRelation(this.value)" id="'+nodo.id+'" value="'+nodo.id+'">'+nodo.nombre + " Edad: " + nodo.edad+'</li>');
             console.log(nodo);
             console.log(personas);
-            alert ("Nodo agregado ");
+//            alert ("Nodo agregado ");
         }
 
         function openRelation(nodoId){
@@ -65,9 +65,11 @@
                 if ( console && console.log ) {
                     console.log(data);
                 }
-                alert("Pedigree agregado con Exito")
-        }).fail(function(data){
-                alert("Error:"+data.error)
+                if(data.errNumber == 200) {
+                    alert("Pedigree agregado con Exito")
+                }else{
+                    alert("Error:" + data.desc)
+                }
         });
         }
 
@@ -77,7 +79,7 @@
 <body>
 <form>
     Nombre:<input type="text" id="nombre" name="nombre" placeholder="Inserte el nombre"/><br>
-    Edad:<input type="text" id="edad" name="edad" placeholder="Inserte el nombre"/><br>
+    Edad:<input type="text" id="edad" name="edad" placeholder="Inserte la edad"/><br>
     Sexo:<select id="sexo" name="sexo">    <option value="m">Hombre</option>    <option value="f">Mujer</option>    </select>    <br>
     <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
 </form>

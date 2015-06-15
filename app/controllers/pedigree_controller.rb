@@ -48,15 +48,23 @@ class PedigreeController < BaseController
 
 #POST /api/pedigree
   def create
+
     persons = Hash.new
     @json['personas'].each { |persona|
       node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
       @neo.set_label(node,"PERSONA")
       persons[persona['id']] = node
+      count = @json['relations'].count{|rel| rel['from'] == persona['id'] && rel['name'] =='MADRE'}
+      if count>1
+        error=Resultado.new('Relacion MADRE duplicada',500)
+        render json:error
+        return
+      end
     }
     @json['relations'].each { |rel|
       @neo.create_relationship(rel['name'], persons[rel['from']], persons[rel['to']])
     }
-    render json:@json
+    resultado= Resultado.new('Pedigree ingresado exitosamente',200)
+    render json:resultado
   end
 end
