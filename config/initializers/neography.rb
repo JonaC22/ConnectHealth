@@ -1,6 +1,10 @@
-neo4j_url = ENV["NEO4J"] || "http://localhost:7474" # default to local server
+neo4j_url = ENV["GRAPHENEDB_URL"] || "http://localhost:7474" # default to local server
 
-uri = URI.parse(neo4j_url)
+if(ENV["RACK_ENV"] == "development")
+	uri = URI.parse(ENV["NEO4J_DEV"])
+else
+	uri = URI.parse(neo4j_url)
+end
 
 require 'neography'
 
