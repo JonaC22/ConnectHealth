@@ -3,8 +3,8 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>ConnectHealth - Crear Pedigree </title>
-    <script src="/javascripts/joint.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/third-party/angular.min.js"></script>
+    <script type="text/javascript" src="/javascripts/third-party/jquery-1.11.3.min.js"></script>
     <script type="text/javascript">
         var personas = [];
         var relations = [];
@@ -62,11 +62,12 @@
                 // processData: false, // this is optional
                 dataType: 'json'
         }).done(function( data ) {
+
                 if ( console && console.log ) {
                     console.log(data);
                 }
                 if(data.errNumber == 200) {
-                    alert("Pedigree agregado con Exito")
+                    alert(data.desc)
                 }else{
                     alert("Error:" + data.desc)
                 }
@@ -74,44 +75,49 @@
         }
 
     </script>
-    <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>-->
 </head>
-<body>
-<form>
-    Nombre:
-    <input type="text" id="nombre" name="nombre" placeholder="Inserte el nombre"/>
+<body ng-app="pedigree">
+    <script>
+     angular.module('pedigree', [])
+       .controller('PedigreeController', ['$scope', function($scope) {
+         $scope.nombre = '';
+         $scope.edad = '';
+       }]);
+    </script>
+    <style>
+      .form-input.ng-invalid {
+        -webkit-transition:all linear 0.5s;
+        transition:all linear 0.5s;
+        border: 2px solid red;
+      }
+    </style> 
+    <div>
+    <form novalidate name="insertForm" ng-controller="PedigreeController">
+        Nombre: <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/><br />
+        Edad: <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input" type="number" id="edad" name="edad" placeholder="Inserte la edad" max=150 min=0 required/><br />
+        Sexo: <input type="radio" name="sexo" value="m" checked="checked"/>masculino
+        <input type="radio" name="sexo" value="f" />femenino<br />   
+        <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
+    </form>
+    </div>
     <br>
-    Edad:
-    <input type="text" id="edad" name="edad" placeholder="Inserte la edad"/>
-    <br>
-    Sexo:
-    <select id="sexo" name="sexo">    
-        <option value="m">Hombre</option>    
-        <option value="f">Mujer</option>    
-    </select>    
-    <br>
-    <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
-</form>
-<br>
-<div id="people">
-    <h3>Personas</h3>
-    <ul style="list-style-type:square" id="listPeople">
-
-    </ul>
-</div>
-<div id="selectRelation">
-    <h3>Selecciona otra persona para la relación</h3>
-    <ul style="list-style-type:square" id="listPeopleAvailable"></ul>
-    <select id="relationName">    
-        <option value="MADRE">Madre</option>    
-        <option value="PADRE">Padre</option>    
-    </select>
-    <!--<input type="text" placeholder="Nombre de la Relación" id="relationName">-->
-</div>
-<div id="relations">
-    <h3>Relaciones</h3>
-    <ul style="list-style-type:square" id="listRelations"></ul>
-</div>
-<input type="button" value="Guardar Pedigree" onClick="savePedigree()"/>
+    <div id="people">
+        <h3>Personas</h3>
+        <ul style="list-style-type:square" id="listPeople"></ul>
+    </div>
+    <div id="selectRelation">
+        <h3>Selecciona otra persona para la relación</h3>
+        <ul style="list-style-type:square" id="listPeopleAvailable"></ul>
+        <select id="relationName">    
+            <option value="MADRE">Madre</option>    
+            <option value="PADRE">Padre</option>    
+        </select>
+        <!--<input type="text" placeholder="Nombre de la Relación" id="relationName">-->
+    </div>
+    <div id="relations">
+        <h3>Relaciones</h3>
+        <ul style="list-style-type:square" id="listRelations"></ul>
+    </div>
+    <input type="button" value="Guardar Pedigree" onClick="savePedigree()"/>
 </body>
 </html>
