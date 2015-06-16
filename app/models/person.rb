@@ -18,4 +18,11 @@ class Person
     #   mother.children.append(self)
     # end
   end
+
+  def add_to(pedigree) 
+    unless pedigree.get_persons_ids.include? @id
+        pedigree.add_person(self)
+    end
+  end
+
 end

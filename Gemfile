@@ -2,6 +2,10 @@ source 'https://rubygems.org'
 
 ruby '2.2.2'
 
+# For autoreload server when a file changes, use 'rerun foreman start' instead of 'foreman start'
+gem 'rerun'
+
+# For Neo4j connection
 gem 'neography'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
