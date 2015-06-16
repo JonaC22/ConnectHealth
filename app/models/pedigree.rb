@@ -1,4 +1,5 @@
 class Pedigree
+
 	attr_accessor :id, :current_patient
 	@persons = []
 	@relations = []
@@ -6,6 +7,10 @@ class Pedigree
 	def initialize(persons = [], relations = [])
 		@persons = persons
 		@relations = relations
+	end
+
+	def set_current(person)
+		@current_patient = person
 	end
 
 	def add(element)
@@ -32,6 +37,7 @@ class Pedigree
 		json = Hash.new
 		json['persons'] = @persons
 		json['relations'] = @relations
+		json['current'] = current_patient
 		json
 	end
 end

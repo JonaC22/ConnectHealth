@@ -9,8 +9,9 @@ class PedigreeController < BaseController
 
   # GET /api/pedigree
   def index
-    query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{params[:name]}'})-[*]-(n2:PERSONA) return n, n2"
-    patients = @neo.execute_query(query_busqueda_pacientes)
+    current_patient_name = params[:name]
+    query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{current_patient_name}'})-[*]-(n2:PERSONA) return n, n2"
+    patients = @neo.execute_query query_busqueda_pacientes
     persons = []
     relations = []
     pedigree = Pedigree.new
@@ -18,8 +19,11 @@ class PedigreeController < BaseController
     #Se extraen personas y relaciones
     patients["data"].each do |data_array|
       data_array.each do |node|
-        person = Person.new( node["metadata"]["id"], node['data']['nombre'], node['data']['sexo'])
-        pedigree.add(person)
+        person = Person.new node["metadata"]["id"], node['data']['nombre'], node['data']['sexo']
+        pedigree.add person
+        if person.name == current_patient_name 
+          pedigree.set_current person
+        end
       end
     end
 
@@ -34,7 +38,7 @@ class PedigreeController < BaseController
       }
     }
 
-    pedigree.add_elements(relations)
+    pedigree.add_elements relations
 
     #puts YAML::dump(pedigree)
 

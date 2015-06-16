@@ -42,17 +42,18 @@
         var nodos = {};
         var relations = [];
         $.each( data.persons, function( key, val ) {
-            console.log(val.gender);
+            var color_fill = '#2ECC71';
+            if(val.id == data.current.id) color_fill = '#8d8d8d';
             if(val.gender == 'f'){
                 var nodo1 = new joint.shapes.basic.Circle({
                     position: { x: Math.random()*window.innerWidth-40, y: Math.random() * window.innerHeight -40},
-                    attrs: { circle: { fill: '#2ECC71' }, text: { text: val.name, fill: 'white' } }
+                    attrs: { circle: { fill: color_fill }, text: { text: val.name, fill: 'white' } }
                 });
             } else {
                  var nodo1 = new joint.shapes.basic.Rect({
                     position: { x: Math.random()*window.innerWidth-40, y: Math.random() * window.innerHeight -40},
                     size: { width: 50, height: 50 },
-                    attrs: { rect: { fill: '#2ECC71' }, text: { text: val.name, fill: 'white' } }
+                    attrs: { rect: { fill: color_fill }, text: { text: val.name, fill: 'white' } }
                 });               
             }
             graph.addCells([nodo1]);
