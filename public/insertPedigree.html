@@ -3,102 +3,24 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>ConnectHealth - Crear Pedigree </title>
+    <link href="/stylesheets/alta_pedigree.css" media="screen" rel="stylesheet"> 
     <script type="text/javascript" src="/javascripts/third-party/angular.min.js"></script>
     <script type="text/javascript" src="/javascripts/third-party/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript">
-        var personas = [];
-        var relations = [];
-        var result = {};
-        result.personas=personas;
-        result.relations=relations;
-
-        function agregarNodo (form) {
-            var nodo = {};
-            nodo.id = personas.length;
-            nodo.nombre = form.nombre.value;
-            nodo.edad = form.edad.value;
-            nodo.sexo = form.sexo.value;
-            personas.push(nodo);
-            $("#listPeople").append('<li onclick="openRelation(this.value)" id="'+nodo.id+'" value="'+nodo.id+'">'+nodo.nombre + " Edad: " + nodo.edad+'</li>');
-            console.log(nodo);
-            console.log(personas);
-//            alert ("Nodo agregado ");
-        }
-
-        function openRelation(nodoId){
-            $("#listPeopleAvailable").empty();
-            personas.map(function(nodo){
-                if (nodo.id!=nodoId) {
-                    $("#listPeopleAvailable").append('<li onclick="addRelation(' + nodoId + ',this.value)" id="' + nodo.id + '" value="' + nodo.id + '">' + nodo.nombre + " Edad: " + nodo.edad + '</li>');
-                }
-
-            });
-            console.log(personas[nodoId]);
-        }
-
-        function addRelation(nodoIdFrom,nodoIdTo){
-            var nodoFrom = personas[nodoIdFrom];
-            var nodoTo = personas[nodoIdTo];
-            var relationName = $("#relationName")[0].value;
-            var relation = {};
-            relation.from = nodoIdFrom;
-            relation.to = nodoIdTo;
-            relation.name = relationName;
-            relations.push(relation);
-            $("#listRelations").append('<li >'+nodoFrom.nombre + "--["+relationName+"]-->" + nodoTo.nombre+'</li>');
-            console.log(result);
-        }
-
-        function savePedigree() {
-//            $.post( "api/pedigree", result, function( data ) {
-//                console.log( data );
-//            }, "json");
-            console.log(JSON.stringify(result));
-            $.ajax({
-                url: 'api/pedigree',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(result),
-                // processData: false, // this is optional
-                dataType: 'json'
-        }).done(function( data ) {
-
-                if ( console && console.log ) {
-                    console.log(data);
-                }
-                if(data.errNumber == 200) {
-                    alert(data.desc)
-                }else{
-                    alert("Error:" + data.desc)
-                }
-        });
-        }
-
-    </script>
+    <script type="text/javascript" src="/javascripts/alta_pedigree.js"></script>
 </head>
 <body ng-app="pedigree">
-    <script>
-     angular.module('pedigree', [])
-       .controller('PedigreeController', ['$scope', function($scope) {
-         $scope.nombre = '';
-         $scope.edad = '';
-       }]);
-    </script>
-    <style>
-      .form-input.ng-invalid {
-        -webkit-transition:all linear 0.5s;
-        transition:all linear 0.5s;
-        border: 2px solid red;
-      }
-    </style> 
     <div>
-    <form novalidate name="insertForm" ng-controller="PedigreeController">
-        Nombre: <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/><br />
-        Edad: <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input" type="number" id="edad" name="edad" placeholder="Inserte la edad" max=150 min=0 required/><br />
-        Sexo: <input type="radio" name="sexo" value="m" checked="checked"/>masculino
-        <input type="radio" name="sexo" value="f" />femenino<br />   
-        <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
-    </form>
+        <form novalidate name="insertForm" ng-controller="PedigreeController">
+
+            Nombre: <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/><br />
+
+            Edad: <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input" type="number" id="edad" name="edad" placeholder="Inserte la edad" max=150 min=0 required/><br />
+
+            Sexo: <input type="radio" name="sexo" value="m" checked="checked"/>masculino
+            <input type="radio" name="sexo" value="f" />femenino<br />   
+
+            <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
+        </form>
     </div>
     <br>
     <div id="people">
