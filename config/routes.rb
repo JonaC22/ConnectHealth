@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     scope '/pedigree' do
         get '/' => 'pedigree#index'
         post '/' => 'pedigree#create'
+        get '/query' => 'pedigree#query'
     end
   end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
