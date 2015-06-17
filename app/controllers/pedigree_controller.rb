@@ -90,10 +90,10 @@ class PedigreeController < BaseController
 
   #GET /api/pedigree/query
   def query 
-
+    current_patient_name = params[:name]
     match = " match (n)-[r:PADECE]->(e) //todas las personas que padecen una enfermedad
-      where (n)-[:PADRE|MADRE*]-({nombre:'Elsa'}) or
-      n.nombre = 'Elsa'  //todas las personas de la familia del paciente
+      where (n)-[:PADRE|MADRE*]-({nombre: '#{current_patient_name}'}) or
+      n.nombre = '#{current_patient_name}'  //todas las personas de la familia del paciente
       return avg(r.edad_diagnostico) as promedio_edad_diagnostico //promedio de a que edad lo padecieron "
     result = @neo.execute_query match
 
