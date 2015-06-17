@@ -73,7 +73,7 @@ function savePedigree() {
                 if ( console && console.log ) {
                     console.log(data);
                 }
-                if(data.errNumber == 200) {
+                if(data.err_number == 200) {
                     alert(data.desc)
                 }else{
                     alert("Error:" + data.desc)
