@@ -1,5 +1,7 @@
 class PedigreeController < BaseController
 
+  attr_accessor :pedigree 
+
   before_filter :initialize
   skip_before_filter :verify_authenticity_token
 
@@ -10,25 +12,30 @@ class PedigreeController < BaseController
   # GET /api/pedigree
   def index
     current_patient_name = params[:name]
+    visualize current_patient_name
+  end
+
+  def visualize current_patient_name
     query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{current_patient_name}'})-[*]-(n2:PERSONA) return n, n2"
     patients = @neo.execute_query query_busqueda_pacientes
     persons = []
     relations = []
-    pedigree = Pedigree.new
+    @pedigree = Pedigree.new
 
     #Se extraen personas y relaciones
     patients["data"].each do |data_array|
       data_array.each do |node|
-        person = Person.new node["metadata"]["id"], node['data']['nombre'], node['data']['sexo']
-        pedigree.add person
+        data = node['data']
+        person = Person.new node["metadata"]["id"], data['nombre'], data['apellido'], data['fecha_nacimiento'], data['sexo']
+        @pedigree.add person
         if person.name == current_patient_name 
-          pedigree.set_current person
+          @pedigree.set_current person
         end
       end
     end
 
     #Se extraen relaciones
-    pedigree.get_persons_ids.each {|key|
+    @pedigree.get_persons_ids.each {|key|
       node = Neography::Node.load(key, @neo)
 
       node.rels(:PADRE, :MADRE).outgoing.each { |relat|
@@ -38,11 +45,11 @@ class PedigreeController < BaseController
       }
     }
 
-    pedigree.add_elements relations
+    @pedigree.add_elements relations
 
     #puts YAML::dump(pedigree)
 
-    render json:pedigree.to_json
+    render json:@pedigree.to_json
   end
 
   before_filter only: :create do

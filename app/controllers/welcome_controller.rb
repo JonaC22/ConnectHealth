@@ -1,16 +1,15 @@
 class WelcomeController < ApplicationController
   skip_before_action :verify_authenticity_token #Que hace esto?
 
-  @pacientes
+  @pacientes = []
 
   # GET /welcome
   def index
-      @neo = Neography::Rest.new(ENV['NEO4J'])
       busqueda_paciente()
   end
 
   def busqueda_paciente
-
+    @neo = Neography::Rest.new
     unless params[:text_box_nombre_paciente].nil?
       nombre = params[:text_box_nombre_paciente]
       query_busqueda_pacientes = "MATCH (n:PERSONA) WHERE n.nombre =~ '(?i).*"+ nombre +".*' RETURN n LIMIT 7"
@@ -21,7 +20,7 @@ class WelcomeController < ApplicationController
   end
 
   def insert_paciente
-    @neo = Neography::Rest.new(ENV['NEO4J'])
+    @neo = Neography::Rest.new
     nombre = params[:text_box_nombre]
     apellido = params[:text_box_apellido]
     edad = params[:text_box_edad]
@@ -31,7 +30,7 @@ class WelcomeController < ApplicationController
   end
 
   def delete_paciente
-    @neo = Neography::Rest.new(ENV['NEO4J'])
+    @neo = Neography::Rest.new
     nombre = params[:text_box_nombre_a_borrar]
     query = "MATCH (n:PERSONA) WHERE n.nombre =~ '"+ nombre +"' DELETE n"
     @neo.execute_query(query)
