@@ -32,7 +32,7 @@ class WelcomeController < ApplicationController
   def delete_paciente
     @neo = Neography::Rest.new
     nombre = params[:text_box_nombre_a_borrar]
-    query = "MATCH (n:PERSONA) WHERE n.nombre =~ '"+ nombre +"' DELETE n"
+    query = "MATCH (n:PERSONA), (n)-[r]-() WHERE n.nombre =~ '"+ nombre +"' DELETE r,n"
     @neo.execute_query(query)
     redirect_to '/'
   end
