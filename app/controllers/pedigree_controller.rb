@@ -16,7 +16,12 @@ class PedigreeController < BaseController
   end
 
   def visualize current_patient_name
-    query_busqueda_pacientes = "match (n:PERSONA{nombre:'#{current_patient_name}'})-[*]-(n2:PERSONA) return n, n2"
+    query_busqueda_pacientes = 
+    "match (n:PERSONA{nombre:'#{current_patient_name}'})-[r:PADRE|MADRE*]-(n2:PERSONA)
+    return n2 as nodo
+    UNION
+    match(n:PERSONA{nombre:'#{current_patient_name}'})
+    return n as nodo"
     patients = @neo.execute_query query_busqueda_pacientes
     persons = []
     relations = []
@@ -87,8 +92,7 @@ class PedigreeController < BaseController
   def query 
 
     match = " match (n)-[r:PADECE]->(e) //todas las personas que padecen una enfermedad
-      where (n)-[:MADRE*]-({nombre:'Elsa'}) or
-      (n)-[:PADRE*]-({nombre:'Elsa'}) or
+      where (n)-[:PADRE|MADRE*]-({nombre:'Elsa'}) or
       n.nombre = 'Elsa'  //todas las personas de la familia del paciente
       return avg(r.edad_diagnostico) as promedio_edad_diagnostico //promedio de a que edad lo padecieron "
     result = @neo.execute_query match
