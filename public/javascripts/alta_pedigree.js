@@ -18,8 +18,6 @@ var error_function = function(XMLHttpRequest, textStatus, errorThrown) {
     }
 }
 
-
-
 function openRelation(nodoId){
     $("#listPeopleAvailable").empty();
     personas.map(function(nodo){
