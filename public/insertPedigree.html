@@ -16,24 +16,25 @@
         <form novalidate name="insertForm" ng-controller="PedigreeController">
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input form-group" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/>
+                <input ng-model="person.name" ng-pattern="/^[A-z]+$/" class="form-input form-group" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/>
             </div>
             <div class="form-group">
                 <label for="edad">Edad:</label>
-                <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input form-group" type="number" id="edad" name="edad" max=150 min=0 required/>
+                <input ng-model="person.age" ng-pattern="/^\d+$/" class="form-input form-group" type="number" id="edad" name="edad" max=150 min=0 required/>
             </div>
             <label for="sexo">Sexo:</label>
             <div class="radio">
                 <label>
-                   <input type="radio" name="sexo" id="optionMasculino" value="m" checked> Masculino
+                   <input type="radio" ng-model="person.gender" name="sexo" id="optionMasculino" value="m" checked> Masculino
                 </label>
-            </div class="radio">
+            </div>
+            <div class="radio">
                 <label>
-                   <input type="radio" name="sexo" id="optionFemenino" value="f" checked> Femenino
+                   <input type="radio" ng-model="person.gender" name="sexo" id="optionFemenino" value="f"> Femenino
                 </label>
             </div>
 
-            <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
+            <input type="button" value="Agregar" ng-click="agregarNodo()" ng-disabled="insertForm.$invalid"/>
         </form>
     </div>
     <br>
