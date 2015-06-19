@@ -3,21 +3,35 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>ConnectHealth - Crear Pedigree </title>
-    <link href="/stylesheets/alta_pedigree.css" media="screen" rel="stylesheet"> 
+    <link rel="stylesheet" type="text/css" href="/stylesheets/alta_pedigree.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/third-party/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/third-party/bootstrap-theme.min.css">
     <script type="text/javascript" src="/javascripts/third-party/angular.min.js"></script>
     <script type="text/javascript" src="/javascripts/third-party/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/javascripts/alta_pedigree.js"></script>
+    <script type="text/javascript" src="/javascripts/third-party/bootstrap.min.js"></script>
 </head>
 <body ng-app="pedigree">
     <div>
         <form novalidate name="insertForm" ng-controller="PedigreeController">
-
-            Nombre: <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/><br />
-
-            Edad: <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input" type="number" id="edad" name="edad" placeholder="Inserte la edad" max=150 min=0 required/><br />
-
-            Sexo: <input type="radio" name="sexo" value="m" checked="checked"/>masculino
-            <input type="radio" name="sexo" value="f" />femenino<br />   
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input ng-model="nombre" ng-pattern="/^[A-z]+$/" class="form-input form-group" type="text" id="nombre" name="nombre" placeholder="Inserte el nombre" required/>
+            </div>
+            <div class="form-group">
+                <label for="edad">Edad:</label>
+                <input ng-model="edad" ng-pattern="/^\d+$/" class="form-input form-group" type="number" id="edad" name="edad" max=150 min=0 required/>
+            </div>
+            <label for="sexo">Sexo:</label>
+            <div class="radio">
+                <label>
+                   <input type="radio" name="sexo" id="optionMasculino" value="m" checked> Masculino
+                </label>
+            </div class="radio">
+                <label>
+                   <input type="radio" name="sexo" id="optionFemenino" value="f" checked> Femenino
+                </label>
+            </div>
 
             <input type="button" value="Agregar" onClick="agregarNodo(this.form)"/>
         </form>
