@@ -72,9 +72,9 @@ class PedigreeController < BaseController
       node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
       @neo.set_label(node,"PERSONA")
       persons[persona['id']] = node
-      count = @json['relations'].count{|rel| rel['from'] == persona['id'] && rel['name'] =='MADRE'}
-      if count>1
-        error=Resultado.new('Relacion MADRE duplicada',500)
+      count = @json['relations'].count{|rel| rel['from'] == persona['id'] && (rel['name'] =='MADRE' || rel['name'] == 'PADRE')}
+      if count > 1
+        error = Resultado.new('Relacion duplicada', 500)
         render json:error
         return
       end
