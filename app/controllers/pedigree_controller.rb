@@ -69,15 +69,14 @@ class PedigreeController < BaseController
 
     persons = Hash.new
     @json['personas'].each { |persona|
+      tags = ['MADRE', 'PADRE']
+      error = validate_relations @json, persona, tags
+      if error.err_number == 500
+        return render json:error
+      end
       node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
       @neo.set_label(node,"PERSONA")
       persons[persona['id']] = node
-      count = @json['relations'].count{|rel| rel['from'] == persona['id'] && (rel['name'] =='MADRE' || rel['name'] == 'PADRE')}
-      if count > 1
-        error = Resultado.new('Relacion duplicada', 500)
-        render json:error
-        return
-      end
     }
     
     @json['relations'].each { |rel|
@@ -86,6 +85,16 @@ class PedigreeController < BaseController
 
     resultado= Resultado.new('Pedigree ingresado exitosamente',200)
     render json:resultado
+  end
+
+  def validate_relations json, persona, tags
+    tags.each do |tag|
+      count = json['relations'].count{|rel| rel['from'] == persona['id'] && rel['name'] == tag}
+      if count > 1
+        return Resultado.new("Relacion duplicada: #{tag}", 500)
+      end
+    end
+    Resultado.new('OK', 200)
   end
 
   #GET /api/pedigree/query
