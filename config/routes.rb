@@ -13,6 +13,8 @@ Rails.application.routes.draw do
         get '/' => 'pedigree#index'
         post '/' => 'pedigree#create'
         get '/query' => 'pedigree#query'
+        get '/medicos' => 'pedigree#get_medicos_mysql'
+        get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end
   end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"

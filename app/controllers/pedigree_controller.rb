@@ -7,6 +7,7 @@ class PedigreeController < BaseController
 
   def initialize
     @neo = Neography::Rest.new
+    @mysql = get_mysql_connection()
   end
 
   # GET /api/pedigree
@@ -107,6 +108,30 @@ class PedigreeController < BaseController
     result = @neo.execute_query match
 
     render json:result
+  end
+
+  #GET metodo provisorio para ver la carga batch de medicos en mysql
+  def get_medicos_mysql
+    result = @mysql.query("SELECT * FROM medicos")
+    render json:result
+  end
+
+  #GET metodo provisorio para ver la arga batch de pacientes en mysql
+  def get_pacientes_mysql
+    result = @mysql.query("SELECT * FROM pacientes")
+    render json:result
+  end
+
+  def get_mysql_connection
+    mysql_url = ENV["CLEARDB_DATABASE_URL"]
+
+    if(ENV["RACK_ENV"] == "development")
+      uri = URI.parse(ENV["MYSQL_DEV"])
+    else
+      uri = URI.parse(mysql_url)
+    end
+
+    Mysql2::Client.new(:host => uri.host, :database => (uri.path || "").split("/")[1], :username => uri.user, :password => uri.password)
   end
 
 end
