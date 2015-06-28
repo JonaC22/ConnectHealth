@@ -112,20 +112,24 @@ class PedigreeController < BaseController
 
   #GET metodo provisorio para ver la carga batch de medicos en mysql
   def get_medicos_mysql
-    result = @mysql.query("SELECT * FROM medicos")
+    medicos = @mysql.query('SELECT * FROM medicos')
+    result = Hash.new
+    result['medicos']=medicos
     render json:result
   end
 
   #GET metodo provisorio para ver la arga batch de pacientes en mysql
   def get_pacientes_mysql
-    result = @mysql.query("SELECT * FROM pacientes")
+    pacientes = @mysql.query('SELECT * FROM pacientes')
+    result = Hash.new
+    result['pacientes']=pacientes
     render json:result
   end
 
   def get_mysql_connection
-    mysql_url = ENV["CLEARDB_DATABASE_URL"]
+    mysql_url = ENV['CLEARDB_DATABASE_URL']
 
-    if(ENV["RACK_ENV"] == "development")
+    if ENV['RACK_ENV'] == 'development'
       uri = URI.parse(ENV["MYSQL_DEV"])
     else
       uri = URI.parse(mysql_url)
