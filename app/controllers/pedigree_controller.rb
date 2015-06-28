@@ -122,23 +122,28 @@ class PedigreeController < BaseController
   end
 
   def generate
-    pacientes = @mysql.query('SELECT * FROM pacientes Limit 100')
-    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"')
-    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"')
-    apellidos = @mysql.query('SELECT Apellido FROM pacientes')
+    pacientes = @mysql.query('SELECT * FROM pacientes Limit 5')
+    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"').map { |n| n['Nombre']}
+    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"').map { |n| n['Nombre']}
+    apellidos = @mysql.query('SELECT Apellido FROM pacientes').map { |n| n['Apellido']}
     familias = Array.new
     pacientes.each { |paciente|
-      p = Person.create_from_mysql(paciente)
-      fecha_nac=DateTime.strptime(paciente['Fecha_Nac'], "%Y-%m-%d %H:%M:%S")
-      padre = Person.new -1,(nombres_m.map { |n|  n['Nombre']}).sample,p.surname,rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-25, 12, 31)),'m'
-      madre =Person.new -1,(nombres_f.map { |n|  n['Nombre']}).sample,(apellidos.map { |n|  n['Apellido']}).sample,rand(Date.civil(fecha_nac.year-38, 1, 1)..Date.civil(fecha_nac.year-17, 12, 31)),'f'
       result = Hash.new
+      p = Person.create_from_mysql(paciente)
+      padre = p.create_father(nombres_m.sample)
+      madre = p.create_mother(nombres_f.sample,apellidos.sample)
       result['paciente']=p
       result['padre']=padre
       result['madre']=madre
+      result['abuelo_pat']=padre.create_father(nombres_m.sample)
+      result['abuela_pat']=padre.create_mother(nombres_f.sample,apellidos.sample)
+      result['abuelo_mat']=madre.create_father(nombres_m.sample)
+      result['abuela_mat']=madre.create_mother(nombres_f.sample,apellidos.sample)
       familias.append(result)
     }
     render json:familias
   end
+
+
 
 end
