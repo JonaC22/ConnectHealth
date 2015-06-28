@@ -122,15 +122,16 @@ class PedigreeController < BaseController
   end
 
   def generate
-    pacientes = @mysql.query('SELECT * FROM pacientes')
+    pacientes = @mysql.query('SELECT * FROM pacientes Limit 100')
     nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"')
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"')
     apellidos = @mysql.query('SELECT Apellido FROM pacientes')
     familias = Array.new
     pacientes.each { |paciente|
       p = Person.create_from_mysql(paciente)
-      padre = Person.new -1,(nombres_m.map { |n|  n['Nombre']}).sample,p.surname,"10/10/10",'m'
-      madre =Person.new -1,(nombres_f.map { |n|  n['Nombre']}).sample,(apellidos.map { |n|  n['Apellido']}).sample,"10/10/10",'f'
+      fecha_nac=DateTime.strptime(paciente['Fecha_Nac'], "%Y-%m-%d %H:%M:%S")
+      padre = Person.new -1,(nombres_m.map { |n|  n['Nombre']}).sample,p.surname,rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-25, 12, 31)),'m'
+      madre =Person.new -1,(nombres_f.map { |n|  n['Nombre']}).sample,(apellidos.map { |n|  n['Apellido']}).sample,rand(Date.civil(fecha_nac.year-38, 1, 1)..Date.civil(fecha_nac.year-17, 12, 31)),'f'
       result = Hash.new
       result['paciente']=p
       result['padre']=padre
