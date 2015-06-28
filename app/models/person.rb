@@ -13,6 +13,11 @@ class Person
     @diseases = diseases
   end
 
+  def self.create_from_mysql(paciente)
+    persona = Person.new paciente['Nro_Afiliado'],paciente['Nombre'],paciente['Apellido'],paciente['Fecha_Nac'],paciente['Sexo']
+    return persona
+  end
+
   def add_to(pedigree) 
     unless pedigree.get_persons_ids.include? @id
         pedigree.add_person(self)
@@ -24,5 +29,7 @@ class Person
       birth = Date.parse(birth_date)
       now.year - birth.year - (birth.to_date.change(:year => now.year) > now ? 1 : 0)
   end
+
+
 
 end

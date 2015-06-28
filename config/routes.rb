@@ -16,6 +16,7 @@ Rails.application.routes.draw do
         get '/medicos' => 'pedigree#get_medicos_mysql'
         get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end
+    get '/createGraphDB' => 'pedigree#generate'
   end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
   get '/hi', to: 'base#index'

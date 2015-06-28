@@ -2,13 +2,8 @@ class PedigreeController < BaseController
 
   attr_accessor :pedigree 
 
-  before_filter :initialize
   skip_before_filter :verify_authenticity_token
 
-  def initialize
-    @neo = Neography::Rest.new
-    @mysql = get_mysql_connection()
-  end
 
   # GET /api/pedigree
   def index
@@ -126,16 +121,23 @@ class PedigreeController < BaseController
     render json:result
   end
 
-  def get_mysql_connection
-    mysql_url = ENV['CLEARDB_DATABASE_URL']
-
-    if ENV['RACK_ENV'] == 'development'
-      uri = URI.parse(ENV["MYSQL_DEV"])
-    else
-      uri = URI.parse(mysql_url)
-    end
-
-    Mysql2::Client.new(:host => uri.host, :database => (uri.path || "").split("/")[1], :username => uri.user, :password => uri.password)
+  def generate
+    pacientes = @mysql.query('SELECT * FROM pacientes')
+    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"')
+    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"')
+    apellidos = @mysql.query('SELECT Apellido FROM pacientes')
+    familias = Array.new
+    pacientes.each { |paciente|
+      p = Person.create_from_mysql(paciente)
+      padre = Person.new -1,(nombres_m.map { |n|  n['Nombre']}).sample,p.surname,"10/10/10",'m'
+      madre =Person.new -1,(nombres_f.map { |n|  n['Nombre']}).sample,(apellidos.map { |n|  n['Apellido']}).sample,"10/10/10",'f'
+      result = Hash.new
+      result['paciente']=p
+      result['padre']=padre
+      result['madre']=madre
+      familias.append(result)
+    }
+    render json:familias
   end
 
 end
