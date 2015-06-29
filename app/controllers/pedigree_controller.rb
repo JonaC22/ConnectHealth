@@ -63,7 +63,7 @@ class PedigreeController < BaseController
   #POST /api/pedigree
   def create
 
-    persons = Hash.new
+    personas = Hash.new
     @json['personas'].each { |persona|
       tags = ['MADRE', 'PADRE']
       error = validate_relations @json, persona, tags
@@ -72,20 +72,20 @@ class PedigreeController < BaseController
       end
       node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
       @neo.set_label(node,"PERSONA")
-      persons[persona['id']] = node
+      personas[persona['id']] = node
     }
     
     @json['relations'].each { |rel|
-      @neo.create_relationship(rel['name'], persons[rel['from']], persons[rel['to']])
+      @neo.create_relationship(rel['name'], personas[rel['from']], personas[rel['to']])
     }
 
     resultado= Resultado.new('Pedigree ingresado exitosamente',200)
     render json:resultado
   end
 
-  def validate_relations json, persona, tags
+  def validate_relations(json, persona, tags)
     tags.each do |tag|
-      count = json['relations'].count{|rel| rel['from'] == persona['id'] && rel['name'] == tag}
+      count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
       if count > 1
         return Resultado.new("Relacion duplicada: #{tag}", 500)
       end
@@ -129,17 +129,33 @@ class PedigreeController < BaseController
     familias = Array.new
     pacientes.each { |paciente|
       result = Hash.new
+
       p = Person.create_from_mysql(paciente)
+      if p.gender=='f' && rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        p.diseases.append(cancer_mama)
+      end
       padre = p.create_father(nombres_m.sample)
       madre = p.create_mother(nombres_f.sample,apellidos.sample)
       result['paciente']=p
       result['padre']=padre
+      if  rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        madre.diseases.append(cancer_mama)
+      end
       result['madre']=madre
       result['abuelo_pat']=padre.create_father(nombres_m.sample)
       result['abuela_pat']=padre.create_mother(nombres_f.sample,apellidos.sample)
       result['abuelo_mat']=madre.create_father(nombres_m.sample)
       result['abuela_mat']=madre.create_mother(nombres_f.sample,apellidos.sample)
+      if  rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        result['abuela_mat'].diseases.append(cancer_mama)
+      end
       familias.append(result)
+      if false
+
+      end
     }
     render json:familias
   end

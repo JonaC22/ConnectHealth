@@ -1,6 +1,6 @@
 class Person
 
-  attr_accessor :id, :name, :surname, :birth_date, :gender, :medical_history
+  attr_accessor :id, :name, :surname, :birth_date, :gender, :medical_history,:diseases
   @diseases = []
 
   def initialize(id, name, surname, birth_date, gender, medical_history =nil, diseases = [])
