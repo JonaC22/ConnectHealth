@@ -2,13 +2,8 @@ class PedigreeController < BaseController
 
   attr_accessor :pedigree 
 
-  before_filter :initialize
   skip_before_filter :verify_authenticity_token
 
-  def initialize
-    @neo = Neography::Rest.new
-    @mysql = get_mysql_connection()
-  end
 
   # GET /api/pedigree
   def index
@@ -68,7 +63,7 @@ class PedigreeController < BaseController
   #POST /api/pedigree
   def create
 
-    persons = Hash.new
+    personas = Hash.new
     @json['personas'].each { |persona|
       tags = ['MADRE', 'PADRE']
       error = validate_relations @json, persona, tags
@@ -77,20 +72,20 @@ class PedigreeController < BaseController
       end
       node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
       @neo.set_label(node,"PERSONA")
-      persons[persona['id']] = node
+      personas[persona['id']] = node
     }
     
     @json['relations'].each { |rel|
-      @neo.create_relationship(rel['name'], persons[rel['from']], persons[rel['to']])
+      @neo.create_relationship(rel['name'], personas[rel['from']], personas[rel['to']])
     }
 
     resultado= Resultado.new('Pedigree ingresado exitosamente',200)
     render json:resultado
   end
 
-  def validate_relations json, persona, tags
+  def validate_relations(json, persona, tags)
     tags.each do |tag|
-      count = json['relations'].count{|rel| rel['from'] == persona['id'] && rel['name'] == tag}
+      count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
       if count > 1
         return Resultado.new("Relacion duplicada: #{tag}", 500)
       end
@@ -112,26 +107,59 @@ class PedigreeController < BaseController
 
   #GET metodo provisorio para ver la carga batch de medicos en mysql
   def get_medicos_mysql
-    result = @mysql.query("SELECT * FROM medicos")
+    medicos = @mysql.query('SELECT * FROM medicos')
+    result = Hash.new
+    result['medicos']=medicos
     render json:result
   end
 
   #GET metodo provisorio para ver la arga batch de pacientes en mysql
   def get_pacientes_mysql
-    result = @mysql.query("SELECT * FROM pacientes")
+    pacientes = @mysql.query('SELECT * FROM pacientes')
+    result = Hash.new
+    result['pacientes']=pacientes
     render json:result
   end
 
-  def get_mysql_connection
-    mysql_url = ENV["CLEARDB_DATABASE_URL"]
+  def generate
+    pacientes = @mysql.query('SELECT * FROM pacientes Limit 5')
+    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"').map { |n| n['Nombre']}
+    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"').map { |n| n['Nombre']}
+    apellidos = @mysql.query('SELECT Apellido FROM pacientes').map { |n| n['Apellido']}
+    familias = Array.new
+    pacientes.each { |paciente|
+      result = Hash.new
 
-    if(ENV["RACK_ENV"] == "development")
-      uri = URI.parse(ENV["MYSQL_DEV"])
-    else
-      uri = URI.parse(mysql_url)
-    end
+      p = Person.create_from_mysql(paciente)
+      if p.gender=='f' && rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        p.diseases.append(cancer_mama)
+      end
+      padre = p.create_father(nombres_m.sample)
+      madre = p.create_mother(nombres_f.sample,apellidos.sample)
+      result['paciente']=p
+      result['padre']=padre
+      if  rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        madre.diseases.append(cancer_mama)
+      end
+      result['madre']=madre
+      result['abuelo_pat']=padre.create_father(nombres_m.sample)
+      result['abuela_pat']=padre.create_mother(nombres_f.sample,apellidos.sample)
+      result['abuelo_mat']=madre.create_father(nombres_m.sample)
+      result['abuela_mat']=madre.create_mother(nombres_f.sample,apellidos.sample)
+      if  rand(10)>rand(4..6)
+        cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
+        result['abuela_mat'].diseases.append(cancer_mama)
+      end
+      familias.append(result)
+      if false
 
-    Mysql2::Client.new(:host => uri.host, :database => (uri.path || "").split("/")[1], :username => uri.user, :password => uri.password)
+      end
+    }
+    render json:familias
   end
+
+
 
 end
