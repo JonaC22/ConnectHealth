@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       post '/query' => 'statistics#get_results'
     end
     get '/createGraphDB' => 'pedigree#generate'
+    get '/flushGraphDB' => 'pedigree#delete_all_nodes'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
   end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
