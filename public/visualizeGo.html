@@ -471,8 +471,9 @@
         console.log(data);
         var nodos = {};
         var people = [];
-        $.each( data.persons, function( key, val ) {
+        $.each( data.people, function( key, val ) {
             nodos[val.id] = val;
+            if(val.diseases.length>0) val.attributes_go=["B"]
         });
 
         $.each( data.relations, function( key, val ) {
@@ -500,6 +501,7 @@
             if(val.father!=undefined) p.f=val.father;
             if(val.wife!=undefined) p.ux=val.wife;
             if(val.husband!=undefined) p.vir=val.husband;
+            if(val.attributes_go!=undefined) p.a=val.attributes_go;
             people.push(p);
         });
 //        people.push( { key: 999, n: "abuela", s: "F", a: ["B","H", "L"] });

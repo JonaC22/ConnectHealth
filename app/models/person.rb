@@ -36,7 +36,7 @@ class Person
   end
 
   def add_to(pedigree) 
-    unless pedigree.get_persons_ids.include? @id
+    unless pedigree.get_people.include? @id
         pedigree.add_person(self)
     end
   end
@@ -45,6 +45,13 @@ class Person
       now = Time.now.utc.to_date
       birth = Date.parse(birth_date)
       now.year - birth.year - (birth.to_date.change(:year => now.year) > now ? 1 : 0)
+  end
+
+  def add_disease(disease)
+    neo = Neography::Rest.new
+    enf_rel=neo.create_relationship('PADECE',get_node, disease.get_node)
+    neo.reset_relationship_properties(enf_rel, {'edad_diagnostico' => disease.edad_diagnostico})
+    diseases.append(disease)
   end
 
   def get_node
