@@ -455,17 +455,6 @@
 <div id="sample">
     <div id="myDiagram" style="border: solid 1px blue; width:100%; height:600px"></div>
 
-    The properties are:
-    <ul>
-        <li><b>key</b>, the unique ID of the person</li>
-        <li><b>n</b>, the person's name</li>
-        <li><b>s</b>, the person's sex</li>
-        <li><b>m</b>, the person's mother's key</li>
-        <li><b>f</b>, the person's father's key</li>
-        <li><b>ux</b>, the person's wife</li>
-        <li><b>vir</b>, the person's husband</li>
-        <li><b>a</b>, an Array of the attributes or markers that the person has</li>
-    </ul>
 </div>
 <script type="text/javascript">
     $.urlParam = function(name){
@@ -495,6 +484,7 @@
                 }
             }else if(val.name=="PADRE"){
                 nodos[val.from].father = val.to;
+//                if(val.to==7) nodos[val.from].mother = 999;
                 if(nodos[val.from].mother!=undefined){
                     nodos[nodos[val.from].father].wife = nodos[val.from].mother
                 }
@@ -512,7 +502,7 @@
             if(val.husband!=undefined) p.vir=val.husband;
             people.push(p);
         });
-
+//        people.push( { key: 999, n: "abuela", s: "F", a: ["B","H", "L"] });
         var patientId = data.current.id;
         console.log(people);
         setupDiagram(myDiagram, people, patientId /* focus on this person */);
