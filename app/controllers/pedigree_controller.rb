@@ -70,8 +70,8 @@ class PedigreeController < BaseController
       if error.err_number == 500
         return render json:error
       end
-      node = @neo.create_node("edad" => persona['edad'], "nombre" => persona['nombre'],'sexo' => persona['sexo'], 'posX' => persona['posX'], 'posY' => persona['posY'])
-      @neo.set_label(node,"PERSONA")
+      node = @neo.create_node('edad' => persona['edad'], 'nombre' => persona['nombre'], 'apellido' => persona['apellido'],'sexo' => persona['sexo'])
+      @neo.set_label(node, 'PERSONA')
       personas[persona['id']] = node
     }
     
@@ -122,16 +122,15 @@ class PedigreeController < BaseController
   end
 
   def generate
-    pacientes = @mysql.query('SELECT * FROM pacientes Limit 5')
+    pacientes = @mysql.query('SELECT * FROM pacientes Limit 1')
     nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"').map { |n| n['Nombre']}
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"').map { |n| n['Nombre']}
     apellidos = @mysql.query('SELECT Apellido FROM pacientes').map { |n| n['Apellido']}
     familias = Array.new
     pacientes.each { |paciente|
       result = Hash.new
-
       p = Person.create_from_mysql(paciente)
-      if p.gender=='f' && rand(10)>rand(4..6)
+      if p.gender=='F' && rand(10)>rand(4..6)
         cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
         p.diseases.append(cancer_mama)
       end
@@ -152,10 +151,8 @@ class PedigreeController < BaseController
         cancer_mama = Enfermedad.new rand(20..50),"Cancer de mama"
         result['abuela_mat'].diseases.append(cancer_mama)
       end
-      familias.append(result)
-      if false
+      familias.append(result){}
 
-      end
     }
     render json:familias
   end
