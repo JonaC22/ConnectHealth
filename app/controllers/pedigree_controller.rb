@@ -125,7 +125,7 @@ class PedigreeController < BaseController
   end
 
   def generate
-    pacientes = @mysql.query('SELECT * FROM pacientes Limit 20')
+    pacientes = @mysql.query('SELECT * FROM pacientes')
     nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"').map { |n| n['Nombre']}
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"').map { |n| n['Nombre']}
     apellidos = @mysql.query('SELECT Apellido FROM pacientes').map { |n| n['Apellido']}
