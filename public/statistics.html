@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ConnectHealth - Estadísticas </title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/statistics.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/third-party/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/third-party/bootstrap-theme.min.css">
+    <script type="text/javascript" src="/javascripts/third-party/angular.min.js"></script>
+    <script type="text/javascript" src="/javascripts/third-party/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/javascripts/statistics.js"></script>
+    <script type="text/javascript" src="/javascripts/third-party/bootstrap.min.js"></script>
+</head>
+<body ng-app="statistics">
+
+<div id="selectDisease">
+    <h3>Seleccionar enfermedad</h3>
+    <select id="disease">
+        <option value="Cancer de mama">Cáncer de mama</option>
+        <option value="Cancer de ovario">Cáncer de ovario</option>
+    </select>
+</div>
+<div id="selectType">
+    <h3>Seleccionar tipo de consulta</h3>
+    <select id="type">
+        <option value="count">Contar casos</option>
+        <option value="avg">Promedio</option>
+    </select>
+</div>
+
+<input type="button" value="Consultar" onClick="get_results()"/>
+
+</body>
+</html>

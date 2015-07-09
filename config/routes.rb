@@ -16,6 +16,11 @@ Rails.application.routes.draw do
         get '/medicos' => 'pedigree#get_medicos_mysql'
         get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end
+    scope '/statistics' do
+      get '/' => 'statistics#index'
+      get '/query' => 'statistics#get_results'
+      post '/' => 'statistics#set_query'
+    end
     get '/createGraphDB' => 'pedigree#generate'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
   end
