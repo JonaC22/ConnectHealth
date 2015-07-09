@@ -1,27 +1,27 @@
 
 class StatisticsModel
-  attr_accessor :query_cypher
+  attr_accessor :query_cypher, :neo
+
+  def initialize neo
+    @neo = neo
+  end
 
   def set_query disease, query_type
+    @query_cypher = "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})"
 
-    if query_type == "count"
-      @query_cypher =
-          "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})
-         return count(r.edad_diagnostico) as count, r.edad_diagnostico as age "
-    end
-
-    if query_type == "avg"
-      @query_cypher =
-          "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})
-         return avg(r.edad_diagnostico)"
+    case query_type
+    when "count"
+      @query_cypher += "return count(r.edad_diagnostico) as Cantidad, r.edad_diagnostico as Edad"
+    when "avg"
+      @query_cypher += "return avg(r.edad_diagnostico) as Edad"
     end
 
   end
 
-  def calc_query neo
-    results = neo.execute_query @query_cypher
+  def calc_query
+    results = @neo.execute_query @query_cypher
     save_results
-    return results
+    results
   end
 
   def save_results

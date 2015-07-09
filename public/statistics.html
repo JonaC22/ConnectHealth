@@ -11,24 +11,36 @@
     <script type="text/javascript" src="/javascripts/statistics.js"></script>
     <script type="text/javascript" src="/javascripts/third-party/bootstrap.min.js"></script>
 </head>
-<body ng-app="statistics">
+<body ng-app="statistics" ng-controller="StatisticsController">
 
 <div id="selectDisease">
     <h3>Seleccionar enfermedad</h3>
-    <select id="disease">
+    <select ng-model="disease">
         <option value="Cancer de mama">Cáncer de mama</option>
         <option value="Cancer de ovario">Cáncer de ovario</option>
     </select>
 </div>
 <div id="selectType">
     <h3>Seleccionar tipo de consulta</h3>
-    <select id="type">
+    <select ng-model="type">
         <option value="count">Contar casos</option>
         <option value="avg">Promedio</option>
     </select>
 </div>
 
-<input type="button" value="Consultar" onClick="get_results()"/>
+<button ng-click="get_results()">Consultar</button>
+
+<!-- tabla -->
+<div>
+    <table class="table">
+        <th ng-repeat="column in results.columns">
+            {{column}}
+        </th>
+        <tr ng-repeat="row in results.data">
+            <td ng-repeat="val in row">{{val}}</td>
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>

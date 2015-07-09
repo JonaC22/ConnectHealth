@@ -18,8 +18,7 @@ Rails.application.routes.draw do
     end
     scope '/statistics' do
       get '/' => 'statistics#index'
-      get '/query' => 'statistics#get_results'
-      post '/' => 'statistics#set_query'
+      post '/query' => 'statistics#get_results'
     end
     get '/createGraphDB' => 'pedigree#generate'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
