@@ -1,10 +1,5 @@
-
-class StatisticsModel
-  attr_accessor :query_cypher, :neo
-
-  def initialize neo
-    @neo = neo
-  end
+class StatisticsModel < BaseModel
+  attr_accessor :query_cypher
 
   def set_query disease, query_type
     @query_cypher = "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})"
@@ -25,6 +20,8 @@ class StatisticsModel
   end
 
   def save_results
+    get_mysql_connection
     #guardar resultados en mysql para historico
+    close_mysql
   end
 end
