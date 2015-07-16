@@ -105,19 +105,23 @@ class PedigreeController < BaseController
   def query
     current_patient_name = params[:name]
     type = params[:type] || nil
+
+    #query genérica que devuelve todos los familiares que padecen una enfermedad
+    match = " match (n)-[r:PADECE]->(e)
+              where (n)-[:PADRE|MADRE*]-({nombre: '#{current_patient_name}'}) or
+              n.nombre = '#{current_patient_name}' "
     case type
-      when 'number'
-        match = " match (n)-[r:PADECE]->(e) //todas las personas que padecen una enfermedad
-        where (n)-[:PADRE|MADRE*]-({nombre: '#{current_patient_name}'}) or
-        n.nombre = '#{current_patient_name}'  //todas las personas de la familia del paciente
-        return avg(r.edad_diagnostico) as promedio_edad_diagnostico //promedio de a que edad lo padecieron "
-        result = @neo.execute_query match
-        render json: result
+      when 'integer'
+        execute_and_render match << " return count(r) as cantidad_casos "
+      when 'float'
+        execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
+      when 'table'
+        execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
       when 'pedigree' #Obtiene el pedigree recortado
         match = " match ca = (n:PERSONA{nombre:'#{current_patient_name}'})-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
-                with nodes(ca) as nodos
-                unwind nodos as nodo
-                return nodo "
+                  with nodes(ca) as nodos
+                  unwind nodos as nodo
+                  return nodo "
         patients = @neo.execute_query match
 
         visualize patients, current_patient_name
@@ -125,6 +129,11 @@ class PedigreeController < BaseController
         result = {"status" => "ERROR", "results" => "Formato de respuesta no especificado"}
         render json: result
     end
+  end
+
+  def execute_and_render match
+    result = @neo.execute_query match
+    render json: result
   end
 
   #GET metodo provisorio para ver la carga batch de medicos en mysql
