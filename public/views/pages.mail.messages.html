@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="col-md-5 col-md-push-7"><input id="message_filter" type="text" class="form-control input-sm" placeholder="Search..."/></div>
+    <div class="col-md-5 col-md-pull-5">
+        <div class="btn-group btn-group-sm" ng-if="foldId == 0">
+            <button type="button" class="btn btn-default">Reply</button>
+            <button type="button" class="btn btn-default">Spam</button>
+            <button type="button" class="btn btn-default text-danger">Delete</button>
+        </div>
+        <div class="btn-group btn-group-sm" ng-if="foldId == 1">
+            <button type="button" class="btn btn-default">Archive</button>
+            <button type="button" class="btn btn-default text-danger">Delete</button>
+        </div>
+        <div class="btn-group btn-group-sm" ng-if="foldId == 2">
+            <button type="button" class="btn btn-default">Move to Inbox</button>
+            <button type="button" class="btn btn-default text-danger">Delete</button>
+        </div>
+    </div>
+</div>
+<hr/>
+<table id="mailbox_table" class="table table-yuk2 bg-fill toggle-arrow-tiny" data-page-size="20" data-filter="#message_filter">
+    <thead>
+        <tr>
+            <th class="cw footable_toggler"></th>
+            <th class="cw"><input type="checkbox" ng-model="selectAll[foldId]" ng-click="checkAll(foldId)"></th>
+            <th class="cw"></th>
+            <th data-hide="phone,tablet">From</th>
+            <th>Subject</th>
+            <th data-hide="phone">Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="message in folders[foldId]['messages']" ng-class="{ 'selected': message.selected, 'unreaded': message.status=='unreaded' }" on-last-repeat>
+            <td></td>
+            <td><div><input type="checkbox" ng-model="message.selected"></div></td>
+            <td class="mbox_star" ng-class="{ marked: message.marked }"><span ng-click="message.marked = !message.marked" ng-class="{ icon_star: message.marked, icon_star_alt: !message.marked}"></span></td>
+            <td>{{message.fromName}}</td>
+            <td><a ui-sref="auth.pages.mail.details({messageId:message.id})">{{message.subject}}</a></td>
+            <td>{{message.date}}</td>
+        </tr>
+    </tbody>
+    <tfoot class="hide-if-no-paging">
+        <tr>
+            <td colspan="6">
+                <ul class="pagination pagination-sm"></ul>
+            </td>
+        </tr>
+    </tfoot>
+</table>

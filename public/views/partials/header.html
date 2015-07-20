@@ -1,0 +1,117 @@
+		<!-- header -->
+		<header id="main_header" class="{{topBarColor}}">
+			<div class="container-fluid">
+				<div class="brand_section">
+					<a ui-sref="auth.home"><img ng-src="assets/img/logo.png" alt="site_logo" width="63" height="26"></a>
+				</div>
+				<ul class="header_notifications clearfix">
+					<li class="dropdown" on-toggle="toggled(open)" dropdown>
+						<span class="label label-danger">8</span>
+						<a href class="dropdown-toggle" dropdown-toggle><i class="el-icon-envelope"></i></a>
+						<div class="dropdown-menu">
+							<ul>
+								<li>
+									<img ng-src="assets/img/avatars/avatar02_tn.png" alt="" width="38" height="38">
+									<p><a href="#">Lorem ipsum dolor sit amet&hellip;</a></p>
+									<small class="text-muted">14.07.2014</small>
+								</li>
+								<li>
+									<img ng-src="assets/img/avatars/avatar03_tn.png" alt="" width="38" height="38">
+									<p><a href="#">Lorem ipsum dolor sit&hellip;</a></p>
+									<small class="text-muted">14.07.2014</small>
+								</li>
+								<li>
+									<img ng-src="assets/img/avatars/avatar04_tn.png" alt="" width="38" height="38">
+									<p><a href="#">Lorem ipsum dolor&hellip;</a></p>
+									<small class="text-muted">14.07.2014</small>
+								</li>
+								<li>
+									<img ng-src="assets/img/avatars/avatar05_tn.png" alt="" width="38" height="38">
+									<p><a href="#">Lorem ipsum dolor sit amet&hellip;</a></p>
+									<small class="text-muted">14.07.2014</small>
+								</li>
+								<li>
+									<a href="#" class="btn btn-xs btn-primary btn-block">All messages</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="dropdown" id="tasks_dropdown" on-toggle="toggled(open)" dropdown>
+						<span class="label label-danger">14</span>
+						<a href class="dropdown-toggle" dropdown-toggle><i class="el-icon-tasks"></i></a>
+						<div class="dropdown-menu">
+							<ul>
+								<li>
+									<div class="clearfix">
+										<div class="label label-warning pull-right">Medium</div>
+										<small class="text-muted">YUK-21 (24.07.2014)</small>
+									</div>
+									<p>Lorem ipsum dolor sit amet&hellip;</p>
+								</li>
+								<li>
+									<div class="clearfix">
+										<div class="label label-danger pull-right">High</div>
+										<small class="text-muted">YUK-8 (26.07.2014)</small>
+									</div>
+									<p>Lorem ipsum dolor sit amet&hellip;</p>
+								</li>
+								<li>
+									<div class="clearfix">
+										<div class="label label-success pull-right">Medium</div>
+										<small class="text-muted">DES-14 (25.07.2014)</small>
+									</div>
+									<p>Lorem ipsum dolor sit amet&hellip;</p>
+								</li>
+								<li>
+									<a href="#" class="btn btn-xs btn-primary btn-block">All tasks</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="dropdown" on-toggle="toggled(open)" dropdown>
+						<span class="label label-primary">2</span>
+						<a href class="dropdown-toggle" dropdown-toggle><i class="el-icon-bell"></i></a>
+						<div class="dropdown-menu">
+							<ul>
+								<li>
+									<p>Lorem ipsum dolor sit amet&hellip;</p>
+									<small class="text-muted">20 minutes ago</small>
+								</li>
+								<li>
+									<p>Lorem ipsum dolor sit&hellip;</p>
+									<small class="text-muted">44 minutes ago</small>
+								</li>
+								<li>
+									<p>Lorem ipsum dolor&hellip;</p>
+									<small class="text-muted">10:55</small>
+								</li>
+								<li>
+									<p>Lorem ipsum dolor sit amet&hellip;</p>
+									<small class="text-muted">14.07.2014</small>
+								</li>
+								<li>
+									<a href="#" class="btn btn-xs btn-primary btn-block">All Alerts</a>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+                <div class="header_user_actions dropdown" on-toggle="toggled(open)" dropdown>
+                    <div class="dropdown-toggle user_dropdown" dropdown-toggle>
+                        <div class="user_avatar">
+                            <img ng-src="assets/img/avatars/avatar08_tn.png" alt="" title="Carrol Clark (carrol@example.com)" width="38" height="38">
+                        </div>
+                        <span class="caret"></span>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a ui-sref="auth.pages.userProfile">User Profile</a></li>
+                        <li><a ui-sref="auth.pages.userProfile2">User Profile 2</a></li>
+                        <li><a ui-sref="login">Log Out</a></li>
+                    </ul>
+                </div>
+                <div class="search_section hidden-sm hidden-xs" ng-controller="topSearchCtrl">
+                    <input type="text" class="form-control input-sm" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8">
+                    <button class="btn btn-link btn-sm" type="button"><span class="icon_search"></span></button>
+                </div>
+			</div>
+		</header>

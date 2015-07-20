@@ -1,0 +1,11 @@
+<div class="row">
+    <div class="col-md-2">
+        <div class="list-group">
+            <a ui-sref="auth.plugins.tables.footable" ng-class="{ active: $state.includes('auth.plugins.tables.footable') }" class="list-group-item">Footable</a>
+            <a ui-sref="auth.plugins.tables.datatable" ng-class="{ active: $state.includes('auth.plugins.tables.datatable') }" class="list-group-item">Datatable</a>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div ui-view autoscroll="false" class="mainView-animate"></div>
+    </div>
+</div>

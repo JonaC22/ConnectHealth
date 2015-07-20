@@ -1,0 +1,8 @@
+<accordion close-others="false">
+    <accordion-group ng-repeat="item in faq[catId].items">
+        <accordion-heading>
+            {{$index+1}}. {{item.question}}
+        </accordion-heading>
+        {{item.answer}}
+    </accordion-group>
+</accordion>

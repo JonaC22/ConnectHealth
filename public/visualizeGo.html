@@ -479,15 +479,15 @@
         $.each( data.relations, function( key, val ) {
             if(val.name == "MADRE"){
                 nodos[val.from].mother = val.to;
-//                console.log(nodos[val.from]);
                 if(nodos[val.from].father!=undefined){
                     nodos[nodos[val.from].mother].husband = nodos[val.from].father
+                    nodos[nodos[val.from].father].wife = nodos[val.from].mother
                 }
             }else if(val.name=="PADRE"){
                 nodos[val.from].father = val.to;
-//                if(val.to==7) nodos[val.from].mother = 999;
                 if(nodos[val.from].mother!=undefined){
                     nodos[nodos[val.from].father].wife = nodos[val.from].mother
+                    nodos[nodos[val.from].mother].husband = nodos[val.from].father
                 }
             }
         });
