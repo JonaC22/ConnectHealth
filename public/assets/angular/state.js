@@ -896,5 +896,29 @@ yukonApp
                     },
                     controller: 'vectorMapsCtrl'
                 })
+
+                .state('auth.visualizeGo', {
+                    page_title: 'Connect Health - Visualizar Pedigree',
+                    data: {
+                        ncyBreadcrumbLabel: 'Visualizar Pedigree '
+                    },
+                    url: '/visualizeGo',
+                    templateUrl: 'views/conH/visualize_pedigree.html',
+                    resolve: {
+                        files: [
+                            'uiLoad',
+                            function (uiLoad) {
+                                return uiLoad.load([
+                                    // vector maps
+                                    'assets/lib/jvectormap/jquery-jvectormap-1.2.2.min.js',
+                                    'assets/lib/jvectormap/maps/jquery-jvectormap-world-mill-en.js',
+                                    'assets/lib/jvectormap/maps/jquery-jvectormap-ca-mill-en.js'
+                                ]);
+                            }
+                        ]
+                    },
+                    controller: 'visualizeGo'
+                })
+
         }
     ]);
