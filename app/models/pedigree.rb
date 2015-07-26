@@ -1,6 +1,6 @@
 class Pedigree
 
-	attr_accessor :id, :current_patient
+	attr_accessor :current_patient
 	@people = []
 	@relations = []
 

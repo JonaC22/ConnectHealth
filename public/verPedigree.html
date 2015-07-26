@@ -37,7 +37,7 @@
         }
     });
 
-    $.getJSON( "api/pedigree?name=" + ($.urlParam('name') || "Francisco"), function( data ) {
+    $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
         console.log(data);
         var nodos = {};
         var relations = [];

@@ -8,22 +8,24 @@ class PedigreeController < BaseController
   # GET /api/pedigree
   def index
     #generate
-    current_patient_name = params[:name]
-    get_pedigree current_patient_name
+    id_current_patient = params[:id]
+    get_pedigree id_current_patient
   end
 
-  def get_pedigree current_patient_name
+  def get_pedigree id_current_patient
     query_busqueda_pacientes =
-        " match (n:PERSONA{nombre:'#{current_patient_name}'})-[r:PADRE|MADRE*]-(n2:PERSONA)
+        " match (n:PERSONA)-[r:PADRE|MADRE*]-(n2:PERSONA)
+        where id(n) = #{id_current_patient}
         return n2 as nodo
         UNION
-        match(n:PERSONA{nombre:'#{current_patient_name}'})
+        match(n:PERSONA)
+        where id(n) = #{id_current_patient}
         return n as nodo"
     patients = @neo.execute_query query_busqueda_pacientes
-    visualize patients, current_patient_name
+    visualize patients, id_current_patient
   end
 
-  def visualize patients, current_patient_name
+  def visualize patients, id_current_patient
     persons = []
     relations = []
     @pedigree = Pedigree.new
@@ -34,7 +36,7 @@ class PedigreeController < BaseController
         data = node['data']
         person = Person.new node['metadata']['id'], data['nombre'], data['apellido'], data['fecha_nacimiento'], data['sexo']
         @pedigree.add person
-        if person.name == current_patient_name
+        if person.id.to_s == id_current_patient
           @pedigree.set_current person
         end
       end
@@ -103,13 +105,13 @@ class PedigreeController < BaseController
 
   #GET /api/pedigree/query
   def query
-    current_patient_name = params[:name]
+    id_current_patient = params[:id]
     type = params[:type] || nil
 
     #query genérica que devuelve todos los familiares que padecen una enfermedad
     match = " match (n)-[r:PADECE]->(e)
-              where (n)-[:PADRE|MADRE*]-({nombre: '#{current_patient_name}'}) or
-              n.nombre = '#{current_patient_name}' "
+              where ((n)-[:PADRE|MADRE*]-(n2) and id(n2) = #{id_current_patient}) or
+              id(n) = #{id_current_patient} "
     case type
       when 'integer'
         execute_and_render match << " return count(r) as cantidad_casos "
@@ -118,13 +120,14 @@ class PedigreeController < BaseController
       when 'table'
         execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
       when 'pedigree' #Obtiene el pedigree recortado
-        match = " match ca = (n:PERSONA{nombre:'#{current_patient_name}'})-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
+        match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
+                  where id(n) = #{id_current_patient}
                   with nodes(ca) as nodos
                   unwind nodos as nodo
                   return nodo "
         patients = @neo.execute_query match
 
-        visualize patients, current_patient_name
+        visualize patients, id_current_patient
       else
         result = {"status" => "ERROR", "results" => "Formato de respuesta no especificado"}
         render json: result
