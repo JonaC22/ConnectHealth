@@ -1,4 +1,4 @@
-class Enfermedad
+class Disease
 
   attr_accessor :nombre,:edad_diagnostico
 

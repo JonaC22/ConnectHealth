@@ -3,8 +3,7 @@ class PedigreeController < BaseController
   attr_accessor :pedigree
 
   skip_before_filter :verify_authenticity_token
-
-
+  
   # GET /api/pedigree
   def index
     #generate
@@ -47,12 +46,12 @@ class PedigreeController < BaseController
       node = Neography::Node.load(person.id, @neo)
 
       node.rels(:PADRE, :MADRE).outgoing.each { |relat|
-
+        YAML::dump relat
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
       }
       node.rels(:PADECE).outgoing.each { |rel|
-        person.diseases.append(Enfermedad.new rel.edad_diagnostico, rel.end_node.nombre)
+        person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
       }
     }
 
@@ -165,13 +164,13 @@ class PedigreeController < BaseController
     nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
     apellidos = @mysql.query('SELECT Apellido FROM pacientes where Nro_Afiliado > 10000 limit 100').map { |n| n['Apellido'] }
-    Enfermedad.generate(['Cancer de ovario'])
+    Disease.generate(['Cancer de ovario'])
     familias = Array.new
     pacientes.each { |paciente|
       result = Hash.new
       p = Person.create_from_mysql(paciente)
       if p.gender=='F' && rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
         p.add_disease(cancer_mama)
       end
       padre = p.create_father(nombres_m.sample)
@@ -179,7 +178,7 @@ class PedigreeController < BaseController
       result['paciente']=p
       result['padre']=padre
       if rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
         madre.add_disease(cancer_mama)
       end
       result['madre']=madre
@@ -188,7 +187,7 @@ class PedigreeController < BaseController
       result['abuelo_mat']=madre.create_father(nombres_m.sample)
       result['abuela_mat']=madre.create_mother(nombres_f.sample, apellidos.sample)
       if rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
         result['abuela_mat'].add_disease(cancer_mama)
       end
       familias.append(result) {}
