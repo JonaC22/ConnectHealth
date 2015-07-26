@@ -3,6 +3,7 @@ class Pedigree
 	attr_accessor :current_patient
 	@people = []
 	@relations = []
+  @annotations = []
 
 	def initialize(persons = [], relations = [])
 		@people = persons
@@ -38,6 +39,7 @@ class Pedigree
 		json['people'] = @people
 		json['relations'] = @relations
 		json['current'] = current_patient
+    json['annotations'] = @annotations
 		json
 	end
 end
