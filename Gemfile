@@ -42,6 +42,8 @@ gem 'spring',        group: :development
 
 gem 'puma'
 
+gem 'bcrypt', '~> 3.1.7' # Se encarga de la password
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

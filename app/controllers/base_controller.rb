@@ -17,7 +17,8 @@ class BaseController < ApplicationController
       uri = URI.parse(mysql_url)
     end
 
-    @mysql = Mysql2::Client.new(:host => uri.host, :database => (uri.path || "").split("/")[1], :username => uri.user, :password => uri.password)
+    # @mysql = Mysql2::Client.new(:host => uri.host, :database => (uri.path || "").split("/")[1], :username => uri.user, :password => uri.password)
+    @mysql = Mysql2::Client.new(:host => 'localhost', :database => 'heroku_7c99704f99bd301', :username => 'root', :password => 'root')
   end
 
   def close_mysql
