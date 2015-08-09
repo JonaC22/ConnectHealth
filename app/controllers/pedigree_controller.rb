@@ -24,8 +24,8 @@ class PedigreeController < BaseController
     visualize patients, id_current_patient
   end
 
-  def visualize patients, id_current_patient
-    persons = []
+  def visualize(patients, id_current_patient)
+
     relations = []
     @pedigree = Pedigree.new
 
@@ -100,6 +100,46 @@ class PedigreeController < BaseController
       end
     end
     Resultado.new('OK', 200)
+  end
+  #GET /api/pedigree/gailModelCalculate
+  def calculate_gail_model
+    # AgeIndicator: age ge 50 ind
+    # 0=[20, 50)
+    # 1=[50, 85)
+    # MenarcheAge: age menarchy
+    # 0=[14, 39] U 99 (unknown)
+    # 1=[12, 14)
+    # 2=[ 7, 12)
+    # NumberOfBiopsy: # biopsy
+    # 0=0 or (99 and ever had biopsy=99
+    # 1=1 or (99 and ever had biopsy=1 y
+    # 2=[ 2, 30]
+    # FirstLiveBirthAge: age 1st live
+    # 0=<20, 99 (unknown)
+    # 1=[20, 25)
+    # 2=[25, 30) U 0
+    # 3=[30, 55]
+    # FirstDegRelatives: 1st degree rel
+    # 0=0, 99 (unknown)
+    # 1=1
+    # 2=[2, 31]
+
+    #  RiskIndex           [1 Abs, 2 Avg]
+    #, CurrentAge		    //[t1] edad actual ( tiene que ser mayor a 35)
+    #, ProjectionAge	    //[t2]
+    #, AgeIndicator	    //[i0]
+    #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 o mas)
+    #, MenarcheAge		    //[i1] edad de primera menstruacion
+    #, FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
+    #, EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
+    #, HyperPlasia		    //[ihyp] 0 no, 1 yes, 99 unknown
+    #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
+    #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
+    #, Race			    //[race] 1-white 3-hispanic 6-unknown
+    absRisk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,0,2,0,99,99,3)
+    avgRisk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,0,2,0,99,99,3)
+    result = {'absoluteRisk' => absRisk, 'averageRisk' => avgRisk}
+    render json: result
   end
 
   #GET /api/pedigree/query

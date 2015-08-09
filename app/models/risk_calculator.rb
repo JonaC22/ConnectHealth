@@ -13,19 +13,22 @@ class RiskCalculator
   #private double[,] rmu2 = new double[14, 6];//[14,6];
   #private double[,] rlan2 = new double[14, 6]; //[14,6];[84] #[14,6]; #[14,6];[84] #[12]
   def initialize
+    @log = Logger.new(STDOUT)
+    @log.level = Logger::DEBUG
+
     @num_cov_patt_in_gail_model = 216
-    @bet2 = 0.0#Array.CreateInstance(System::Double, 8, 12)
-    @bet = 0.0#Array.CreateInstance(System::Double, 8)
-    @rf = 0.0#Array.CreateInstance(System::Double, 2)
-    @abs = 0.0#Array.CreateInstance(System::Double, 216)
-    @rlan = 0.0#Array.CreateInstance(System::Double, 14)
-    @rmu = 0.0#Array.CreateInstance(System::Double, 14)
-    @sumb = 0.0#Array.CreateInstance(System::Double, 216)
-    @sumbb = 0.0#Array.CreateInstance(System::Double, 216)
-    @tvar = new Array#Array.CreateInstance(System::Double, 15)
-    @rmu2 = 0.0#Array.CreateInstance(System::Double, 14, 12)
-    @rlan2 = 0.0#Array.CreateInstance(System::Double, 14, 12)
-    @rf2 = 0.0#Array.CreateInstance(System::Double, 2, 13)
+    @bet2 = Array.new(15) {Array.new(14)}#Array.CreateInstance(System::Double, 8, 12)
+    @bet =  Array.new#Array.CreateInstance(System::Double, 8)
+    @rf =  Array.new#Array.CreateInstance(System::Double, 2)
+    @abs =  Array.new#Array.CreateInstance(System::Double, 216)
+    @rlan =  Array.new#Array.CreateInstance(System::Double, 14)
+    @rmu =  Array.new#Array.CreateInstance(System::Double, 14)
+    @sumb =  Array.new#Array.CreateInstance(System::Double, 216)
+    @sumbb = Array.new#Array.CreateInstance(System::Double, 216)
+    @tvar = Array.new#Array.CreateInstance(System::Double, 15)
+    @rmu2 = Array.new(15) {Array.new(14)} #Array.CreateInstance(System::Double, 14, 12)
+    @rlan2 =Array.new(15) {Array.new(14)} #Array.CreateInstance(System::Double, 14, 12)
+    @rf2 = Array.new(15) {Array.new(14)}#Array.CreateInstance(System::Double, 2, 13)
     self.initialize_calc
   end
 
@@ -602,22 +605,44 @@ class RiskCalculator
   end
 
   def calculate_risk(riskindex, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
+
+    # AgeIndicator: age ge 50 ind
+    # 0=[20, 50)
+    # 1=[50, 85)
+    # MenarcheAge: age menarchy
+    # 0=[14, 39] U 99 (unknown)
+    # 1=[12, 14)
+    # 2=[ 7, 12)
+    # NumberOfBiopsy: # biopsy
+    # 0=0 or (99 and ever had biopsy=99
+    # 1=1 or (99 and ever had biopsy=1 y
+    # 2=[ 2, 30]
+    # FirstLiveBirthAge: age 1st live
+    # 0=<20, 99 (unknown)
+    # 1=[20, 25)
+    # 2=[25, 30) U 0
+    # 3=[30, 55]
+    # FirstDegRelatives: 1st degree rel
+    # 0=0, 99 (unknown)
+    # 1=1
+    # 2=[2, 31]
+
     #  RiskIndex           [1 Abs, 2 Avg]
-    #, CurrentAge		    //[t1]
+    #, CurrentAge		    //[t1] edad actual ( tiene que ser mayor a 35)
     #, ProjectionAge	    //[t2]
     #, AgeIndicator	    //[i0]
-    #, NumberOfBiopsy	    //[i2]
-    #, MenarcheAge		    //[i1]
-    #, FirstLiveBirthAge   //[i3]
-    #, EverHadBiopsy	    //[iever]
-    #, HyperPlasia		    //[ihyp]
-    #, FirstDegRelatives   //[i4]
-    #, RHyperPlasia	    //[rhyp]
-    #, Race			    //[race]
+    #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 o mas)
+    #, MenarcheAge		    //[i1] edad de primera menstruacion
+    #, FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
+    #, EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
+    #, HyperPlasia		    //[ihyp] 0 no, 1 yes, 99 unknown
+    #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
+    #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
+    #, Race			    //[race] 1-white 3-hispanic 6-unknown
     retval = 0.0
     # Local variables
     abss = 0.0
-    r8i_tox2 = [][]
+    r8i_tox2 = Array.new(216) {Array.new(9)}
     #double[] r8i_tox2 = new double[1944]; //[216,9];
     n = 216 # ** age categories boundaries
     r = 0.0
@@ -831,9 +856,9 @@ class RiskCalculator
     i = ilev # index ilev of range 1-
     # setting i to covariate p
     #HACK CHECK LOG VALUE
-    @sumbb[i - 1] += Math.Log(rhyp)
+    @sumbb[i - 1] += Math.log(rhyp)
     if i <= 108
-      @sumbb[i + 107] += Math.Log(rhyp)
+      @sumbb[i + 107] += Math.log(rhyp)
     end
     #Console.WriteLine("sumbb  0th Elmnt {0} 107th Elmnt{1}", sumbb[0], sumbb[107]);
     if ts <= @tvar[ni]
@@ -999,16 +1024,18 @@ class RiskCalculator
   end
 
   def self.print_array(o, name)# o is an array o[]
-    # Console.WriteLine("------------------Contents of {0}", name)
+    @log.debug('------------------Contents of '+ name)
     o.each{|d|
+      @log.debug(d)
       # Console.WriteLine(System::String.Format("{0}", d.ToString("F5")))
     }
   end
 
   def self.print_array2(o, name)# o is a matrix o[][]
-    # Console.WriteLine("------------------Contents of {0}", name)
+    @log.debug('------------------Contents of ' + name)
     o.each{|d|
       d.each{|e|
+        @log.debug(e)
         # Console.WriteLine(System::String.Format("{0}", e.ToString("F5")))
       }
       # Console.WriteLine()

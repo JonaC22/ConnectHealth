@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         get '/' => 'pedigree#index'
         post '/' => 'pedigree#create'
         get '/query' => 'pedigree#query'
+        get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
         get '/medicos' => 'pedigree#get_medicos_mysql'
         get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end
