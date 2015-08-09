@@ -1407,7 +1407,7 @@ class BcptConvert
   # <param name="ever_had_biopsy"></param>
   # <returns></returns>
   def self.hyperplasia(hyperplasia, ever_had_biopsy)
-    if ever_had_biopsy == 0
+    if ever_had_biopsy
       rval = 99
     else
       # case hyperplasia

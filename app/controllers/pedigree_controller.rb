@@ -130,18 +130,35 @@ class PedigreeController < BaseController
     #, AgeIndicator	    //[i0]
     #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 o mas)
     #, MenarcheAge		    //[i1] edad de primera menstruacion
-    #, FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
+    #, FirstLiveBirthAge   //[i3] 2 ()never) , 0 (<20),1(20-24), 2(25-29),3(>=30)
     #, EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
     #, HyperPlasia		    //[ihyp] 0 no, 1 yes, 99 unknown
     #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
     #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
+    RiskCalculator.new
+    current_age=params[:age].to_i
+    projection_age=current_age+5
+    menarche_age = BcptConvert.MenarcheAge(params[:menstAge].to_i)
+    first_live_birth_age=BcptConvert.FirstLiveBirthAge(params[:first_birth_age].to_i)
+    age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
+    ever_had_biopsy_bool=false
+    ever_had_biopsy=ever_had_biopsy_bool ? 1 : 0
+    number_of_biopsy = ever_had_biopsy_bool ? params[:numberBiopsy].to_i : 0
+    race = 3 #Hispanic
+    first_deg_relatives = BcptConvert.FirstDegRelatives(params[:relatives].to_i,race)
+    ihyp=BcptConvert.hyperplasia(0,ever_had_biopsy_bool)
+    rhyp=BcptConvert.r_hyperplasia(ihyp)
     # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
-    abs_risk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    abs_risk90 = RiskCalculator.new.calculate_absolute_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    avg_risk90 = RiskCalculator.new.calculate_average_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    result = {'absoluteRisk' => abs_risk, 'averageRisk' => avg_risk,'absoluteRisk90' => abs_risk90, 'averageRisk90' => avg_risk90}
+    abs_risk = RiskCalculator.new.calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    avg_risk = RiskCalculator.new.calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    abs_risk90 = RiskCalculator.new.calculate_absolute_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    avg_risk90 = RiskCalculator.new.calculate_average_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    # abs_risk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    # avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    # abs_risk90 = RiskCalculator.new.calculate_absolute_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    # avg_risk90 = RiskCalculator.new.calculate_average_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    result = {'absoluteRiskIn5Years' => abs_risk, 'averageRiskIn5Years' => avg_risk,'absoluteRiskAt90yo' => abs_risk90, 'averageRiskAt90yo' => avg_risk90}
     render json: result
   end
 
