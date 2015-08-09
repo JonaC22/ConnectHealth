@@ -631,7 +631,7 @@ class RiskCalculator
     #, CurrentAge		    //[t1] edad actual ( tiene que ser mayor a 35)
     #, ProjectionAge	    //[t2]
     #, AgeIndicator	    //[i0]
-    #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 o mas)
+    #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 had_biopsy mas)
     #, MenarcheAge		    //[i1] edad de primera menstruacion
     #, FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
     #, EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
@@ -746,7 +746,7 @@ class RiskCalculator
     # index in r8i
     k = 0
     while k < 216
-      # col1: intercept o
+      # col1: intercept had_biopsy
       r8i_tox2[k][0] = 1.0
       k += 1
     end
@@ -1023,7 +1023,7 @@ class RiskCalculator
     return retval
   end
 
-  def self.print_array(o, name)# o is an array o[]
+  def self.print_array(o, name)# had_biopsy is an array had_biopsy[]
     @log.debug('------------------Contents of '+ name)
     o.each{|d|
       @log.debug(d)
@@ -1031,7 +1031,7 @@ class RiskCalculator
     }
   end
 
-  def self.print_array2(o, name)# o is a matrix o[][]
+  def self.print_array2(o, name)# had_biopsy is a matrix had_biopsy[][]
     @log.debug('------------------Contents of ' + name)
     o.each{|d|
       d.each{|e|
@@ -1040,5 +1040,398 @@ class RiskCalculator
       }
       # Console.WriteLine()
     }
+  end
+end
+
+class BcptRace
+  def initialize()
+    @White = 1
+    @Black = 2
+    @Hispanic = 3
+    @AAChinese = 7
+    @AAJapanese = 8
+    @AAFilipino = 9
+    @AAHawaiian = 10
+    @AAOtherPacificIslander = 11
+    @AAOtherAsianAmerican = 12
+  end
+end
+# <summary>
+# Has static methods for converting/recoding values passed from ui or test harness
+# </summary>
+class BcptConvert
+  def initialize()
+    @_UNKNOWN = "UNKNOWN"
+    @_UDERSCORE = "__"
+    @_EMPTY = ""
+    @_YES = "YES"
+    @_NO = "NO"
+    @_NA = "NA"
+    @_0BIRTHS = "0 BIRTHS"
+  end
+  #appears in menarche
+  # <summary>
+  # Returns current age
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetCurrentAge(o)
+    case o.ToString().ToUpper()
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 90
+      when "< 35", "<35"
+        rval = 34
+      else
+        rval = Convert.ToInt32(o)
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Projection Age
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetProjectionAge(o)
+    case o
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 90
+      else
+        rval = Convert.ToInt32(o)
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Menarche Age
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetMenarcheAge(o)
+    case o
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA, @_0BIRTHS
+        rval = 99
+      when "7 TO 11"
+        rval = 10
+      when "12 TO 13"
+        rval = 13
+      when "> 13"
+        rval = 15
+      else
+        rval = o
+    end
+    #HACK CHECK AND UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
+    #if (rval < 7 || rval > 39 && rval != 99)
+    #{
+    #    string ERR_MENARCHE_1 = "!!! ERROR CONDITION !!! Menarche age coded as:   {0}. Valid menarche ages are 7 thru 39.";
+    #    throw new Exception(string.Format(ERR_MENARCHE_1, rval));
+    #}
+    return rval
+  end
+
+  # <summary>
+  # Returns First Live BirthAge
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetFirstLiveBirthAge(o)
+    case o.Trim().ToUpper()
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 99
+      when "NO BIRTHS"
+        rval = 0
+      when "< 20"
+        rval = 15
+      when "20 TO 24"
+        rval = 22
+      when "25 TO 30"
+        rval = 27
+      when "> 30"
+        rval = 31
+      else
+        rval = Convert.ToInt32(o)
+    end
+    #HACK UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
+    #if (rval <= 10)
+    #{
+    #    string ERR_FLB_1 = "!!! ERROR CONDITION !!! Age of 1st live birth coded as: {0} Outside of valid range of 10 to 55.";
+    #    throw new Exception(string.Format(ERR_FLB_1, rval));
+    #}
+    return rval
+  end
+
+  # <summary>
+  # Returns Number First Degree Relatives
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetFirstDegRelatives(o)
+    case o.Trim().ToUpper()
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 99
+      when "0"
+        rval = 0
+      when "1"
+        rval = 1
+      when "> 1"
+        rval = 2
+      else
+        rval = Convert.ToInt32(o)
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns whether the person Ever Had Biopsy
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetEverHadBiopsy(had_biopsy)
+    rval = 99
+    case had_biopsy
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 99
+      when @_NO, "0"
+        rval = 0
+      when @_YES, "1"
+        rval = 1
+    end
+    #default:
+    #    rval = Convert.ToInt32(had_biopsy);
+    #    break;
+    return rval
+  end
+
+  # <summary>
+  # Returns Number of Biopsy
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetNumberOfBiopsy(o)
+    case o
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 99
+      when "1"
+        rval = 1
+      when "> 1"
+        rval = 2
+      else
+        rval = o
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns whether the person had Hyper Plasia or not
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetHyperPlasia(o)
+    case o
+      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+        rval = 99
+      when @_NO
+        rval = 0
+      when @_YES
+        rval = 1
+      else
+        rval = o
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns race/ethnicity
+  # </summary>
+  # <param name="had_biopsy"></param>
+  # <returns></returns>
+  def self.GetRace(o)
+    case o
+      when "WHITE", @_UNKNOWN, "1", "4" #! recode other race to white 5/12/00
+        rval = BcptRace.White
+      when "BLACK", "2"
+        rval = BcptRace.Black
+      when "HISPANIC", "3"
+        rval = BcptRace.Hispanic
+      when "7"
+        rval = BcptRace.AAChinese
+      when "8"
+        rval = BcptRace.AAJapanese
+      when "9"
+        rval = BcptRace.AAFilipino
+      when "10"
+        rval = BcptRace.AAHawaiian
+      when "11"
+        rval = BcptRace.AAOtherPacificIslander
+      when "12"
+        rval = BcptRace.AAOtherAsianAmerican
+      else
+        rval = BcptRace.White
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Current Age Indicator/Index
+  # </summary>
+  # <param name="currentAge"></param>
+  # <returns></returns>
+  def self.CurrentAgeIndicator(currentAge)
+    rval = 0
+    if currentAge < 50 then
+      rval = 0
+    elsif currentAge >= 50 then
+      rval = 1
+    end
+    return rval
+  end
+
+  # <summary>
+  # gets the menarche age
+  # </summary>
+  # <param name="menarcheAge"></param>
+  # <returns></returns>
+  def self.MenarcheAge(menarcheAge)
+    rval = 0
+    if menarcheAge >= 7 and menarcheAge < 12 then
+      rval = 2
+    elsif menarcheAge >= 12 and menarcheAge < 14 then
+      rval = 1
+    elsif menarcheAge >= 14 and menarcheAge <= 39 or menarcheAge == 99 then
+      rval = 0
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns First Live Birth Age
+  # </summary>
+  # <param name="firstLiveBirthAge"></param>
+  # <returns></returns>
+  def self.FirstLiveBirthAge(firstLiveBirthAge)
+    rval = 0
+    if firstLiveBirthAge == 0 then
+      # no live birth
+      rval = 2
+    elsif firstLiveBirthAge > 0 then
+      if firstLiveBirthAge < 20 or firstLiveBirthAge == 99 then # includes unknown
+        rval = 0
+      elsif firstLiveBirthAge >= 20 and firstLiveBirthAge < 25 then
+        rval = 1
+      elsif firstLiveBirthAge >= 25 and firstLiveBirthAge < 30 then
+        rval = 2
+      elsif firstLiveBirthAge >= 30 and firstLiveBirthAge <= 55 then
+        rval = 3
+      end
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Number of first degree relatives
+  # </summary>
+  # <param name="firstDegRelatives"></param>
+  # <returns></returns>
+  def self.FirstDegRelatives(firstDegRelatives)
+    rval = 0
+    if firstDegRelatives == 0 or firstDegRelatives == 99 then
+      rval = 0
+    elsif firstDegRelatives == 1 then
+      rval = 1
+    elsif firstDegRelatives >= 2 and firstDegRelatives <= 31 then
+      rval = 2
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Number of first degree relatives based on race
+  # </summary>
+  # <param name="firstDegRelatives"></param>
+  # <returns></returns>
+  def self.FirstDegRelatives(firstDegRelatives, race)
+    rval = 0
+    if firstDegRelatives == 0 or firstDegRelatives == 99 then
+      rval = 0
+    elsif firstDegRelatives == 1 then
+      rval = 1
+    elsif firstDegRelatives >= 2 and firstDegRelatives <= 31 and race < 7 then
+      rval = 2
+    elsif firstDegRelatives >= 2 and race >= 7 then
+      rval = 1
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns whether a woman ever had biopsy or not
+  # </summary>
+  # <param name="ever_had_biopsy"></param>
+  # <returns></returns>
+  def self.EverHadBiopsy(everHadBiopsy)
+    rval = 0
+    case everHadBiopsy
+      when 99
+        #case 0:
+        rval = 0
+      else
+        rval = everHadBiopsy
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Number Of Biopsies
+  # </summary>
+  # <param name="number_of_prev_biopsy"></param>
+  # <param name="ever_had_biopsy"></param>
+  # <returns></returns>
+  def self.number_of_biopsy(number_of_prev_biopsy, ever_had_biopsy)
+    rval = 0
+    if ever_had_biopsy == 99 then
+      rval = 99
+    elsif number_of_prev_biopsy == 0 or (number_of_prev_biopsy == 99 and ever_had_biopsy == 99) then
+      rval = 0
+    elsif number_of_prev_biopsy == 1 or (number_of_prev_biopsy == 99 and ever_had_biopsy == 1) then
+      rval = 1
+    elsif number_of_prev_biopsy > 1 and number_of_prev_biopsy <= 30 then
+      rval = 2
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns Hyperlasia value
+  # </summary>
+  # <param name="hyperplasia"></param>
+  # <param name="ever_had_biopsy"></param>
+  # <returns></returns>
+  def self.hyperplasia(hyperplasia, ever_had_biopsy)
+    if ever_had_biopsy == 0
+      rval = 99
+    else
+      # case hyperplasia
+      #   else
+          rval = hyperplasia
+      # end
+    end
+    return rval
+  end
+
+  # <summary>
+  # Returns RHyperplasia value
+  # </summary>
+  # <param name="hyperplasia"></param>
+  # <returns></returns>
+  def self.r_hyperplasia(hyperplasia)
+    case hyperplasia
+      when 1 # hyperplasia=yes
+        rval = 1.82
+      when 0 # hyperplasia=no
+        rval = 0.93
+      else # hyperplasia=never had biopsy
+        rval = 1.0
+    end
+    return rval
   end
 end

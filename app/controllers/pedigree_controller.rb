@@ -136,9 +136,12 @@ class PedigreeController < BaseController
     #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
     #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
-    absRisk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,0,2,0,99,99,3)
-    avgRisk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,0,2,0,99,99,3)
-    result = {'absoluteRisk' => absRisk, 'averageRisk' => avgRisk}
+    # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
+    abs_risk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    abs_risk90 = RiskCalculator.new.calculate_absolute_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    avg_risk90 = RiskCalculator.new.calculate_average_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
+    result = {'absoluteRisk' => abs_risk, 'averageRisk' => avg_risk,'absoluteRisk90' => abs_risk90, 'averageRisk90' => avg_risk90}
     render json: result
   end
 
