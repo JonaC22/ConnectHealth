@@ -3,6 +3,7 @@
 #require "System.Text, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 #require "System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
+=begin
 #module NCI.DCEG.BCRA.Engine
 class RiskCalculator
   ## of covariate patterns in GAIL model
@@ -1023,3 +1024,4 @@ class RiskCalculator
   end
 end
 end
+=end
