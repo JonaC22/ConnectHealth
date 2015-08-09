@@ -21,7 +21,7 @@ Rails.application.routes.draw do
       post '/query' => 'statistics#get_results'
       get '/reports' => 'statistics#get_reports'
     end
-    get '/createGraphDB' => 'pedigree#generate'
+    get '/createGraphDB' => 'generate_graph_db#generate'
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
   end

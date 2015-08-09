@@ -3,6 +3,11 @@ class Person < Positionable
   attr_accessor :name, :surname, :birth_date, :gender, :medical_history,:diseases
   @diseases = []
 
+  def to_json(options={})
+    options[:except] ||= [:children]
+    super(options)
+  end
+
   def initialize(id, name, surname, birth_date, gender, medical_history =nil, diseases = [])
     @id = id
     @name = name

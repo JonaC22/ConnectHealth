@@ -3,7 +3,7 @@
 #require "System.Text, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 #require "System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
-=begin
+
 #module NCI.DCEG.BCRA.Engine
 class RiskCalculator
   ## of covariate patterns in GAIL model
@@ -12,40 +12,40 @@ class RiskCalculator
   #private double[,] bet2 = new double[8, 3];
   #private double[,] rmu2 = new double[14, 6];//[14,6];
   #private double[,] rlan2 = new double[14, 6]; //[14,6];[84] #[14,6]; #[14,6];[84] #[12]
-  def initialize()
-    @NumCovPattInGailModel = 216
-    @bet2 = Array.CreateInstance(System::Double, 8, 12)
-    @bet = Array.CreateInstance(System::Double, 8)
-    @rf = Array.CreateInstance(System::Double, 2)
-    @abs = Array.CreateInstance(System::Double, 216)
-    @rlan = Array.CreateInstance(System::Double, 14)
-    @rmu = Array.CreateInstance(System::Double, 14)
-    @sumb = Array.CreateInstance(System::Double, 216)
-    @sumbb = Array.CreateInstance(System::Double, 216)
-    @t = Array.CreateInstance(System::Double, 15)
-    @rmu2 = Array.CreateInstance(System::Double, 14, 12)
-    @rlan2 = Array.CreateInstance(System::Double, 14, 12)
-    @rf2 = Array.CreateInstance(System::Double, 2, 13)
-    self.Initialize()
+  def initialize
+    @num_cov_patt_in_gail_model = 216
+    @bet2 = 0.0#Array.CreateInstance(System::Double, 8, 12)
+    @bet = 0.0#Array.CreateInstance(System::Double, 8)
+    @rf = 0.0#Array.CreateInstance(System::Double, 2)
+    @abs = 0.0#Array.CreateInstance(System::Double, 216)
+    @rlan = 0.0#Array.CreateInstance(System::Double, 14)
+    @rmu = 0.0#Array.CreateInstance(System::Double, 14)
+    @sumb = 0.0#Array.CreateInstance(System::Double, 216)
+    @sumbb = 0.0#Array.CreateInstance(System::Double, 216)
+    @tvar = new Array#Array.CreateInstance(System::Double, 15)
+    @rmu2 = 0.0#Array.CreateInstance(System::Double, 14, 12)
+    @rlan2 = 0.0#Array.CreateInstance(System::Double, 14, 12)
+    @rf2 = 0.0#Array.CreateInstance(System::Double, 2, 13)
+    self.initialize_calc
   end
 
-  def Initialize()
+  def initialize_calc
     # age categories boundaries
-    @t[0] = 20.0
-    @t[1] = 25.0
-    @t[2] = 30.0
-    @t[3] = 35.0
-    @t[4] = 40.0
-    @t[5] = 45.0
-    @t[6] = 50.0
-    @t[7] = 55.0
-    @t[8] = 60.0
-    @t[9] = 65.0
-    @t[10] = 70.0
-    @t[11] = 75.0
-    @t[12] = 80.0
-    @t[13] = 85.0
-    @t[14] = 90.0
+    @tvar[0] = 20.0
+    @tvar[1] = 25.0
+    @tvar[2] = 30.0
+    @tvar[3] = 35.0
+    @tvar[4] = 40.0
+    @tvar[5] = 45.0
+    @tvar[6] = 50.0
+    @tvar[7] = 55.0
+    @tvar[8] = 60.0
+    @tvar[9] = 65.0
+    @tvar[10] = 70.0
+    @tvar[11] = 75.0
+    @tvar[12] = 80.0
+    @tvar[13] = 85.0
+    @tvar[14] = 90.0
     #
     # age specific competing hazards (h2) - BCPT model or STAR model
     # SEER mortality 1985:87, excluding death from breast cancer - white, African American)
@@ -364,7 +364,6 @@ class RiskCalculator
     @bet2[7][2] = -0.1908113865 # age 1st live birth * # 1st degree rel
     #American-Asian Beta
     i = 6
-    i = 6
     while i <= 11
       @bet2[0][i] = 0.00000000000000 #  intercept
       @bet2[1][i] = 0.00000000000000 #  age >= 50 indicator
@@ -404,7 +403,6 @@ class RiskCalculator
     @rf2[0][5] = 1.0 # age < 50, race=hispanic avg woman    5/12
     @rf2[1][5] = 1.0 # age >=50, race=hispanic avg woman
     #American-Asian conversion factor
-    i = 6
     i = 6
     while i <= 11
       @rf2[0][i] = 0.47519806426735 # age < 50, avg woman
@@ -595,15 +593,15 @@ class RiskCalculator
     @rmu2[13][11] = 0.087485802065
   end
 
-  def CalculateAbsoluteRisk(CurrentAge, ProjectionAge, AgeIndicator, NumberOfBiopsy, MenarcheAge, FirstLiveBirthAge, FirstDegRelatives, EverHadBiopsy, ihyp, rhyp, irace)
-    return self.CalculateRisk(1, CurrentAge, ProjectionAge, AgeIndicator, NumberOfBiopsy, MenarcheAge, FirstLiveBirthAge, EverHadBiopsy, FirstDegRelatives, ihyp, rhyp, irace)
+  def calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
+    return self.calculate_risk(1, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
   end
 
-  def CalculateAeverageRisk(CurrentAge, ProjectionAge, AgeIndicator, NumberOfBiopsy, MenarcheAge, FirstLiveBirthAge, FirstDegRelatives, EverHadBiopsy, ihyp, rhyp, irace)
-    return self.CalculateRisk(2, CurrentAge, ProjectionAge, AgeIndicator, NumberOfBiopsy, MenarcheAge, FirstLiveBirthAge, EverHadBiopsy, FirstDegRelatives, ihyp, rhyp, irace)
+  def calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
+    return self.calculate_risk(2, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
   end
 
-  def CalculateRisk(riskindex, CurrentAge, ProjectionAge, AgeIndicator, NumberOfBiopsy, MenarcheAge, FirstLiveBirthAge, EverHadBiopsy, FirstDegRelatives, ihyp, rhyp, irace)
+  def calculate_risk(riskindex, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
     #  RiskIndex           [1 Abs, 2 Avg]
     #, CurrentAge		    //[t1]
     #, ProjectionAge	    //[t2]
@@ -619,15 +617,15 @@ class RiskCalculator
     retval = 0.0
     # Local variables
     abss = 0.0
-    r8iTox2 = Array.CreateInstance(System::Double, 216, 9)
-    #double[] r8iTox2 = new double[1944]; //[216,9];
+    r8i_tox2 = [][]
+    #double[] r8i_tox2 = new double[1944]; //[216,9];
     n = 216 # ** age categories boundaries
     r = 0.0
     #HACK
     ni = 0
     ns = 0
-    ti = (CurrentAge)
-    ts = (ProjectionAge)
+    ti = (current_age)
+    ts = (projection_age)
     # 11/29/2007 SR: setting BETA to race specific lnRR
     i = 0
     while i < 8
@@ -635,17 +633,17 @@ class RiskCalculator
       i += 1
     end #index starts from 0 hence irace-1
     # 11/29/2007 SR: recode agemen for African American women
-    if irace == 2 then # for African American women
-      if MenarcheAge == 2 then
-        MenarcheAge = 1 # recode agemen=2 (age<12) to agmen=1 [12,13]
-        FirstLiveBirthAge = 0
+    if irace == 2  # for African American women
+      if menarche_age == 2
+        menarche_age = 1 # recode agemen=2 (age<12) to agmen=1 [12,13]
+        first_live_birth_age = 0
       end
     end # set age 1st live birth to 0
     #Console.WriteLine(string.Format("CurrentAge:{0} ProjectionAge:{1}", CurrentAge, ProjectionAge));
     i = 1
     while i <= 15
       # i-1=14 ==> current age=85, max for curre
-      if ti < @t[i - 1] then
+      if ti < @tvar[i - 1]
         #TODO CHECK THE INDEX
         ni = i - 1 # ni holds the index for current
         break
@@ -654,7 +652,7 @@ class RiskCalculator
     end #goto L70;
     i = 1
     while i <= 15
-      if ts <= @t[i - 1] then
+      if ts <= @tvar[i - 1]
         #!!!TODO CHECK THE INDEX
         ns = i - 1 # ns holds the index for risk as
         break
@@ -662,7 +660,7 @@ class RiskCalculator
       i += 1
     end #goto L80;
     incr = 0
-    if riskindex == 2 and irace < 7 then
+    if riskindex == 2 and irace < 7
       #HACK CHECK THIS
       incr = 3
     end
@@ -687,19 +685,19 @@ class RiskCalculator
     #PrintArray(rmu, "rmu");
     @rf[0] = @rf2[0][incr + irace - 1] # selecting correct fac
     @rf[1] = @rf2[1][incr + irace - 1] # based on race
-    if riskindex == 2 and irace >= 7 then
+    if riskindex == 2 and irace >= 7
       @rf[0] = @rf2[0][12] # selecting correct fac
       @rf[1] = @rf2[1][12]
     end # based on race
-    if riskindex >= 2 then #&& irace < 7)
+    if riskindex >= 2  #&& irace < 7)
       # set risk factors to
-      MenarcheAge = 0 # baseline age menarchy
-      NumberOfBiopsy = 0 # # of previous biop
-      FirstLiveBirthAge = 0 # age 1st live birth
-      FirstDegRelatives = 0 # # 1st degree relat
+      menarche_age = 0 # baseline age menarchy
+      number_of_biopsy = 0 # # of previous biop
+      first_live_birth_age = 0 # age 1st live birth
+      first_deg_relatives = 0 # # 1st degree relat
       rhyp = 1.0
     end # set hyperplasia to 1.0
-    ilev = AgeIndicator * 108 + MenarcheAge * 36 + NumberOfBiopsy * 12 + FirstLiveBirthAge * 3 + FirstDegRelatives + 1 # matrix of
+    ilev = age_indicator * 108 + menarche_age * 36 + number_of_biopsy * 12 + first_live_birth_age * 3 + first_deg_relatives + 1 # matrix of
     # covariate
     # range of 1
     # AgeIndicator: age ge 50 ind  0=[20, 50)
@@ -724,14 +722,14 @@ class RiskCalculator
     k = 0
     while k < 216
       # col1: intercept o
-      r8iTox2[k][0] = 1.0
+      r8i_tox2[k][0] = 1.0
       k += 1
     end
     k = 0
     while k < 108
       # col2: indicator for age
-      r8iTox2[k][1] = 0.0
-      r8iTox2[108 + k][1] = 1.0
+      r8i_tox2[k][1] = 0.0
+      r8i_tox2[108 + k][1] = 1.0
       k += 1
     end
     j = 1
@@ -739,9 +737,9 @@ class RiskCalculator
       # col3: age menarchy cate
       k = 1
       while k <= 36
-        r8iTox2[(j - 1) * 108 + k - 1][2] = 0.0
-        r8iTox2[(j - 1) * 108 + 36 + k - 1][2] = 1.0
-        r8iTox2[(j - 1) * 108 + 72 + k - 1][2] = 2.0
+        r8i_tox2[(j - 1) * 108 + k - 1][2] = 0.0
+        r8i_tox2[(j - 1) * 108 + 36 + k - 1][2] = 1.0
+        r8i_tox2[(j - 1) * 108 + 72 + k - 1][2] = 2.0
         k += 1
       end
       j += 1
@@ -751,9 +749,9 @@ class RiskCalculator
       # col4: # biopsy cate
       k = 1
       while k <= 12
-        r8iTox2[(j - 1) * 36 + k - 1][3] = 0.0
-        r8iTox2[(j - 1) * 36 + 12 + k - 1][3] = 1.0
-        r8iTox2[(j - 1) * 36 + 24 + k - 1][3] = 2.0
+        r8i_tox2[(j - 1) * 36 + k - 1][3] = 0.0
+        r8i_tox2[(j - 1) * 36 + 12 + k - 1][3] = 1.0
+        r8i_tox2[(j - 1) * 36 + 24 + k - 1][3] = 2.0
         k += 1
       end
       j += 1
@@ -763,10 +761,10 @@ class RiskCalculator
       # col5: age 1st live birt
       k = 1
       while k <= 3
-        r8iTox2[(j - 1) * 12 + k - 1][4] = 0.0
-        r8iTox2[(j - 1) * 12 + 3 + k - 1][4] = 1.0
-        r8iTox2[(j - 1) * 12 + 6 + k - 1][4] = 2.0
-        r8iTox2[(j - 1) * 12 + 9 + k - 1][4] = 3.0
+        r8i_tox2[(j - 1) * 12 + k - 1][4] = 0.0
+        r8i_tox2[(j - 1) * 12 + 3 + k - 1][4] = 1.0
+        r8i_tox2[(j - 1) * 12 + 6 + k - 1][4] = 2.0
+        r8i_tox2[(j - 1) * 12 + 9 + k - 1][4] = 3.0
         k += 1
       end
       j += 1
@@ -774,23 +772,23 @@ class RiskCalculator
     j = 1
     while j <= 72
       # col6: # 1st degree re
-      r8iTox2[(j - 1) * 3 + 1 - 1][5] = 0.0
-      r8iTox2[(j - 1) * 3 + 2 - 1][5] = 1.0
-      r8iTox2[(j - 1) * 3 + 3 - 1][5] = 2.0
+      r8i_tox2[(j - 1) * 3 + 1 - 1][5] = 0.0
+      r8i_tox2[(j - 1) * 3 + 2 - 1][5] = 1.0
+      r8i_tox2[(j - 1) * 3 + 3 - 1][5] = 2.0
       j += 1
     end
     i = 0
     while i < 216
       # col8: age 1st live*# r
       # col7: age*#biop intera
-      r8iTox2[i][6] = r8iTox2[i][1] * r8iTox2[i][3]
-      r8iTox2[i][7] = r8iTox2[i][4] * r8iTox2[i][5]
+      r8i_tox2[i][6] = r8i_tox2[i][1] * r8i_tox2[i][3]
+      r8i_tox2[i][7] = r8i_tox2[i][4] * r8i_tox2[i][5]
       i += 1
     end
     i = 0
     while i < 216
-      #HACK r8iTox2[i + 1727] = 1.0;
-      r8iTox2[i][8] = 1.0
+      #HACK r8i_tox2[i + 1727] = 1.0;
+      r8i_tox2[i][8] = 1.0
       i += 1
     end
     # **  Computation of breast cancer risk
@@ -801,7 +799,7 @@ class RiskCalculator
       @sumb[i] = 0.0
       j = 0
       while j < 8
-        @sumb[i] += @bet[j] * r8iTox2[i][j]
+        @sumb[i] += @bet[j] * r8i_tox2[i][j]
         j += 1
       end
       i += 1
@@ -834,25 +832,25 @@ class RiskCalculator
     # setting i to covariate p
     #HACK CHECK LOG VALUE
     @sumbb[i - 1] += Math.Log(rhyp)
-    if i <= 108 then
+    if i <= 108
       @sumbb[i + 107] += Math.Log(rhyp)
     end
     #Console.WriteLine("sumbb  0th Elmnt {0} 107th Elmnt{1}", sumbb[0], sumbb[107]);
-    if ts <= @t[ni] then
+    if ts <= @tvar[ni]
       # same 5 year age risk in
       # age & projection age wi
-      @abs[i - 1] = 1.0 - Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (ts - ti))
-      @abs[i - 1] = @abs[i - 1] * @rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) / (@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1])
+      @abs[i - 1] = 1.0 - Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (ts - ti))
+      @abs[i - 1] = @abs[i - 1] * @rlan[ni - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1])
     else # breast cance
       # 5 year age risk interval
       # calculate risk from
       # 1st age interval
       # age & projection age not i
-      @abs[i - 1] = 1.0 - Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@t[ni] - ti))
-      @abs[i - 1] = @abs[i - 1] * @rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) / (@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) # age in
+      @abs[i - 1] = 1.0 - Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
+      @abs[i - 1] = @abs[i - 1] * @rlan[ni - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) # age in
       # risk f
-      if ns - ni > 0 then
-        if (ProjectionAge) > 50.0 and (CurrentAge) < 50.0 then
+      if ns - ni > 0
+        if (projection_age) > 50.0 and (current_age) < 50.0
           # a
           # s
           # a
@@ -862,23 +860,23 @@ class RiskCalculator
           # Console.WriteLine("value of r={0} ns={1} i={2}", r.ToString("F5"), ns.ToString("F5"), i.ToString("F5"));
           # Console.WriteLine("rlan[ns - 1] \t sumbb[i + 107] \t rmu[ns - 1] \t ts \t t[ns - 1] \t math");
           # Console.Write("{0} \t {1} \t {2} \t {3} \t {4}", rlan[ns - 1].ToString("F5"), sumbb[i + 107].ToString("F5"), rmu[ns - 1].ToString("F5"), ts.ToString("F5"), t[ns - 1].ToString("F5"));
-          # Console.Write(" \t {0}", Math.Exp(sumbb[i + 107]).ToString("F5"));
+          # Console.Write(" \t {0}", Math.exp(sumbb[i + 107]).ToString("F5"));
           # Console.WriteLine();
           #
-          r = 1.0 - Math.Exp(-(@rlan[ns - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[ns - 1]) * (ts - @t[ns - 1]))
+          r = 1.0 - Math.exp(-(@rlan[ns - 1] * Math.exp(@sumbb[i + 107]) + @rmu[ns - 1]) * (ts - @tvar[ns - 1]))
           #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
-          r = r * @rlan[ns - 1] * Math.Exp(@sumbb[i + 107]) / (@rlan[ns - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[ns - 1])
+          r = r * @rlan[ns - 1] * Math.exp(@sumbb[i + 107]) / (@rlan[ns - 1] * Math.exp(@sumbb[i + 107]) + @rmu[ns - 1])
           #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
-          r *= Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@t[ni] - ti))
+          r *= Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
           #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
-          if ns - ni > 1 then
-            MenarcheAge = ns - 1
+          if ns - ni > 1
+            menarche_age = ns - 1
             j = ni + 1
-            while j <= MenarcheAge
-              if @t[j - 1] >= 50.0 then
-                r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+            while j <= menarche_age
+              if @tvar[j - 1] >= 50.0
+                r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i + 107]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               else
-                r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+                r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               end
               j += 1
             end
@@ -888,42 +886,42 @@ class RiskCalculator
           # calculate risk from
           # last age interval
           # ages do not stradle
-          r = 1.0 - Math.Exp(-(@rlan[ns - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ns - 1]) * (ts - @t[ns - 1]))
-          r = r * @rlan[ns - 1] * Math.Exp(@sumbb[i - 1]) / (@rlan[ns - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ns - 1])
-          r *= Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@t[ni] - ti))
-          if ns - ni > 1 then
-            MenarcheAge = ns - 1
+          r = 1.0 - Math.exp(-(@rlan[ns - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ns - 1]) * (ts - @tvar[ns - 1]))
+          r = r * @rlan[ns - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[ns - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ns - 1])
+          r *= Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
+          if ns - ni > 1
+            menarche_age = ns - 1
             j = ni + 1
-            while j <= MenarcheAge
-              r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+            while j <= menarche_age
+              r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               j += 1
             end
           end
           @abs[i - 1] += r
         end
       end
-      if ns - ni > 1 then
-        if (ProjectionAge) > 50.0 and (CurrentAge) < 50.0 then
+      if ns - ni > 1
+        if (projection_age) > 50.0 and (current_age) < 50.0
           # calculate risk from
           # intervening age int
-          MenarcheAge = ns - 1
+          menarche_age = ns - 1
           k = ni + 1
-          while k <= MenarcheAge
-            if @t[k - 1] >= 50.0 then
-              r = 1.0 - Math.Exp(-(@rlan[k - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[k - 1]) * (@t[k] - @t[k - 1]))
-              r = r * @rlan[k - 1] * Math.Exp(@sumbb[i + 107]) / (@rlan[k - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[k - 1])
+          while k <= menarche_age
+            if @tvar[k - 1] >= 50.0
+              r = 1.0 - Math.exp(-(@rlan[k - 1] * Math.exp(@sumbb[i + 107]) + @rmu[k - 1]) * (@tvar[k] - @tvar[k - 1]))
+              r = r * @rlan[k - 1] * Math.exp(@sumbb[i + 107]) / (@rlan[k - 1] * Math.exp(@sumbb[i + 107]) + @rmu[k - 1])
             else
-              r = 1.0 - Math.Exp(-(@rlan[k - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[k - 1]) * (@t[k] - @t[k - 1]))
-              r = r * @rlan[k - 1] * Math.Exp(@sumbb[i - 1]) / (@rlan[k - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[k - 1])
+              r = 1.0 - Math.exp(-(@rlan[k - 1] * Math.exp(@sumbb[i - 1]) + @rmu[k - 1]) * (@tvar[k] - @tvar[k - 1]))
+              r = r * @rlan[k - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[k - 1] * Math.exp(@sumbb[i - 1]) + @rmu[k - 1])
             end
-            r *= Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@t[ni] - ti))
-            NumberOfBiopsy = k - 1
+            r *= Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
+            number_of_biopsy = k - 1
             j = ni + 1
-            while j <= NumberOfBiopsy
-              if @t[j - 1] >= 50.0 then
-                r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i + 107]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+            while j <= number_of_biopsy
+              if @tvar[j - 1] >= 50.0
+                r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i + 107]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               else
-                r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+                r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               end
               j += 1
             end
@@ -933,16 +931,16 @@ class RiskCalculator
         else
           # calculate risk from
           # intervening age int
-          MenarcheAge = ns - 1
+          menarche_age = ns - 1
           k = ni + 1
-          while k <= MenarcheAge
-            r = 1.0 - Math.Exp(-(@rlan[k - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[k - 1]) * (@t[k] - @t[k - 1]))
-            r = r * @rlan[k - 1] * Math.Exp(@sumbb[i - 1]) / (@rlan[k - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[k - 1])
-            r *= Math.Exp(-(@rlan[ni - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@t[ni] - ti))
-            NumberOfBiopsy = k - 1
+          while k <= menarche_age
+            r = 1.0 - Math.exp(-(@rlan[k - 1] * Math.exp(@sumbb[i - 1]) + @rmu[k - 1]) * (@tvar[k] - @tvar[k - 1]))
+            r = r * @rlan[k - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[k - 1] * Math.exp(@sumbb[i - 1]) + @rmu[k - 1])
+            r *= Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
+            number_of_biopsy = k - 1
             j = ni + 1
-            while j <= NumberOfBiopsy
-              r *= Math.Exp(-(@rlan[j - 1] * Math.Exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@t[j] - @t[j - 1]))
+            while j <= number_of_biopsy
+              r *= Math.exp(-(@rlan[j - 1] * Math.exp(@sumbb[i - 1]) + @rmu[j - 1]) * (@tvar[j] - @tvar[j - 1]))
               j += 1
             end
             @abs[i - 1] += r
@@ -955,7 +953,7 @@ class RiskCalculator
     #Console.WriteLine("abss=", abss);
     abss = @abs[i - 1] * 1000.0
     #HACK CHECK THIS
-    if abss - (abss) >= .5f then
+    if abss - (abss) >= 0.5
     #abss = d_int(abss) + 1.0 ;
     abss = (abss) + 1.0
     else
@@ -993,35 +991,27 @@ class RiskCalculator
     # PrintArray2(rmu2, "rmu2");
     # PrintArray2(rlan2, "rlan2");
     # PrintArray2(rf2, "rf2");
-    # PrintArray2(r8iTox2, "r8iTox2");
+    # PrintArray2(r8i_tox2, "r8i_tox2");
     #
     #return
     retval = @abs[i - 1]
     return retval
   end
 
-  def RiskCalculator.PrintArray(o, Name)
-    Console.WriteLine("------------------Contents of {0}", Name)
-    enumerator = o.GetEnumerator()
-    while enumerator.MoveNext()
-      d = enumerator.Current
-      Console.WriteLine(System::String.Format("{0}", d.ToString("F5")))
-    end
+  def self.print_array(o, name)# o is an array o[]
+    # Console.WriteLine("------------------Contents of {0}", name)
+    o.each{|d|
+      # Console.WriteLine(System::String.Format("{0}", d.ToString("F5")))
+    }
   end
 
-  def RiskCalculator.PrintArray2(o, Name)
-    Console.WriteLine("------------------Contents of {0}", Name)
-    i = 0
-    while i <= o.GetUpperBound(0)
-      j = 0
-      while j <= o.GetUpperBound(1)
-        Console.Write(System::String.Format("{0} ", o[i][j].ToString("F2")))
-        j += 1
-      end
-      Console.WriteLine()
-      i += 1
-    end
+  def self.print_array2(o, name)# o is a matrix o[][]
+    # Console.WriteLine("------------------Contents of {0}", name)
+    o.each{|d|
+      d.each{|e|
+        # Console.WriteLine(System::String.Format("{0}", e.ToString("F5")))
+      }
+      # Console.WriteLine()
+    }
   end
 end
-end
-=end
