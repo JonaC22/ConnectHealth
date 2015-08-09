@@ -1,0 +1,18 @@
+<div id="page_wrapper">
+    <!-- header -->
+    <ng-include src="'views/partials/header.html'"></ng-include>
+
+    <!-- breadcrumbs -->
+    <div ncy-breadcrumb></div>
+
+    <!-- main content -->
+    <div id="main_wrapper">
+        <div class="container-fluid mainView-animate" ui-view autoscroll="false"></div>
+    </div>
+
+    <!-- side menu -->
+    <ng-include src="'views/partials/side_menu.html'"></ng-include>
+
+    <!-- style switcher -->
+    <ng-include src="'views/partials/style_switcher.html'"></ng-include>
+</div>

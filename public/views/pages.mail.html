@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-md-3 col-lg-2">
+        <a ui-sref="auth.pages.mail.compose" class="btn btn-primary btn-outline btn-sm">Compose</a>
+        <hr/>
+        <div class="list-group mailbox_menu">
+            <a ng-repeat="folder in folders" ui-sref="{{folder.link}}" class="list-group-item" ng-class="{ active: $state.includes(folder.link) }" ng-click="folderId(folder.folderId)">
+                <span ng-if="folder.showCount" class="badge badge-danger">{{countMessages(folder.folderId)}}</span>
+                <span class="menu_icon" ng-class="{'icon_download': folder.folder == 'Inbox','icon_upload': folder.folder == 'Sent','icon_error-circle_alt': folder.folder == 'Spam','icon_pencil-edit': folder.folder == 'Drafts','icon_trash_alt': folder.folder == 'Trash'}"></span>{{folder.folder}}
+            </a>
+        </div>
+    </div>
+    <div class="col-md-9 col-lg-10">
+        <div ui-view autoscroll="false" class="mainView-animate"></div>
+    </div>
+</div>
+        

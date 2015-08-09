@@ -1,0 +1,36 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-sm-4 col-md-3">
+                <select name="contactList_filter" id="contactList_filter" class="form-control input-sm" ng-model="cFilter" ng-options="cFilter.company for cFilter in contactList | unique:'company' | orderBy: 'company' track by cFilter.company ">
+                    <option value="">-- Select Company --</option>
+                </select>
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <select name="contactList_sort" id="contactList_sort" class="form-control input-sm">
+                    <option value="">-- Sort by --</option>
+                    <option value="name">Name</option>
+                    <option value="name_desc">Name (desc)</option>
+                    <option value="company">Company</option>
+                    <option value="company_desc">Company (desc)</option>
+                </select>
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <input type="text" name="contactList_search" id="contactList_search" class="form-control input-sm" placeholder="Find user...">
+            </div>
+        </div>
+        <hr/>
+        <ul class="contact_list">
+            <li class="contact_item" ng-repeat="contact in contactList" data-groups='["{{contact.company}}"]' data-name="{{contact.name}}" data-company="{{contact.company}}" on-last-repeat>
+                <a href="javascript:void(0)">
+                    <img class="img-circle" ng-src="{{contact.avatar}}" alt="" add-image-prop />
+                    <span class="contact_content">
+                        <h2>{{contact.name}}</h2>
+                        <span class="text-muted">{{contact.company}}</span>
+                        <small class="text-muted">{{contact.email}}</small>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-6">
+        <input class="form-control" type="text" ng-model="icon_search" ng-minlength="2" placeholder="Find icon (min 2 char.)..."/>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="heading_a">
+            <span class="heading_text">
+                Elusive Icons
+            </span>
+        </h2>
+        <ul class="icon_list">
+            <li ng-repeat="icon in icons.elusive" ng-show="!icon_search || ([icon]|filter:icon_search).length"><span class="{{icon}}" tooltip=".{{icon}}"></span></li>
+        </ul>
+        <a href="http://shoestrap.org/downloads/elusive-icons-webfont/">
+            <small>Elusive Icons</small>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="heading_a">
+            <span class="heading_text">
+                Elegant Icon Font
+            </span>
+        </h2>
+        <ul class="icon_list">
+            <li ng-repeat="icon in icons.elegant" ng-show="!icon_search || ([icon]|filter:icon_search).length"><span class="{{icon}}" tooltip=".{{icon}}"></span></li>
+        </ul>
+        <a href="http://www.elegantthemes.com/blog/resources/elegant-icon-font">
+            <small>Elegant Icon Font</small>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="heading_a">
+            <span class="heading_text">
+                Flags
+            </span>
+        </h2>
+        <ul class="icon_list list_small">
+            <li ng-repeat="icon in icons.flags" ng-show="!icon_search || ([icon]|filter:icon_search).length"><span class="{{icon}}" tooltip=".{{icon}}"></span></li>
+        </ul>
+        <a href="https://www.gosquared.com/resources/flag-icons/">
+            <small>Flags</small>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2 class="heading_a">
+            <span class="heading_text">
+                Glyphicons
+            </span>
+        </h2>
+        <a href="http://glyphicons.com/">Glyphicons</a> from Bootstrap Framework <a class="btn btn-xs btn-default" href="http://getbootstrap.com/components/#glyphicons">more info</a>
+    </div>
+</div>

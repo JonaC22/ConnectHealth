@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-2">
+        <div class="heading_b"><span class="heading_text">Examples</span></div>
+        <div class="list-group">
+            <a ui-sref="auth.plugins.calendar.basic" ng-class="{ active: $state.includes('auth.plugins.calendar.basic') }" class="list-group-item">Basic</a>
+            <a ui-sref="auth.plugins.calendar.lunar" ng-class="{ active: $state.includes('auth.plugins.calendar.lunar') }" class="list-group-item">Phases of the Moon</a>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div ui-view autoscroll="false" class="mainView-animate"></div>
+    </div>
+</div>
+

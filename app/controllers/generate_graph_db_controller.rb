@@ -1,24 +1,49 @@
 class GenerateGraphDbController < BaseController
 
   def generate
-    pacientes = @mysql.query('SELECT * FROM pacientes LIMIT 100')
-    # nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f"')
-    # nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m"')
-    # apellidos = @mysql.query('SELECT Apellido FROM pacientes')
+    self.delete_all_nodes
+    self.get_mysql_connection
+    pacientes = @mysql.query('SELECT * FROM pacientes where Nro_Afiliado > 10000 limit 100')
+    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
+    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
+    apellidos = @mysql.query('SELECT Apellido FROM pacientes where Nro_Afiliado > 10000 limit 100').map { |n| n['Apellido'] }
+    Disease.generate(['Cancer de Ovario','Cancer de Mama'])
     familias = Array.new
     pacientes.each { |paciente|
-      fecha_nac=DateTime.strptime(paciente['Fecha_Nac'], "%Y-%m-%d %H:%M:%S")
-      date = rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-20, 12, 31))
-      # p = Person.create_from_mysql(paciente)
-      # padre = Person.new -1,rand(nombres_m.map { |n| return n['Nombre']}),p.surname,rand(Date.civil(Time.at(pacientes).to_date.year-50, 1, 1)..Date.civil(Time.at(pacientes).to_date.year-20, 12, 31)),'m'
-      # madre =Person.new -1,rand(nombres_f.map { |n| return n['Nombre']}),rand(apellidos.map { |n| return n['Apellido']}),rand(Date.civil(Time.at(pacientes).to_date.year-38, 1, 1)..Date.civil(Time.at(pacientes).to_date.year-17, 12, 31)),'f'
-      # result = Hash.new
-      # result['paciente']=p
-      # result['padre']=padre
-      # result['madre']=madre
-      familias.append(date)
+      result = Hash.new
+      p = Person.create_from_mysql(paciente)
+      if p.gender=='F' && rand(10)>rand(4..6)
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
+        p.add_disease(cancer_mama)
+      end
+      padre = p.create_father(nombres_m.sample)
+      madre = p.create_mother(nombres_f.sample, apellidos.sample)
+      result['paciente']=p
+      result['padre']=padre
+      if rand(10)>rand(4..6)
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
+        madre.add_disease(cancer_mama)
+      end
+      result['madre']=madre
+      result['abuelo_pat']=padre.create_father(nombres_m.sample)
+      result['abuela_pat']=padre.create_mother(nombres_f.sample, apellidos.sample)
+      result['abuelo_mat']=madre.create_father(nombres_m.sample)
+      result['abuela_mat']=madre.create_mother(nombres_f.sample, apellidos.sample)
+      if rand(10)>rand(4..6)
+        cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
+        result['abuela_mat'].add_disease(cancer_mama)
+      end
+      familias.append(result) {}
+
     }
-    render json:familias
+    close_mysql
+    render json: familias
+  end
+
+
+  def delete_all_nodes
+    @neo.execute_query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
+    render json: {}
   end
 
 end

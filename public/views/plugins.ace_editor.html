@@ -1,0 +1,45 @@
+<div class="row">
+    <div class="col-md-3">
+        <label for="editor_theme">Theme</label>
+        <select id="editor_theme" class="form-control input-sm" ng-init="theme = aceThemes[22].theme" ng-change="changeTheme(theme)" ng-model="theme" data-ng-options="th.theme as th.name group by th.group for th in aceThemes">
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="editor_font_size">Font Size</label>
+        <select id="editor_font_size" class="form-control input-sm" ng-init="fSize = aceFontSize[3].fSize" ng-change="changeFontSize(fSize)" ng-model="fSize" data-ng-options="fs.fSize as fs.name for fs in aceFontSize">
+        </select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+<div id="aceEditor" class="ace_editor">//  jquery-1.11.1.js
+
+// Cross-browser xml parsing
+jQuery.parseXML = function( data ){
+	var xml, tmp;
+	if ( !data || typeof data !== "string" ) {
+		return null;
+	}
+	try {
+		if ( window.DOMParser ) { // Standard
+			tmp = new DOMParser();
+			xml = tmp.parseFromString( data, "text/xml" );
+		} else { // IE
+			xml = new ActiveXObject( "Microsoft.XMLDOM" );
+			xml.async = "false";
+			xml.loadXML( data );
+		}
+	} catch( e ) {
+		xml = undefined;
+	}
+	if ( !xml || !xml.documentElement || xml.getElementsByTagName( "parsererror" ).length ) {
+		jQuery.error( "Invalid XML: " + data );
+	}
+	return xml;
+};
+
+// Segment location into parts
+ajaxLocParts = rurl.exec( ajaxLocation.toLowerCase() ) || [];
+</div>
+    </div>
+</div>

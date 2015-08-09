@@ -3,27 +3,28 @@ class PedigreeController < BaseController
   attr_accessor :pedigree
 
   skip_before_filter :verify_authenticity_token
-
-
+  
   # GET /api/pedigree
   def index
     #generate
-    current_patient_name = params[:name]
-    get_pedigree current_patient_name
+    id_current_patient = params[:id]
+    get_pedigree id_current_patient
   end
 
-  def get_pedigree current_patient_name
+  def get_pedigree id_current_patient
     query_busqueda_pacientes =
-        " match (n:PERSONA{nombre:'#{current_patient_name}'})-[r:PADRE|MADRE*]-(n2:PERSONA)
+        " match (n:PERSONA)-[r:PADRE|MADRE*]-(n2:PERSONA)
+        where id(n) = #{id_current_patient}
         return n2 as nodo
         UNION
-        match(n:PERSONA{nombre:'#{current_patient_name}'})
+        match(n:PERSONA)
+        where id(n) = #{id_current_patient}
         return n as nodo"
     patients = @neo.execute_query query_busqueda_pacientes
-    visualize patients, current_patient_name
+    visualize patients, id_current_patient
   end
 
-  def visualize patients, current_patient_name
+  def visualize patients, id_current_patient
     persons = []
     relations = []
     @pedigree = Pedigree.new
@@ -34,7 +35,7 @@ class PedigreeController < BaseController
         data = node['data']
         person = Person.new node['metadata']['id'], data['nombre'], data['apellido'], data['fecha_nacimiento'], data['sexo']
         @pedigree.add person
-        if person.name == current_patient_name
+        if person.id.to_s == id_current_patient
           @pedigree.set_current person
         end
       end
@@ -45,12 +46,12 @@ class PedigreeController < BaseController
       node = Neography::Node.load(person.id, @neo)
 
       node.rels(:PADRE, :MADRE).outgoing.each { |relat|
-
+        YAML::dump relat
         #person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
       }
       node.rels(:PADECE).outgoing.each { |rel|
-        person.diseases.append(Enfermedad.new rel.edad_diagnostico, rel.end_node.nombre)
+        person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
       }
     }
 
@@ -103,13 +104,13 @@ class PedigreeController < BaseController
 
   #GET /api/pedigree/query
   def query
-    current_patient_name = params[:name]
+    id_current_patient = params[:id]
     type = params[:type] || nil
 
     #query genérica que devuelve todos los familiares que padecen una enfermedad
     match = " match (n)-[r:PADECE]->(e)
-              where (n)-[:PADRE|MADRE*]-({nombre: '#{current_patient_name}'}) or
-              n.nombre = '#{current_patient_name}' "
+              where ((n)-[:PADRE|MADRE*]-(n2) and id(n2) = #{id_current_patient}) or
+              id(n) = #{id_current_patient} "
     case type
       when 'integer'
         execute_and_render match << " return count(r) as cantidad_casos "
@@ -118,13 +119,14 @@ class PedigreeController < BaseController
       when 'table'
         execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
       when 'pedigree' #Obtiene el pedigree recortado
-        match = " match ca = (n:PERSONA{nombre:'#{current_patient_name}'})-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
+        match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
+                  where id(n) = #{id_current_patient}
                   with nodes(ca) as nodos
                   unwind nodos as nodo
                   return nodo "
         patients = @neo.execute_query match
 
-        visualize patients, current_patient_name
+        visualize patients, id_current_patient
       else
         result = {"status" => "ERROR", "results" => "Formato de respuesta no especificado"}
         render json: result
@@ -154,51 +156,6 @@ class PedigreeController < BaseController
     result['pacientes']=pacientes
     close_mysql
     render json: result
-  end
-
-  def generate
-    get_mysql_connection
-    pacientes = @mysql.query('SELECT * FROM pacientes where Nro_Afiliado > 10000 limit 100')
-    nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
-    nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
-    apellidos = @mysql.query('SELECT Apellido FROM pacientes where Nro_Afiliado > 10000 limit 100').map { |n| n['Apellido'] }
-    Enfermedad.generate(['Cancer de ovario'])
-    familias = Array.new
-    pacientes.each { |paciente|
-      result = Hash.new
-      p = Person.create_from_mysql(paciente)
-      if p.gender=='F' && rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
-        p.add_disease(cancer_mama)
-      end
-      padre = p.create_father(nombres_m.sample)
-      madre = p.create_mother(nombres_f.sample, apellidos.sample)
-      result['paciente']=p
-      result['padre']=padre
-      if rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
-        madre.add_disease(cancer_mama)
-      end
-      result['madre']=madre
-      result['abuelo_pat']=padre.create_father(nombres_m.sample)
-      result['abuela_pat']=padre.create_mother(nombres_f.sample, apellidos.sample)
-      result['abuelo_mat']=madre.create_father(nombres_m.sample)
-      result['abuela_mat']=madre.create_mother(nombres_f.sample, apellidos.sample)
-      if rand(10)>rand(4..6)
-        cancer_mama = Enfermedad.new rand(20..50), 'Cancer de ovario'
-        result['abuela_mat'].add_disease(cancer_mama)
-      end
-      familias.append(result) {}
-
-    }
-    close_mysql
-    render json: familias
-  end
-
-
-  def delete_all_nodes
-    @neo.execute_query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
-    render json: {}
   end
 
 end

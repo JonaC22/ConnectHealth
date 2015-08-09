@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>ConnectHealth - Visualizar Pedigree </title>
     <script type="text/javascript" src="./javascripts/third-party/go-debug.js"></script>
-    <script type="text/javascript" src="./javascripts/third-party/angular.min.js"></script>
+    <!--<script type="text/javascript" src="./javascripts/third-party/angular.min.js"></script>-->
     <script type="text/javascript" src="./javascripts/third-party/jquery-1.11.3.min.js"></script>
     <script id="code">
 
@@ -453,7 +453,7 @@
 
 
 <div id="sample">
-    <div id="myDiagram" style="border: solid 1px blue; width:100%; height:600px"></div>
+    <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px"></div>
 
 </div>
 <script type="text/javascript">
@@ -467,7 +467,7 @@
         }
     };
     init();
-    $.getJSON( "api/pedigree?name=" + ($.urlParam('name') || "Francisco"), function( data ) {
+    $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
         console.log(data);
         var nodos = {};
         var people = [];
@@ -479,15 +479,15 @@
         $.each( data.relations, function( key, val ) {
             if(val.name == "MADRE"){
                 nodos[val.from].mother = val.to;
-//                console.log(nodos[val.from]);
                 if(nodos[val.from].father!=undefined){
                     nodos[nodos[val.from].mother].husband = nodos[val.from].father
+                    nodos[nodos[val.from].father].wife = nodos[val.from].mother
                 }
             }else if(val.name=="PADRE"){
                 nodos[val.from].father = val.to;
-//                if(val.to==7) nodos[val.from].mother = 999;
                 if(nodos[val.from].mother!=undefined){
                     nodos[nodos[val.from].father].wife = nodos[val.from].mother
+                    nodos[nodos[val.from].mother].husband = nodos[val.from].father
                 }
             }
         });

@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="col-md-12">
+        <form action="">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="mail_to">To</label>
+                        <input type="email" class="form-control" id="mail_to">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="mail_cc">Cc</label>
+                        <input type="email" class="form-control" id="mail_cc">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="mail_subject" placeholder="Add subject">
+            </div>
+            <div class="form-group">
+                <div text-angular ng-model="compose_message"></div>
+            </div>
+            <hr/>
+            <button class="btn btn-sm btn-success"><span class="el-icon-upload"></span> Send</button>
+            <button class="btn btn-sm btn-default"><span class="el-icon-file-new"></span> Add file</button>
+        </form>
+    </div>
+</div>

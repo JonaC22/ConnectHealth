@@ -1,0 +1,20 @@
+<div class="gallery_filer">
+    <div class="row">
+        <div class="col-sm-6">
+            <input class="form-control" type="text" placeholder="Filter by name, tag etc..." ng-model="gallery_search" />
+            <span class="help-block">Eg. business, creative, photoshop</span>
+        </div>
+    </div>
+</div>
+<hr/>
+<ul class="gallery_grid">
+    <li ng-repeat="image in gallery" ng-show="!gallery_search || ([image.title]|filter:gallery_search).length || ([image.tags]|filter:gallery_search).length" on-last-repeat>
+        <a href="{{image.url}}" class="img_wrapper" title="{{image.title}}">
+            <img ng-src="{{image.url}}" alt="{{image.title}}" add-image-prop/>
+            <span class="gallery_image_zoom">
+                <span class="arrow_expand"></span>
+            </span>
+            <span class="hide gallery_image_tags"><span ng-repeat="tag in image.tags">{{tag}}{{$last ? '' : ', '}}</span></span>
+        </a>
+    </li>
+</ul>
