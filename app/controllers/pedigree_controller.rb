@@ -6,12 +6,18 @@ class PedigreeController < BaseController
   
   # GET /api/pedigree
   def index
-    #generate
+    # generate
     id_current_patient = params[:id]
     get_pedigree id_current_patient
   end
 
-  def get_pedigree id_current_patient
+  def show
+    id_current_patient = params[:id]
+    pedigree id_current_patient
+  end
+
+  def pedigree(id_current_patient)
+    return unless id_current_patient
     query_busqueda_pacientes =
         " match (n:PERSONA)-[r:PADRE|MADRE*]-(n2:PERSONA)
         where id(n) = #{id_current_patient}
@@ -24,36 +30,33 @@ class PedigreeController < BaseController
     visualize patients, id_current_patient
   end
 
-  def visualize patients, id_current_patient
-    persons = []
+  def visualize(patients, id_current_patient)
     relations = []
     @pedigree = Pedigree.new
 
-    #Se extraen personas y relaciones
+    # Se extraen personas y relaciones
     patients['data'].each do |data_array|
       data_array.each do |node|
-        data = node['data']
-        person = Person.new node['metadata']['id'], data['nombre'], data['apellido'], data['fecha_nacimiento'], data['sexo']
+        person = Patient.find_by_id(node['metadata']['id'])
         @pedigree.add person
-        if person.id.to_s == id_current_patient
-          @pedigree.set_current person
-        end
+        next unless person.id.to_s == id_current_patient
+        @pedigree.set_current person
       end
     end
 
-    #Se extraen relaciones
-    @pedigree.get_people.each { |person|
+    # Se extraen relaciones
+    @pedigree.get_people.each do |person|
       node = Neography::Node.load(person.id, @neo)
 
-      node.rels(:PADRE, :MADRE).outgoing.each { |relat|
+      node.rels(:PADRE, :MADRE).outgoing.each do |relat|
         YAML::dump relat
-        #person es el nodo en cuestion y persona_related la persona con la que se relaciona
+        # person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
-      }
+      end
       node.rels(:PADECE).outgoing.each { |rel|
         person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
       }
-    }
+    end
 
     @pedigree.add_elements relations
 
@@ -140,7 +143,7 @@ class PedigreeController < BaseController
 
   #GET metodo provisorio para ver la carga batch de medicos en mysql
   def get_medicos_mysql
-    get_mysql_connection
+    mysql_connection
     medicos = @mysql.query('SELECT * FROM medicos')
     result = Hash.new
     result['medicos']=medicos
@@ -150,7 +153,7 @@ class PedigreeController < BaseController
 
   #GET metodo provisorio para ver la carga batch de pacientes en mysql
   def get_pacientes_mysql
-    get_mysql_connection
+    mysql_connection
     pacientes = @mysql.query('SELECT * FROM pacientes')
     result = Hash.new
     result['pacientes']=pacientes

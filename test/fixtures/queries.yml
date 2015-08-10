@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: queries
+#
+#  id          :integer          not null, primary key
+#  create_date :date             not null
+#  query       :string(1000)     not null
+#  description :string(45)       not null
+#  result      :string(1000)     not null
+#  made_by     :integer          not null
+#  id_pedigree :integer          not null
+#
+
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 # This model initially had no columns defined.  If you add columns to the

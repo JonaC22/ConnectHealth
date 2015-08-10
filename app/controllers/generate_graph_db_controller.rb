@@ -1,8 +1,8 @@
 class GenerateGraphDbController < BaseController
 
   def generate
-    self.delete_all_nodes
-    self.get_mysql_connection
+    delete_all_nodes
+    mysql_connection
     pacientes = @mysql.query('SELECT * FROM pacientes where Nro_Afiliado > 10000 limit 100')
     nombres_f = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="f" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m" where Nro_Afiliado > 10000 limit 100').map { |n| n['Nombre'] }

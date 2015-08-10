@@ -22,20 +22,20 @@ class StatisticsModel < BaseModel
   #GET /api/statistics/reports
   #devuelve listado de historico de reportes
   def get_reports
-    get_mysql_connection
+    mysql_connection
     #select sobre la tabla statistical_reports
     close_mysql
   end
 
   #devuelve el resultado de un reporte
   def show_report id
-    get_mysql_connection
+    mysql_connection
     #select sobre la tabla statistical_reports con where sobre el campo id
     close_mysql
   end
 
   def save_report result
-    get_mysql_connection
+    mysql_connection
     #guardar un reporte en mysql para historico (guardar resultado y fecha de generacion)
     close_mysql
   end

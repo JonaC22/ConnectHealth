@@ -6,7 +6,7 @@ class BaseModel
     @neo = Neography::Rest.new
   end
 
-  def get_mysql_connection
+  def mysql_connection
     mysql_url = ENV['CLEARDB_DATABASE_URL']
 
     if ENV['RACK_ENV'] == 'development'

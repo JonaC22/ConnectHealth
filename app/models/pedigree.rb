@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: pedigrees
+#
+#  id          :integer          not null, primary key
+#  id_patient  :integer          not null
+#  create_date :date             not null
+#
+
 class Pedigree < ActiveRecord::Base
 	has_many :patients
 	has_many :annotations
@@ -44,4 +53,3 @@ class Pedigree < ActiveRecord::Base
 		json
 	end
 end
->>>>>>> dev

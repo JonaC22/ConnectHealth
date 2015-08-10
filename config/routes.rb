@@ -9,13 +9,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   scope '/api' do
-    scope '/pedigree' do
-        get '/' => 'pedigree#index'
-        post '/' => 'pedigree#create'
-        get '/query' => 'pedigree#query'
-        get '/medicos' => 'pedigree#get_medicos_mysql'
-        get '/pacientes' => 'pedigree#get_pacientes_mysql'
-    end
+    resources :pedigree, only: [:index, :show, :update, :destroy]
     scope '/statistics' do
       get '/' => 'statistics#index'
       post '/query' => 'statistics#get_results'
