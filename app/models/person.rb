@@ -1,6 +1,6 @@
 class Person
   include Positionable
-  attr_accessor :name, :surname, :birth_date, :gender, :medical_history,:diseases
+  attr_accessor :name, :lastname, :birth_date, :gender, :medical_history,:diseases
   @diseases = []
 
   def to_json(options={})
@@ -16,7 +16,7 @@ class Person
   def create_father(nombre)
     neo = Neography::Rest.new
     fecha_nac=self.birth_date
-    @father=Person.new -1, nombre, self.surname, rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-25, 12, 31)), 'M'
+    @father=Person.new -1, nombre, self.lastname, rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-25, 12, 31)), 'M'
     neo.create_relationship('PADRE', get_node,@father.get_node)
     return @father
   end
@@ -54,7 +54,7 @@ class Person
       return @node
     end
     neo = Neography::Rest.new
-    @node = neo.create_node('fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @surname,'sexo' => @gender)
+    @node = neo.create_node('fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname,'sexo' => @gender)
     neo.set_label(@node, 'PERSONA')
     return @node
   end

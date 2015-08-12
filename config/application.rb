@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module ConnectHealth
   class Application < Rails::Application
+    config.exceptions_app = ->(env) { ErrorsController.action(:show).call(env) }
+
+    config.autoload_paths += Dir["#{config.root}/app/serializers/**/", "#{config.root}/app/models/**/"]
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

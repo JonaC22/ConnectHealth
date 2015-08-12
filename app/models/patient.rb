@@ -16,4 +16,5 @@ class Patient < ActiveRecord::Base
   has_one :medical_history
   belongs_to :pedigree
 
+  attr_accessor :diseases
 end

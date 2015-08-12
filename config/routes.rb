@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   scope '/api' do
     resources :pedigree, only: [:index, :show, :update, :destroy]
+    resources :patients, only: [:index, :show, :create, :update, :destroy]
     scope '/statistics' do
       get '/' => 'statistics#index'
       post '/query' => 'statistics#get_results'

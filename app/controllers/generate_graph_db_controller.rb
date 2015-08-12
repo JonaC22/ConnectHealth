@@ -18,8 +18,8 @@ class GenerateGraphDbController < BaseController
       end
       padre = p.create_father(nombres_m.sample)
       madre = p.create_mother(nombres_f.sample, apellidos.sample)
-      result['paciente']=p
-      result['padre']=padre
+      result['paciente'] = p
+      result['padre'] = padre
       if rand(10)>rand(4..6)
         cancer_mama = Disease.new rand(20..50), 'Cancer de ovario'
         madre.add_disease(cancer_mama)

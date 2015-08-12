@@ -12,8 +12,7 @@ class PedigreeController < BaseController
   end
 
   def show
-    id_current_patient = params[:id]
-    pedigree id_current_patient
+    pedigree params[:id]
   end
 
   def pedigree(id_current_patient)
@@ -27,26 +26,25 @@ class PedigreeController < BaseController
         where id(n) = #{id_current_patient}
         return n as nodo"
     patients = @neo.execute_query query_busqueda_pacientes
+    p patients
     visualize patients, id_current_patient
   end
 
   def visualize(patients, id_current_patient)
     relations = []
     @pedigree = Pedigree.new
-
     # Se extraen personas y relaciones
-    patients['data'].each do |data_array|
+    patients['data'].each do |data_array| # estoy casi seguro de que esto no es necesario, podemos traer el pedigree y listo
       data_array.each do |node|
-        person = Patient.find_by_id(node['metadata']['id'])
-        @pedigree.add person
-        next unless person.id.to_s == id_current_patient
-        @pedigree.set_current person
+        patient = Patient.find_by_id(node['metadata']['id'])
+        patient.update! pedigree: @pedigree
+        next unless patient.id.to_s == id_current_patient
+        @pedigree.update! current_patient: patient
       end
     end
-
     # Se extraen relaciones
-    @pedigree.get_people.each do |person|
-      node = Neography::Node.load(person.id, @neo)
+    @pedigree.patients.each do |patient|
+      node = Neography::Node.load(patient.id, @neo)
 
       node.rels(:PADRE, :MADRE).outgoing.each do |relat|
         YAML::dump relat
@@ -54,7 +52,7 @@ class PedigreeController < BaseController
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
       end
       node.rels(:PADECE).outgoing.each { |rel|
-        person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
+        patient.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
       }
     end
 
@@ -74,7 +72,6 @@ class PedigreeController < BaseController
 
   #POST /api/pedigree
   def create
-
     personas = Hash.new
     @json['personas'].each { |persona|
       tags = ['MADRE', 'PADRE']

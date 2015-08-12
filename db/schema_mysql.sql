@@ -66,7 +66,7 @@ CREATE TABLE `heroku_7c99704f99bd301`.`statistical_reports` (
 CREATE TABLE `heroku_7c99704f99bd301`.`patients` (
   `id` BIGINT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
-  `surname` VARCHAR(45) NOT NULL,
+  `lastname` VARCHAR(45) NOT NULL,
   `document_type` VARCHAR(10) NOT NULL,
   `document_number` BIGINT NOT NULL,
   `active` TINYINT NOT NULL,

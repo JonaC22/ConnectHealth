@@ -31,7 +31,7 @@ $primaryKey = 'id';
 $columns = array(
 	array( 'db' => 'id',         'dt' => 0 ),
 	array( 'db' => 'firstname',  'dt' => 1 ),
-	array( 'db' => 'surname',    'dt' => 2 ),
+	array( 'db' => 'lastname',    'dt' => 2 ),
 	array( 'db' => 'zip',        'dt' => 3 ),
 	array( 'db' => 'country',    'dt' => 4 )
 );
