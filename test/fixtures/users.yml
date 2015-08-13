@@ -2,10 +2,12 @@
 #
 # Table name: users
 #
-#  id       :integer          not null, primary key
-#  username :string(45)       not null
-#  password :string(45)       not null
-#  active   :boolean          not null
+#  id              :integer          not null, primary key
+#  username        :string(255)
+#  password_digest :string(255)
+#  active          :boolean          default(TRUE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

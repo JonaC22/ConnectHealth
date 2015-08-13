@@ -3,8 +3,10 @@
 # Table name: roles
 #
 #  id          :integer          not null, primary key
-#  description :string(45)       not null
-#  active      :integer          not null
+#  description :string(255)
+#  active      :boolean
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 require 'test_helper'

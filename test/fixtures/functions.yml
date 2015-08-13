@@ -3,7 +3,9 @@
 # Table name: functions
 #
 #  id          :integer          not null, primary key
-#  description :string(45)       not null
+#  description :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

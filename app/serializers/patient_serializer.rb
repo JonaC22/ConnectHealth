@@ -13,10 +13,6 @@
 #  updated_at      :datetime         not null
 #
 
-class Patient < ActiveRecord::Base
-  include Positionable
-  has_one :medical_history
-  belongs_to :pedigree
-
-  attr_accessor :diseases
+class PatientSerializer < ActiveModel::Serializer
+  attributes :id, :name, :lastname, :document_type, :document_number
 end

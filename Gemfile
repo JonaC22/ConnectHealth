@@ -44,6 +44,7 @@ gem 'puma'
 
 gem 'bcrypt', '~> 3.1.7' # Se encarga de la password
 
+gem 'active_model_serializers'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

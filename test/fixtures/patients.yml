@@ -3,12 +3,14 @@
 # Table name: patients
 #
 #  id              :integer          not null, primary key
-#  name            :string(45)       not null
-#  lastname        :string(45)       not null
-#  document_type   :string(10)       not null
-#  document_number :integer          not null
-#  active          :integer          not null
 #  pedigree_id     :integer
+#  name            :string(255)
+#  lastname        :string(255)
+#  document_type   :string(255)
+#  document_number :string(255)
+#  active          :boolean          default(FALSE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

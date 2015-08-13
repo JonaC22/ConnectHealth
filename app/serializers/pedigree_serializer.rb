@@ -7,10 +7,6 @@
 #  updated_at :datetime         not null
 #
 
-require 'test_helper'
-
-class PedigreeTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+class PedigreeSerializer < ActiveModel::Serializer
+  attributes :id
 end

@@ -2,9 +2,9 @@
 #
 # Table name: pedigrees
 #
-#  id          :integer          not null, primary key
-#  id_patient  :integer          not null
-#  create_date :date             not null
+#  id         :integer          not null, primary key
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 
 class Pedigree < ActiveRecord::Base

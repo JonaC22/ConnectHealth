@@ -3,10 +3,12 @@
 # Table name: annotations
 #
 #  id          :integer          not null, primary key
-#  id_pedigree :integer          not null
-#  pos_x       :string(45)       not null
-#  pos_y       :string(45)       not null
-#  text        :string(1000)     not null
+#  pedigree_id :integer
+#  pos_x       :integer
+#  pos_y       :integer
+#  text        :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #
 
 class Annotations < ActiveRecord::Base
