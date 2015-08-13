@@ -15,7 +15,7 @@ class StatisticsModel < BaseModel
 
   def calc_query
     @result = @neo.execute_query @query
-    save_results @result
+    save_report @result
     @result
   end
 
