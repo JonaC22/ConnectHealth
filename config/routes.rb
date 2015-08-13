@@ -13,14 +13,17 @@ Rails.application.routes.draw do
         get '/' => 'pedigree#index'
         post '/' => 'pedigree#create'
         get '/query' => 'pedigree#query'
+        get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
         get '/medicos' => 'pedigree#get_medicos_mysql'
         get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end
     scope '/statistics' do
       get '/' => 'statistics#index'
       post '/query' => 'statistics#get_results'
+      get '/reports' => 'statistics#get_reports'
     end
-    get '/createGraphDB' => 'pedigree#generate'
+    get '/createGraphDB' => 'generate_graph_db#generate'
+    get '/flushGraphDB' => 'pedigree#delete_all_nodes'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
   end
 #Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"

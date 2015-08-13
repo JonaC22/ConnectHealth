@@ -11,7 +11,7 @@ class StatisticsController < BaseController
 
   # POST /api/statistics/query
   def get_results
-    @model = StatisticsModel.new @neo
+    @model = StatisticsModel.new
     @model.set_query params[:disease], params[:type]
     results = @model.calc_query
     render json:results

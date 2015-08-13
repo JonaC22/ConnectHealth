@@ -1,0 +1,30 @@
+<div class="row">
+    <div class="col-md-3">
+        <h1 class="page_heading">
+            Help/Faq
+            <span>Get Help. Find Answers</span>
+        </h1>
+    </div>
+    <div class="col-md-9">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="What would you like to know?">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button"><span class="icon_search"></span></button>
+            </span>
+        </div>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-md-3">
+        <div class="heading_b"><span class="heading_text">Categories</span></div>
+        <div class="list-group">
+            <a ng-repeat="category in faq" ui-sref="{{category.link}}" ng-init="cId = category.link" ng-click="categoryId(category.id)" ng-class="{ active: $state.includes(category.link) }" class="list-group-item">{{category.title}}</a>
+        </div>
+    </div>
+    <div class="col-md-9 col-sep">
+        <div ui-view autoscroll="false">
+            <div class="alert alert-info">Please select category from menu.</div>
+        </div>
+    </div>
+</div>

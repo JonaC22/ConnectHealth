@@ -1,5 +1,5 @@
-class Relation
-	attr_accessor :id, :from, :to, :name
+class Relation < Positionable
+	attr_accessor :from, :to, :name
   def initialize(from,to,name)
     @from = from
     @to=to

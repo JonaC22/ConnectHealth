@@ -1,30 +1,42 @@
-
-class StatisticsModel
-  attr_accessor :query_cypher, :neo
-
-  def initialize neo
-    @neo = neo
-  end
+class StatisticsModel < BaseModel
+  attr_accessor :query, :result
 
   def set_query disease, query_type
-    @query_cypher = "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})"
+    @query = "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})"
 
     case query_type
     when "count"
-      @query_cypher += "return count(r.edad_diagnostico) as Cantidad, r.edad_diagnostico as Edad"
+      @query += "return count(r.edad_diagnostico) as Cantidad, r.edad_diagnostico as Edad"
     when "avg"
-      @query_cypher += "return avg(r.edad_diagnostico) as Edad"
+      @query += "return avg(r.edad_diagnostico) as Edad"
     end
 
   end
 
   def calc_query
-    results = @neo.execute_query @query_cypher
-    save_results
-    results
+    @result = @neo.execute_query @query
+    save_results @result
+    @result
   end
 
-  def save_results
-    #guardar resultados en mysql para historico
+  #GET /api/statistics/reports
+  #devuelve listado de historico de reportes
+  def get_reports
+    get_mysql_connection
+    #select sobre la tabla statistical_reports
+    close_mysql
+  end
+
+  #devuelve el resultado de un reporte
+  def show_report id
+    get_mysql_connection
+    #select sobre la tabla statistical_reports con where sobre el campo id
+    close_mysql
+  end
+
+  def save_report result
+    get_mysql_connection
+    #guardar un reporte en mysql para historico (guardar resultado y fecha de generacion)
+    close_mysql
   end
 end

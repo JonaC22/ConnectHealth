@@ -37,11 +37,11 @@
         }
     });
 
-    $.getJSON( "api/pedigree?name=" + ($.urlParam('name') || "Francisco"), function( data ) {
+    $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
         console.log(data);
         var nodos = {};
         var relations = [];
-        $.each( data.persons, function( key, val ) {
+        $.each( data.people, function( key, val ) {
             var color_fill = '#2ECC71';
             if(val.id == data.current.id) color_fill = '#8d8d8d';
             if(val.gender == 'f'){

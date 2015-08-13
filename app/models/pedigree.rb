@@ -1,11 +1,12 @@
 class Pedigree
 
-	attr_accessor :id, :current_patient
-	@persons = []
+	attr_accessor :current_patient
+	@people = []
 	@relations = []
+  @annotations = []
 
 	def initialize(persons = [], relations = [])
-		@persons = persons
+		@people = persons
 		@relations = relations
 	end
 
@@ -18,7 +19,7 @@ class Pedigree
 	end
 
 	def add_person(person)
-		@persons << person
+		@people << person
 	end
 
 	def add_relation(relation)
@@ -29,15 +30,16 @@ class Pedigree
 		elements.each {|element| element.add_to(self)}
 	end
 
-	def get_persons_ids
-		@persons.map {|person| person.id}
+	def get_people
+		@people
 	end
 
 	def to_json
 		json = Hash.new
-		json['persons'] = @persons
+		json['people'] = @people
 		json['relations'] = @relations
 		json['current'] = current_patient
+    json['annotations'] = @annotations
 		json
 	end
 end
