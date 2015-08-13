@@ -54,7 +54,7 @@ class Person < Positionable
 
   def add_disease(disease)
     neo = Neography::Rest.new
-    enf_rel=neo.create_relationship('PADECE',get_node, disease.get_node)
+    enf_rel=neo.create_relationship('PADECE', get_node, disease.get_node)
     neo.reset_relationship_properties(enf_rel, {'edad_diagnostico' => disease.edad_diagnostico})
     diseases.append(disease)
   end
