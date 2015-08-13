@@ -31,8 +31,8 @@ class PatientsController < BaseController
     {
       name: params.require(:name),
       lastname: params[:lastname],
-      document_type: params.require(:document_type),
-      document_number: params.require(:document_number)
+      document_type: params[:document_type],
+      document_number: params[:document_number]
     }
   end
 

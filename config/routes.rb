@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   scope '/api' do
-    resources :pedigree, only: [:index, :show, :update, :destroy]
+    resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
     scope '/statistics' do
       get '/' => 'statistics#index'

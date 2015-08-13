@@ -1,15 +1,19 @@
-class PedigreeController < BaseController
-  attr_accessor :pedigree
-  
-  # GET /api/pedigree
+class PedigreesController < BaseController
   def index
-    # generate
     id_current_patient = params[:id]
     get_pedigree id_current_patient
   end
 
   def show
+    @pedigree = Pedigree.find_by_id(params[:id])
+    render json: @pedigree
+    return
     pedigree params[:id]
+  end
+
+  def create
+    @pedigree = Pedigree.create! pedigree_create_params
+    renter json: @pedigree
   end
 
   def pedigree(id_current_patient)
@@ -154,5 +158,6 @@ class PedigreeController < BaseController
     close_mysql
     render json: result
   end
+
 
 end

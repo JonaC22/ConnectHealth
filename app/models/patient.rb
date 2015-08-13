@@ -18,5 +18,8 @@ class Patient < ActiveRecord::Base
   has_one :medical_history
   belongs_to :pedigree
 
+  validates :document_number, uniqueness: true
+  validates_length_of :document_number, minimum: 7, maximum: 8
+
   attr_accessor :diseases
 end
