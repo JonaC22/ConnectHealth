@@ -24,4 +24,8 @@ class BaseController < ApplicationController
     @mysql.close
   end
 
+  def routing_error
+    
+  end
+
 end

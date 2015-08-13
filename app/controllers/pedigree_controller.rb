@@ -8,7 +8,12 @@ class PedigreeController < BaseController
   def index
     #generate
     id_current_patient = params[:id]
-    get_pedigree id_current_patient
+    unless id_current_patient == 'null'
+      get_pedigree id_current_patient
+    else
+      results = []
+      render json: results
+    end
   end
 
   def get_pedigree id_current_patient
