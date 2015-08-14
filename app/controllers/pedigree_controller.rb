@@ -99,6 +99,9 @@ class PedigreeController < BaseController
     render json: resultado
   end
 
+  #GET /api/pedigree/get_fdr
+  #Devuelve un par clave-valor, donde la clave es el id del pariente y el valor un array de id de enfermedades padecidas.
+  #Se envia id del paciente
   def get_first_deg_relatives
     node = Neography::Node.load(params[:id], @neo)
 
@@ -106,7 +109,17 @@ class PedigreeController < BaseController
     ret.push *node.both(:MADRE)
     ret.push *node.both(:PADRE)
 
-    render json:ret.map {|rel| {:id => rel.neo_id, :nombre => rel.nombre, :apellido => rel.apellido} }
+    relatives = {}
+    rel_ids = ret.map{|rel| rel.neo_id}
+    rel_ids.each do |relative_id|
+      n = Neography::Node.load(relative_id, @neo)
+      diseases = []
+      diseases.push *n.outgoing(:PADECE)
+      diseases = diseases.map {|d| d.neo_id}
+      relatives.store(relative_id, diseases)
+    end
+
+    render json:relatives
   end
 
   def validate_relations(json, persona, tags)
