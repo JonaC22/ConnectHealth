@@ -7,6 +7,7 @@ class PedigreeController < BaseController
   # GET /api/pedigree
   def index
     #generate
+
     id_current_patient = params[:id]
     unless id_current_patient == 'null'
       get_pedigree id_current_patient
@@ -14,6 +15,7 @@ class PedigreeController < BaseController
       results = []
       render json: results
     end
+
   end
 
   def get_pedigree id_current_patient
@@ -95,6 +97,16 @@ class PedigreeController < BaseController
 
     resultado= Resultado.new('Pedigree ingresado exitosamente', 200)
     render json: resultado
+  end
+
+  def get_first_deg_relatives
+    node = Neography::Node.load(params[:id], @neo)
+
+    ret = []
+    ret.push *node.both(:MADRE)
+    ret.push *node.both(:PADRE)
+
+    render json:ret.map {|rel| {:id => rel.neo_id, :nombre => rel.nombre, :apellido => rel.apellido} }
   end
 
   def validate_relations(json, persona, tags)
