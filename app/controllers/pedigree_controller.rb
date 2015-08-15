@@ -99,12 +99,9 @@ class PedigreeController < BaseController
     render json: resultado
   end
 
-  #GET /api/pedigree/get_fdr
+  #Se pasa por parametro el nodo del paciente
   #Devuelve un par clave-valor, donde la clave es el id del pariente y el valor un array de id de enfermedades padecidas.
-  #Se envia id del paciente
-  def get_first_deg_relatives
-    node = Neography::Node.load(params[:id], @neo)
-
+  def get_first_deg_relatives node
     ret = []
     ret.push *node.both(:MADRE)
     ret.push *node.both(:PADRE)
@@ -115,11 +112,11 @@ class PedigreeController < BaseController
       n = Neography::Node.load(relative_id, @neo)
       diseases = []
       diseases.push *n.outgoing(:PADECE)
-      diseases = diseases.map {|d| d.neo_id}
+      diseases = diseases.map {|d| d.nombre}
       relatives.store(relative_id, diseases)
     end
 
-    render json:relatives
+    relatives
   end
 
   def validate_relations(json, persona, tags)
@@ -131,6 +128,7 @@ class PedigreeController < BaseController
     end
     Resultado.new('OK', 200)
   end
+
   #GET /api/pedigree/gailModelCalculate
   def calculate_gail_model
     # AgeIndicator: age ge 50 ind
@@ -167,16 +165,24 @@ class PedigreeController < BaseController
     #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
     RiskCalculator.new
-    current_age=params[:age].to_i
+    patient = Person.create_from_neo params[:id], @neo
+    fdr = get_first_deg_relatives patient.node
+    affected_relatives = fdr.count {
+        |value|
+      unless value.nil?
+        value.include? 'Cancer de Mama'
+      end
+    }
+    current_age = patient.age.to_i
     projection_age=current_age+5
     menarche_age = BcptConvert.MenarcheAge(params[:menstAge].to_i)
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(params[:first_birth_age].to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
-    ever_had_biopsy_bool=false
-    ever_had_biopsy=ever_had_biopsy_bool ? 1 : 0
+    ever_had_biopsy_bool = false
+    ever_had_biopsy = ever_had_biopsy_bool ? 1 : 0
     number_of_biopsy = ever_had_biopsy_bool ? params[:numberBiopsy].to_i : 0
     race = 3 #Hispanic
-    first_deg_relatives = BcptConvert.FirstDegRelatives(params[:relatives].to_i,race)
+    first_deg_relatives = BcptConvert.FirstDegRelatives(affected_relatives,race)
     ihyp=BcptConvert.hyperplasia(0,ever_had_biopsy_bool)
     rhyp=BcptConvert.r_hyperplasia(ihyp)
     # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)

@@ -16,7 +16,6 @@ Rails.application.routes.draw do
         get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
         get '/medicos' => 'pedigree#get_medicos_mysql'
         get '/pacientes' => 'pedigree#get_pacientes_mysql'
-        get '/get_fdr' => 'pedigree#get_first_deg_relatives'
     end
     scope '/statistics' do
       get '/' => 'statistics#index'
