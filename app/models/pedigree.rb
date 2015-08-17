@@ -1,4 +1,4 @@
-class Pedigree
+class Pedigree < BaseModel
 
 	attr_accessor :current_patient
 	@people = []
