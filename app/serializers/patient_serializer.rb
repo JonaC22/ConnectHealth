@@ -11,8 +11,9 @@
 #  active          :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  gender          :string(255)
 #
 
 class PatientSerializer < ActiveModel::Serializer
-  attributes :id, :name, :lastname, :document_type, :document_number
+  attributes :id, :name, :lastname, :document_type, :document_number, :gender
 end

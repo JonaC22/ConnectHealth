@@ -21,13 +21,4 @@ class Pedigree < ActiveRecord::Base
   def add_elements(elements)
     elements.each { |element| element.add_to(self) }
   end
-
-  def to_json
-    json = {}
-    json['people'] = @people
-    json['relations'] = @relations
-    json['current'] = current_patient
-    json['annotations'] = @annotations
-    json
-  end
 end

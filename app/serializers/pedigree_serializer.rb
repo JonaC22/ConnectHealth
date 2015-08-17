@@ -8,5 +8,14 @@
 #
 
 class PedigreeSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :patients, :relations, :current, :annotations
+
+  def relations
+    object.relations
+  end
+
+  def current
+    object.current_patient
+  end
+
 end

@@ -32,7 +32,8 @@ class PatientsController < BaseController
       name: params.require(:name),
       lastname: params[:lastname],
       document_type: params[:document_type],
-      document_number: params[:document_number]
+      document_number: params[:document_number],
+      gender: params[:gender]
     }
   end
 

@@ -11,6 +11,7 @@
 #  active          :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  gender          :string(255)
 #
 
 class Patient < ActiveRecord::Base
