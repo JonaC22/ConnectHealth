@@ -143,7 +143,8 @@ class PedigreeController < BaseController
     #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
     #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
-    RiskCalculator.new
+
+    calculator = RiskCalculator.new
     patient = Person.create_from_neo params[:id]
     #agregar validacion de que paciente no debe tener la enfermedad de la que se esta evaluando el riesgo
     fdr = patient.get_first_deg_relatives
@@ -166,10 +167,10 @@ class PedigreeController < BaseController
     ihyp=BcptConvert.hyperplasia(0,ever_had_biopsy_bool)
     rhyp=BcptConvert.r_hyperplasia(ihyp)
     # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
-    abs_risk = RiskCalculator.new.calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
-    avg_risk = RiskCalculator.new.calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
-    abs_risk90 = RiskCalculator.new.calculate_absolute_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
-    avg_risk90 = RiskCalculator.new.calculate_average_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    abs_risk = calculator.calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    avg_risk = calculator.calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    abs_risk90 = calculator.calculate_absolute_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
+    avg_risk90 = calculator.calculate_average_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
     # abs_risk = RiskCalculator.new.calculate_absolute_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
     # avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
     # abs_risk90 = RiskCalculator.new.calculate_absolute_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
