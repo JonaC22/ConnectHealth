@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   scope '/api' do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
+    scope '/pedigrees' do
+      get '/query' => 'pedigree#query'
+      get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
+      get '/medicos' => 'pedigree#get_medicos_mysql'
+      get '/pacientes' => 'pedigree#get_pacientes_mysql'
+    end
     scope '/statistics' do
       get '/' => 'statistics#index'
       post '/query' => 'statistics#get_results'
@@ -20,8 +26,7 @@ Rails.application.routes.draw do
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
     get '/createGraphDBTest' => 'generate_graph_db#generate'
   end
-#Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
-  get '/hi', to: 'base#index'
+  # Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
   post '/', to: 'welcome#delete_paciente'
   get '/pacientes', to: 'welcome#pacientes'
   post '/pacientes', to: 'welcome#insert_paciente'

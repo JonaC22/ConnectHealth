@@ -3,7 +3,7 @@ var app = angular.module('statistics', []);
 app.controller('StatisticsController', ['$scope', '$http', function ($scope, $http) {
 
     $scope.type = 'count';
-    $scope.disease = 'Cancer de mama';
+    $scope.disease = 'Cancer de Mama';
     $scope.results = {};
 
     function success_function(data) {

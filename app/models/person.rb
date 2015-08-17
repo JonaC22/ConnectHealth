@@ -1,6 +1,6 @@
 class Person
   include Positionable
-  attr_accessor :name, :lastname, :birth_date, :gender, :medical_history,:diseases
+  attr_accessor :node, :name, :surname, :birth_date, :gender, :medical_history, :diseases
   @diseases = []
 
   def to_json(options={})
@@ -8,9 +8,26 @@ class Person
     super(options)
   end
 
+  def initialize(id, name, surname, birth_date, gender, medical_history =nil, diseases = [])
+    @id = id
+    @name = name
+    @surname = surname
+    @birth_date = birth_date
+    @gender = gender
+    @medical_history = medical_history
+    @diseases = diseases
+  end
+
+  #TODO add diseases
+  def self.create_from_neo(patient_id, neo)
+    node = Neography::Node.load(patient_id, neo)
+    patient = Person.new patient_id, node.nombre, node.apellido, node.fecha_nac, node.sexo
+    patient.node = node
+    patient
+  end
+
   def self.create_from_mysql(paciente)
-    persona = Person.new paciente['Nro_Afiliado'],paciente['Nombre'],paciente['Apellido'],DateTime.strptime(paciente['Fecha_Nac'], "%Y-%m-%d %H:%M:%S"),paciente['Sexo']
-    return persona
+    Person.new paciente['Nro_Afiliado'],paciente['Nombre'],paciente['Apellido'],DateTime.strptime(paciente['Fecha_Nac'], "%Y-%m-%d %H:%M:%S"),paciente['Sexo']
   end
 
   def create_father(nombre)
@@ -18,7 +35,7 @@ class Person
     fecha_nac=self.birth_date
     @father=Person.new -1, nombre, self.lastname, rand(Date.civil(fecha_nac.year-50, 1, 1)..Date.civil(fecha_nac.year-25, 12, 31)), 'M'
     neo.create_relationship('PADRE', get_node,@father.get_node)
-    return @father
+    @father
   end
 
   def create_mother(nombre,apellido)
@@ -27,7 +44,7 @@ class Person
     fecha_nac=self.birth_date
     @mother=Person.new -1, nombre, apellido, (rand(Date.civil(fecha_nac.year-40, 1, 1)..Date.civil(fecha_nac.year-17, 12, 31))), 'F'
     neo.create_relationship('MADRE',get_node, @mother.get_node)
-    return @mother
+    @mother
   end
 
   def add_to(pedigree) 
@@ -44,7 +61,7 @@ class Person
 
   def add_disease(disease)
     neo = Neography::Rest.new
-    enf_rel=neo.create_relationship('PADECE',get_node, disease.get_node)
+    enf_rel=neo.create_relationship('PADECE', get_node, disease.get_node)
     neo.reset_relationship_properties(enf_rel, {'edad_diagnostico' => disease.edad_diagnostico})
     diseases.append(disease)
   end
@@ -56,9 +73,7 @@ class Person
     neo = Neography::Rest.new
     @node = neo.create_node('fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname,'sexo' => @gender)
     neo.set_label(@node, 'PERSONA')
-    return @node
+    @node
   end
-
-
 
 end
