@@ -453,10 +453,34 @@
 
 
 <div id="sample">
-    <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px"></div>
-
+    <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px; "></div>
+    <div style="width:20%; " >
+        <input id="calcularGailButton" type="button" value="Calcular algoritmo de Gail" onclick="showGailForm()">
+        <form id="gailForm" style="display: none">
+            <div>
+                <label>Edad de primera menstuación:</label>
+                <input type="text" id="gailFirstMenst">
+            </div>
+            <div>
+                <label>Edad de primer parto (0 si nunca tuvo hijos):</label>
+                <input type="text" id="gailFirstBirth">
+            </div>
+            <div>
+                <label>Número de biopsas realizadas sobre mamas:</label>
+                <input type="text" id="gailBiopsies">
+                <br>
+            </div>
+            <input type="button" id="gailAccept" value="Calcular">
+        </form>
+    </div>
 </div>
 <script type="text/javascript">
+    function showGailForm(){
+        $("#calcularGailButton").hide()
+        $("#gailForm").show()
+    }
+
+
     $.urlParam = function(name){
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
         if (results==null){
