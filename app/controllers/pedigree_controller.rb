@@ -28,20 +28,24 @@ class PedigreeController < BaseController
     # Se extraen relaciones
     pedigree.patients.each do |patient|
       node = Neography::Node.load(patient.id, @neo)
+    end
+
+    #Se extraen relaciones
+    @pedigree.patients.each { |person|
+      node = Neography::Node.load(person.id, @neo)
 
       node.rels(:PADRE, :MADRE).outgoing.each do |relat|
-        YAML.dump relat
-        # person es el nodo en cuestion y persona_related la persona con la que se relaciona
+        #person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
       end
       node.rels(:PADECE).outgoing.each do |rel|
-        patient.diseases.append(Disease.new(rel.edad_diagnostico, rel.end_node.nombre))
+        person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
       end
-    end
+    }
 
     @pedigree.relations = relations
     @pedigree.current_patient = id_current_patient
-    render json: pedigree
+    render json: @pedigree.to_json
   end
 
   before_filter only: :create do
@@ -70,20 +74,20 @@ class PedigreeController < BaseController
     resultado = Resultado.new('Pedigree ingresado exitosamente', 200)
     render json: resultado
   end
-  #Se pasa por parametro el nodo del paciente
-  #Devuelve un par clave-valor, donde la clave es el id del pariente y el valor un array de id de enfermedades padecidas.
-  def get_first_deg_relatives node
+  # Se pasa por parametro el nodo del paciente
+  # Devuelve un par clave-valor, donde la clave es el id del pariente y el valor un array de id de enfermedades padecidas.
+  def get_first_deg_relatives(node)
     ret = []
-    ret.push *node.both(:MADRE)
-    ret.push *node.both(:PADRE)
+    ret.push(*node.both(:MADRE))
+    ret.push(*node.both(:PADRE))
 
     relatives = {}
-    rel_ids = ret.map{|rel| rel.neo_id}
+    rel_ids = ret.map(&:neo_id)
     rel_ids.each do |relative_id|
       n = Neography::Node.load(relative_id, @neo)
       diseases = []
-      diseases.push *n.outgoing(:PADECE)
-      diseases = diseases.map {|d| d.nombre}
+      diseases.push(*n.outgoing(:PADECE))
+      diseases = diseases.map(&:nombre)
       relatives.store(relative_id, diseases)
     end
 
@@ -93,9 +97,7 @@ class PedigreeController < BaseController
   def validate_relations(json, persona, tags)
     tags.each do |tag|
       count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
-      if count > 1
-        return Resultado.new("Relacion duplicada: #{tag}", 500)
-      end
+      return Resultado.new("Relacion duplicada: #{tag}", 500) if count > 1
     end
     Resultado.new('OK', 200)
   end
@@ -135,18 +137,21 @@ class PedigreeController < BaseController
     #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
     #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
-    calculator=RiskCalculator.new
-    patient = Person.create_from_neo params[:id], @neo
-    fdr = get_first_deg_relatives patient.node
+
+    calculator = RiskCalculator.new
+    patient = Person.create_from_neo params[:id]
+    #agregar validacion de que paciente no debe tener la enfermedad de la que se esta evaluando el riesgo
+    fdr = patient.get_first_deg_relatives
     affected_relatives = fdr.count {
         |value|
       unless value.nil?
         value.include? 'Cancer de Mama'
       end
     }
-    current_age = patient.age.to_i
+    current_age = patient.age
     projection_age=current_age+5
-    menarche_age = BcptConvert.MenarcheAge(params[:menstAge].to_i)
+    menarche_age = BcptConvert.MenarcheAge(params[:menarchAge].to_i)
+    #TODO obtener edad de primer hijo
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(params[:first_birth_age].to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy_bool = false

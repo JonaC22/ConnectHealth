@@ -12,13 +12,10 @@ class Pedigree < ActiveRecord::Base
   has_many :annotations
   has_many :queries
 
-  attr_accessor :current_patient, :elements
+  attr_accessor :current_patient, :elements, :relations
 
-  def add_relation(relation)
-    @relations << relation
-  end
-
-  def add_elements(elements)
-    elements.each { |element| element.add_to(self) }
+  def initialize(persons = [], relations = [])
+    @people = persons
+    @relations = relations
   end
 end

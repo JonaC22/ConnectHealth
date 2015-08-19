@@ -16,7 +16,7 @@ var error_function = function(XMLHttpRequest, textStatus, errorThrown) {
     else {
         alert("Ha ocurrido un error, por favor intente nuevamente o comuniquese con el responsable");
     }
-}
+};
 
 function openRelation(nodoId){
     $("#listPeopleAvailable").empty();

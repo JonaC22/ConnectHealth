@@ -898,7 +898,7 @@ yukonApp
                 })
 
                 .state('auth.visualizeGo', {
-                    page_title: 'Connect Health - Visualizar Pedigree',
+                    page_title: 'ConnectHealth - Visualizar Pedigree',
                     data: {
                         ncyBreadcrumbLabel: 'Visualizar Pedigree '
                     },

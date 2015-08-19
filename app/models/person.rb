@@ -19,10 +19,11 @@ class Person
   end
 
   #TODO add diseases
-  def self.create_from_neo(patient_id, neo)
-    node = Neography::Node.load(patient_id, neo)
+  def self.create_from_neo patient_id
+    node = Neography::Node.load patient_id
     patient = Person.new patient_id, node.nombre, node.apellido, node.fecha_nac, node.sexo
     patient.node = node
+    patient.diseases.push *node.outgoing(:PADECE)
     patient
   end
 
@@ -74,6 +75,30 @@ class Person
     @node = neo.create_node('fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname,'sexo' => @gender)
     neo.set_label(@node, 'PERSONA')
     @node
+  end
+
+  #Devuelve un par clave-valor, donde la clave es el id del pariente y el valor un array de nombres de enfermedades padecidas.
+  def get_first_deg_relatives
+
+    if @node.nil?
+      get_node
+    end
+
+    ret = []
+    ret.push *@node.both(:MADRE)
+    ret.push *@node.both(:PADRE)
+
+    relatives = {}
+    rel_ids = ret.map{|rel| rel.neo_id}
+    rel_ids.each do |relative_id|
+      n = Neography::Node.load relative_id
+      diseases = []
+      diseases.push *n.outgoing(:PADECE)
+      diseases = diseases.map {|d| d.nombre}
+      relatives.store relative_id, diseases
+    end
+
+    relatives
   end
 
 end
