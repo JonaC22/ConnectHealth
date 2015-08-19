@@ -13,9 +13,4 @@ class Pedigree < ActiveRecord::Base
   has_many :queries
 
   attr_accessor :current_patient, :elements, :relations
-
-  def initialize(persons = [], relations = [])
-    @people = persons
-    @relations = relations
-  end
 end

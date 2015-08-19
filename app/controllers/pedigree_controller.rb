@@ -50,7 +50,7 @@ class PedigreeController < BaseController
 
   before_filter only: :create do
     @json = JSON.parse(request.body.read)
-    unless @json.has_key?('personas') && @json.has_key?('relations')
+    unless @json.key?('personas') && @json.key?('relations')
       render nothing: true, status: :bad_request
     end
   end

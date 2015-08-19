@@ -12,6 +12,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  gender          :string(255)
+#  birth_date      :date
 #
 
 class Patient < ActiveRecord::Base
@@ -19,8 +20,8 @@ class Patient < ActiveRecord::Base
   has_one :medical_history
   belongs_to :pedigree
 
-  validates :document_number, uniqueness: true
-  validates_length_of :document_number, minimum: 7, maximum: 8
+  # validates :document_number, uniqueness: true
+  # validates_length_of :document_number, minimum: 7, maximum: 8
 
   attr_accessor :diseases
 

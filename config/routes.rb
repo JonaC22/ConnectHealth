@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   scope '/api' do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
+    resources :make_pedigrees, only: [:index]
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
       get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
