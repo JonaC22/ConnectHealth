@@ -5,33 +5,7 @@
 					<a ui-sref="auth.home"><img ng-src="images/logo.jpg" alt="site_logo" width="120" height="40"></a>
 				</div>
 				<ul class="header_notifications clearfix">
-					<li class="dropdown" on-toggle="toggled(open)" dropdown>
-						<span class="label label-primary">2</span>
-						<a href class="dropdown-toggle" dropdown-toggle><i class="el-icon-bell"></i></a>
-						<div class="dropdown-menu">
-							<ul>
-								<li>
-									<p>Lorem ipsum dolor sit amet&hellip;</p>
-									<small class="text-muted">20 minutes ago</small>
-								</li>
-								<li>
-									<p>Lorem ipsum dolor sit&hellip;</p>
-									<small class="text-muted">44 minutes ago</small>
-								</li>
-								<li>
-									<p>Lorem ipsum dolor&hellip;</p>
-									<small class="text-muted">10:55</small>
-								</li>
-								<li>
-									<p>Lorem ipsum dolor sit amet&hellip;</p>
-									<small class="text-muted">14.07.2014</small>
-								</li>
-								<li>
-									<a href="#" class="btn btn-xs btn-primary btn-block">All Alerts</a>
-								</li>
-							</ul>
-						</div>
-					</li>
+
 				</ul>
                 <div class="header_user_actions dropdown" on-toggle="toggled(open)" dropdown>
                     <div class="dropdown-toggle user_dropdown" dropdown-toggle>
@@ -47,8 +21,6 @@
                     </ul>
                 </div>
                 <div class="search_section hidden-sm hidden-xs" ng-controller="topSearchCtrl">
-                    <input type="text" class="form-control input-sm" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8">
-                    <button class="btn btn-link btn-sm" type="button"><span class="icon_search"></span></button>
                 </div>
 			</div>
 		</header>
