@@ -493,12 +493,14 @@
         var firstBirthAge = $("#gailFirstBirth").val;
         var numberBiopsy = $("#gailBiopsies").val;
 
+        $("#ajax-loader").show();
         $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarchAge="+menarchAge+"&first_birth_age="+firstBirthAge+"&numberBiopsy="+numberBiopsy, function( data ) {
             console.log(data);
             $("#gailResults").append("Riesgo absoluto en 5 años: "+(data.absoluteRiskIn5Years *100).toFixed(2) + "%");
             $("#gailResults").append("<br>Riesgo promedio en 5 años: "+(data.averageRiskIn5Years *100).toFixed(2)+ "%");
             $("#gailResults").append("<br>Riesgo absoluto a los 90 años: "+(data.absoluteRiskAt90yo *100).toFixed(2)+ "%");
             $("#gailResults").append("<br>Riesgo promedio a los 90 años: "+(data.averageRiskAt90yo *100).toFixed(2)+ "%");
+            $("#ajax-loader").hide();
         });
 
 
@@ -517,6 +519,7 @@
     init();
     var currentPatient;
 
+    $("#ajax-loader").show();
     $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
 
         console.log(data);
