@@ -6,6 +6,7 @@
     <script type="text/javascript" src="./javascripts/third-party/go-debug.js"></script>
     <!--<script type="text/javascript" src="./javascripts/third-party/angular.min.js"></script>-->
     <script type="text/javascript" src="./javascripts/third-party/jquery-1.11.3.min.js"></script>
+    <img id="ajax-loader" src="images/ajax-loader.gif">
     <script id="code">
 
 
@@ -478,9 +479,10 @@
     </div>
 </div>
 <script type="text/javascript">
+
     function showGailForm(){
-        $("#calcularGailButton").hide()
-        $("#gailForm").show()
+        $("#calcularGailButton").hide();
+        $("#gailForm").show();
     }
 
     function calculateGail(){
@@ -514,7 +516,9 @@
     };
     init();
     var currentPatient;
+
     $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
+
         console.log(data);
         var nodos = {};
         var people = [];
@@ -523,21 +527,21 @@
 
         $.each( data.people, function( key, val ) {
             nodos[val.id] = val;
-            if(val.diseases.length>0) val.attributes_go=["B"]
+            if(val.diseases.length>0) val.attributes_go=["B"];
         });
 
         $.each( data.relations, function( key, val ) {
             if(val.name == "MADRE"){
                 nodos[val.from].mother = val.to;
                 if(nodos[val.from].father!=undefined){
-                    nodos[nodos[val.from].mother].husband = nodos[val.from].father
-                    nodos[nodos[val.from].father].wife = nodos[val.from].mother
+                    nodos[nodos[val.from].mother].husband = nodos[val.from].father;
+                    nodos[nodos[val.from].father].wife = nodos[val.from].mother;
                 }
             }else if(val.name=="PADRE"){
                 nodos[val.from].father = val.to;
                 if(nodos[val.from].mother!=undefined){
-                    nodos[nodos[val.from].father].wife = nodos[val.from].mother
-                    nodos[nodos[val.from].mother].husband = nodos[val.from].father
+                    nodos[nodos[val.from].father].wife = nodos[val.from].mother;
+                    nodos[nodos[val.from].mother].husband = nodos[val.from].father;
                 }
             }
         });
@@ -558,6 +562,7 @@
         var patientId = data.current.id;
         console.log(people);
         setupDiagram(myDiagram, people, patientId /* focus on this person */);
+        $("#ajax-loader").hide();
     });
 </script>
 </body>
