@@ -1,4 +1,4 @@
-class PedigreeController < BaseController
+class PedigreesController < BaseController
   # GET /api/pedigree
   def index
     id_current_patient = params[:id]
@@ -16,7 +16,7 @@ class PedigreeController < BaseController
 
   def pedigree(params)
     return unless params[:id]
-    pedigree = pedigree.find_by_id params[:id]
+    pedigree = Pedigree.find_by_id! params[:id]
     visualize pedigree, params[:current_patient]
   end
 
