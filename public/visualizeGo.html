@@ -6,7 +6,7 @@
     <script type="text/javascript" src="./javascripts/third-party/go-debug.js"></script>
     <!--<script type="text/javascript" src="./javascripts/third-party/angular.min.js"></script>-->
     <script type="text/javascript" src="./javascripts/third-party/jquery-1.11.3.min.js"></script>
-    <img id="ajax-loader" src="images/ajax-loader.gif">
+
     <script id="code">
 
 
@@ -459,15 +459,15 @@
         <input id="calcularGailButton" type="button" value="Calcular algoritmo de Gail" onclick="showGailForm()">
         <form id="gailForm" style="display: none">
             <div>
-                <label>Edad de primera menstuación:</label>
-                <input type="text" id="gailFirstMenst">
+                <label>Edad de menarca:</label>
+                <input type="text" id="gailMenarchAge">
             </div>
             <div>
                 <label>Edad de primer parto (0 si nunca tuvo hijos):</label>
                 <input type="text" id="gailFirstBirth">
             </div>
             <div>
-                <label>Número de biopsas realizadas sobre mamas:</label>
+                <label>Cantidad de biopsas de mama realizadas:</label>
                 <input type="text" id="gailBiopsies">
                 <br>
             </div>
@@ -489,11 +489,11 @@
         $("#gailForm").hide();
         $("#calcularGailButton").show();
         $("#gailResults").empty();
-        var menstAge = $("#gailFirstMenst").val;
+        var menarchAge = $("#gailMenarchAge").val;
         var firstBirthAge = $("#gailFirstBirth").val;
         var numberBiopsy = $("#gailBiopsies").val;
 
-        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menstAge="+menstAge+"&first_birth_age="+firstBirthAge+"&numberBiopsy="+numberBiopsy, function( data ) {
+        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarchAge="+menarchAge+"&first_birth_age="+firstBirthAge+"&numberBiopsy="+numberBiopsy, function( data ) {
             console.log(data);
             $("#gailResults").append("Riesgo absoluto en 5 años: "+(data.absoluteRiskIn5Years *100).toFixed(2) + "%");
             $("#gailResults").append("<br>Riesgo promedio en 5 años: "+(data.averageRiskIn5Years *100).toFixed(2)+ "%");
@@ -565,5 +565,6 @@
         $("#ajax-loader").hide();
     });
 </script>
+<img id="ajax-loader" src="images/ajax-loader.gif">
 </body>
 </html>

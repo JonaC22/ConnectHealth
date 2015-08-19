@@ -40,7 +40,7 @@ class PedigreeController < BaseController
     patients['data'].each do |data_array|
       data_array.each do |node|
         data = node['data']
-        person = Person.new node['metadata']['id'], data['nombre'], data['apellido'], data['fecha_nacimiento'], data['sexo']
+        person = Person.new node['metadata']['id'], data['nombre'], data['apellido'], data['fecha_nac'], data['sexo']
         @pedigree.add person
         if person.id.to_s == id_current_patient
           @pedigree.set_current person
@@ -156,7 +156,8 @@ class PedigreeController < BaseController
     }
     current_age = patient.age
     projection_age=current_age+5
-    menarche_age = BcptConvert.MenarcheAge(params[:menstAge].to_i)
+    menarche_age = BcptConvert.MenarcheAge(params[:menarchAge].to_i)
+    #TODO obtener edad de primer hijo
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(params[:first_birth_age].to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy_bool = false

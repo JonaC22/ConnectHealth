@@ -23,4 +23,5 @@ module ConnectHealth
         'X-Frame-Options' => 'ALLOWALL'
     }
   end
+
 end
