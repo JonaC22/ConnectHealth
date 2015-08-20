@@ -167,8 +167,7 @@ class PedigreeController < BaseController
     current_age = patient.age
     projection_age=current_age+5
     menarche_age = BcptConvert.MenarcheAge(params[:menarchAge].to_i)
-    #TODO obtener edad de primer hijo
-    first_live_birth_age=BcptConvert.FirstLiveBirthAge(params[:first_birth_age].to_i)
+    first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy_bool = false
     ever_had_biopsy = ever_had_biopsy_bool ? 1 : 0

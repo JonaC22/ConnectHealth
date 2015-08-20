@@ -463,10 +463,6 @@
                 <input type="text" id="gailMenarchAge">
             </div>
             <div>
-                <label>Edad de primer parto (0 si nunca tuvo hijos):</label>
-                <input type="text" id="gailFirstBirth">
-            </div>
-            <div>
                 <label>Cantidad de biopsas de mama realizadas:</label>
                 <input type="text" id="gailBiopsies">
                 <br>
@@ -490,11 +486,10 @@
         $("#calcularGailButton").show();
         $("#gailResults").empty();
         var menarchAge = $("#gailMenarchAge").val;
-        var firstBirthAge = $("#gailFirstBirth").val;
         var numberBiopsy = $("#gailBiopsies").val;
 
         $("#ajax-loader").show();
-        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarchAge="+menarchAge+"&first_birth_age="+firstBirthAge+"&numberBiopsy="+numberBiopsy, function( data ) {
+        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarchAge="+menarchAge+"&numberBiopsy="+numberBiopsy, function( data ) {
 
             console.log(data);
             var result = $("#gailResults");

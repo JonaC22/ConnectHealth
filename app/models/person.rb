@@ -105,4 +105,30 @@ class Person < Positionable
     relatives
   end
 
+  #Devuelve la edad a la que tuvo el primer hijo nacido vivo, sino tuvo hijos devuelve 0
+  def get_first_live_birth_age
+
+    if @node.nil?
+      get_node
+    end
+
+    ret = []
+    ret.push *@node.incoming(:MADRE)
+
+    birth_ages = []
+    patient_age = age
+    rel_ids = ret.map{|rel| rel.neo_id}
+    rel_ids.each do |relative_id|
+      child = Person::create_from_neo relative_id
+      birth_ages.push (patient_age - child.age)
+    end
+
+    if birth_ages.empty?
+      0
+    else
+      birth_ages.min
+    end
+
+  end
+
 end
