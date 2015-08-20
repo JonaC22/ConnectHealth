@@ -146,11 +146,17 @@ class PedigreeController < BaseController
 
     calculator = RiskCalculator.new
     patient = Person.create_from_neo params[:id]
+
     if patient.gender == 'M'
       error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes de sexo masculino'}
       return render json: error
     end
-    #agregar validacion de que paciente no debe tener la enfermedad de la que se esta evaluando el riesgo
+
+    if patient.diseases.include? 'Cancer de Mama'
+      error = {status: 'ERROR', message: 'El paciente que ya padece la enfermedad'}
+      return render json: error
+    end
+
     fdr = patient.get_first_deg_relatives
     affected_relatives = fdr.count {
         |value|

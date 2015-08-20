@@ -18,12 +18,16 @@ class Person < Positionable
     @diseases = diseases
   end
 
-  #TODO add diseases
   def self.create_from_neo patient_id
     node = Neography::Node.load patient_id
     patient = Person.new patient_id, node.nombre, node.apellido, node.fecha_nac, node.sexo
     patient.node = node
-    patient.diseases.push *node.outgoing(:PADECE)
+
+    diseases = []
+    diseases.push *node.outgoing(:PADECE)
+    diseases = diseases.map {|d| d.nombre}
+    patient.diseases.push *diseases
+
     patient
   end
 
