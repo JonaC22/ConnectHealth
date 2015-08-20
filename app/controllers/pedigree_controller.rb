@@ -146,6 +146,17 @@ class PedigreeController < BaseController
 
     calculator = RiskCalculator.new
     patient = Person.create_from_neo params[:id]
+    current_age = patient.age
+
+    if current_age > 90
+      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes mayores a 90 años'}
+      return render json: error
+    end
+
+    if current_age < 35
+      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes menores a 35 años'}
+      return render json: error
+    end
 
     if patient.gender == 'M'
       error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes de sexo masculino'}
@@ -164,7 +175,7 @@ class PedigreeController < BaseController
         value.include? 'Cancer de Mama'
       end
     }
-    current_age = patient.age
+
     projection_age=current_age+5
     menarche_age = BcptConvert.MenarcheAge(params[:menarchAge].to_i)
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age)

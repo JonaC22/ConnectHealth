@@ -13,6 +13,7 @@ class Person < Positionable
     @name = name
     @surname = surname
     @birth_date = birth_date
+    @age = age
     @gender = gender
     @medical_history = medical_history
     @diseases = diseases
