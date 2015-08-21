@@ -90,14 +90,18 @@ class Person < Positionable
     end
 
     ret = []
-    #Se obtiene la madre y las hermanas de la paciente
-    query = " match (h)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(h)
-              where id(h) <> id(n) and id(n) = #{@id}
-              return h as nodo
+    #Se obtiene la madre, las hermanas, y las hijas de la paciente
+    query = " match (he)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(he)
+              where id(he) <> id(n) and id(n) = #{@id}
+              return he as nodo
               UNION
               match (n)-[:MADRE]->(m)
               where id(n) = #{@id}
-              return m as nodo"
+              return m as nodo
+              UNION
+              match (n)<-[:MADRE]-(hi)
+              where id(n) = #{@id}
+              return hi as nodo"
 
     neo = Neography::Rest.new
     ret = neo.execute_query(query)
