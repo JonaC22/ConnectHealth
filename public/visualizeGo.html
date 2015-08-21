@@ -460,11 +460,11 @@
         <form id="gailForm" style="display: none">
             <div>
                 <label>Edad de menarca:</label>
-                <input type="text" id="gailMenarchAge">
+                <input type="number" id="gailMenarcheAge">
             </div>
             <div>
                 <label>Cantidad de biopsas de mama realizadas:</label>
-                <input type="text" id="gailBiopsies">
+                <input type="number" id="gailBiopsies">
                 <br>
             </div>
             <input type="button" id="gailAccept" value="Calcular" onclick="calculateGail()">
@@ -485,21 +485,21 @@
         $("#gailForm").hide();
         $("#calcularGailButton").show();
         $("#gailResults").empty();
-        var menarchAge = $("#gailMenarchAge").val;
-        var numberBiopsy = $("#gailBiopsies").val;
+        var menarcheAge = $("#gailMenarcheAge").val();
+        var numberBiopsy = $("#gailBiopsies").val();
 
         $("#ajax-loader").show();
-        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarchAge="+menarchAge+"&numberBiopsy="+numberBiopsy, function( data ) {
+        $.getJSON( "api/pedigree/gailModelCalculate?id=" + currentPatient.id+"&menarcheAge="+menarcheAge+"&numberBiopsy="+numberBiopsy, function( data ) {
 
             console.log(data);
             var result = $("#gailResults");
             if(data.status == "ERROR")
                 result.append("ERROR: " + data.message);
             else {
-                result.append("Riesgo absoluto en 5 años: "+(data.absoluteRiskIn5Years *100).toFixed(2) + "%");
-                result.append("<br>Riesgo promedio en 5 años: "+(data.averageRiskIn5Years *100).toFixed(2)+ "%");
-                result.append("<br>Riesgo absoluto a los 90 años: "+(data.absoluteRiskAt90yo *100).toFixed(2)+ "%");
-                result.append("<br>Riesgo promedio a los 90 años: "+(data.averageRiskAt90yo *100).toFixed(2)+ "%");
+                result.append("Riesgo absoluto de este paciente en 5 años: "+(data.absoluteRiskIn5Years *100).toFixed(2) + "%");
+                result.append("<br>Riesgo promedio de una persona en 5 años: "+(data.averageRiskIn5Years *100).toFixed(2)+ "%");
+                result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: "+(data.absoluteRiskAt90yo *100).toFixed(2)+ "%");
+                result.append("<br>Riesgo promedio de una persona hasta los 90 años: "+(data.averageRiskAt90yo *100).toFixed(2)+ "%");
             }
 
             $("#ajax-loader").hide();
