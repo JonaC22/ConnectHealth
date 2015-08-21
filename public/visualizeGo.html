@@ -544,6 +544,7 @@
                         val.attributes_go.push("H");
                         break;
                     default:
+                        val.attributes_go.push("E");
                         break;
                 }
             }
@@ -571,10 +572,14 @@
             //si es mayor de 90, tachar con una raya roja
             if(val.age > 90) {
                 val.attributes_go.push("S");
+                p.n=val.name + " " + val.surname;
+            }
+            else {
+                p.n=val.name + " " + val.surname + ", edad: " + val.age;
             }
 
             p.key = val.id;
-            p.n=val.name +" "+ val.surname;
+
             p.s=val.gender.toUpperCase();
             if(val.mother!=undefined) p.m=val.mother;
             if(val.father!=undefined) p.f=val.father;
