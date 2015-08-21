@@ -90,17 +90,29 @@ class Person < Positionable
     end
 
     ret = []
-    ret.push *@node.both(:MADRE)
-    ret.push *@node.both(:PADRE)
+    #Se obtiene la madre y las hermanas de la paciente
+    query = " match (h)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(h)
+              where id(h) <> id(n) and id(n) = #{@id}
+              return h as nodo
+              UNION
+              match (n)-[:MADRE]->(m)
+              where id(n) = #{@id}
+              return m as nodo"
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
 
     relatives = {}
-    rel_ids = ret.map{|rel| rel.neo_id}
-    rel_ids.each do |relative_id|
-      n = Neography::Node.load relative_id
-      diseases = []
-      diseases.push *n.outgoing(:PADECE)
-      diseases = diseases.map {|d| d.nombre}
-      relatives.store relative_id, diseases
+
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        relative_id = node['metadata']['id']
+        n = Neography::Node.load relative_id
+        diseases = []
+        diseases.push *n.outgoing(:PADECE)
+        diseases = diseases.map {|d| d.nombre}
+        relatives.store relative_id, diseases
+      end
     end
 
     relatives

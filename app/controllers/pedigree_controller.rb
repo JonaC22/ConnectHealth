@@ -169,6 +169,8 @@ class PedigreeController < BaseController
     end
 
     fdr = patient.get_first_deg_relatives
+    puts YAML::dump fdr
+
     affected_relatives = fdr.count {
         |value|
       unless value.nil?
