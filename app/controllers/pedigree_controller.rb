@@ -183,7 +183,7 @@ class PedigreeController < BaseController
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age.to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy = params[:numberBiopsy].to_i > 0
-    number_of_biopsy = ever_had_biopsy ? params[:numberBiopsy] : 0
+    number_of_biopsy = ever_had_biopsy ? params[:numberBiopsy].to_i : 0
     race = 1 # White or Unknown
     first_deg_relatives = BcptConvert.FirstDegRelatives(affected_relatives, race)
     ihyp=BcptConvert.hyperplasia(0, ever_had_biopsy)
