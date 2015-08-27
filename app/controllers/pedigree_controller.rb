@@ -148,16 +148,6 @@ class PedigreeController < BaseController
     patient = Person.create_from_neo params[:id]
     current_age = patient.age
 
-    if current_age > 90
-      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes mayores a 90 años'}
-      return render json: error
-    end
-
-    if current_age < 35
-      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes menores a 35 años'}
-      return render json: error
-    end
-
     if patient.gender == 'M'
       error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes de sexo masculino'}
       return render json: error
@@ -165,6 +155,16 @@ class PedigreeController < BaseController
 
     if patient.diseases.include? 'Cancer de Mama'
       error = {status: 'ERROR', message: 'El paciente que ya padece la enfermedad'}
+      return render json: error
+    end
+    #TODO agregar validacion para pacientes fallecidos algoritmo no aplicable
+    if current_age > 90
+      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes mayores a 90 años'}
+      return render json: error
+    end
+
+    if current_age < 35
+      error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes menores a 35 años'}
       return render json: error
     end
 
