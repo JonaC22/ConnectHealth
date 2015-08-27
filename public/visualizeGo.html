@@ -455,6 +455,9 @@
 
 <div id="sample">
         <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px; "></div>
+    <div>
+        <label id="current_patient"></label>
+    </div>
     <div style="" >
         <input id="calcularGailButton" type="button" value="Calcular algoritmo de Gail" onclick="showGailForm()">
         <form id="gailForm" style="display: none">
@@ -522,6 +525,7 @@
     var currentPatient;
 
     $("#ajax-loader").show();
+    $("#current_patient").hide();
     $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
 
         console.log(data);
@@ -590,11 +594,18 @@
         });
 
 //        people.push( { key: 999, n: "abuela", s: "F", a: ["B","H", "L"] });
-        var patientId = data.current.id;
         console.log(people);
-        setupDiagram(myDiagram, people, patientId /* focus on this person */);
+
+        setupDiagram(myDiagram, people, null);
         $("#ajax-loader").hide();
+        set_current_patient(currentPatient);
     });
+
+    function set_current_patient(patient){
+        console.log("se ejecuto");
+        $("#current_patient").text(patient.name+" "+patient.surname+" edad:"+patient.age+" sexo:"+patient.gender+" id:"+patient.id);
+        $("#current_patient").show();
+    }
 </script>
 <img id="ajax-loader" src="images/ajax-loader.gif">
 </body>
