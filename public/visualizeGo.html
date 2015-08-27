@@ -523,11 +523,13 @@
     };
     init();
     var currentPatient;
+    var familia;
 
     $("#ajax-loader").show();
     $("#current_patient").hide();
     $.getJSON( "api/pedigree?id=" + $.urlParam('id'), function( data ) {
 
+        var family = data;
         console.log(data);
         var nodos = {};
         var people = [];
@@ -597,16 +599,36 @@
         console.log(people);
 
         setupDiagram(myDiagram, people, null);
+
+        myDiagram.addDiagramListener("ObjectSingleClicked",
+                function(e) {
+                    var part = e.subject.part;
+                    var patient = get_patient_object(family.people, part.data.key);
+                    if (!(part instanceof go.Link)) set_current_patient(patient);
+                });
+
         $("#ajax-loader").hide();
         set_current_patient(currentPatient);
     });
 
     function set_current_patient(patient){
-        console.log("se ejecuto");
-        $("#current_patient").text(patient.name+" "+patient.surname+" edad:"+patient.age+" sexo:"+patient.gender+" id:"+patient.id);
+        currentPatient = patient;
+        $("#current_patient").text(patient.name+" "+patient.surname+" edad: "+patient.age+" sexo: "+patient.gender+" id: "+patient.id);
         $("#current_patient").show();
     }
+
+    function get_patient_object(people, id){
+        console.log("people", people);
+        var patient;
+        $.each(people, function (key, val){
+            console.log("patient", val);
+            if(val.id == id) patient = val;
+        });
+
+        return patient;
+    }
 </script>
+<label id="diagramEventsMsg"></label>
 <img id="ajax-loader" src="images/ajax-loader.gif">
 </body>
 </html>
