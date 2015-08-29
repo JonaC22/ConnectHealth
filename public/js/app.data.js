@@ -280,7 +280,7 @@ $(document).ready(function() {
 			    // Create IMG tag for each returned image
 			    formatter: function (items) {
 			      $.each(items, function (index, item) {
-			        item.geonameId = '<a href="#edit?geonameid='+item.geonameId+'"><i class="icon-pencil"></i></a>';
+			        item.geonameId = '<a href="#edit?geonameid='+item.geonameId+'"><i class="fa fa-pencil"></i></a>';
 			      });
 			    }
 		  })
