@@ -183,7 +183,7 @@ class PedigreeController < BaseController
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age.to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy = params[:numberBiopsy].to_i > 0
-    number_of_biopsy = ever_had_biopsy ? params[:numberBiopsy].to_i : 0
+    number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(params[:numberBiopsy].to_i,true) : 0
     race = 1 # White or Unknown
     first_deg_relatives = BcptConvert.FirstDegRelatives(affected_relatives, race)
     ihyp=BcptConvert.hyperplasia(0, ever_had_biopsy)
@@ -191,6 +191,8 @@ class PedigreeController < BaseController
 
 
     # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
+    logger.info "Gail Params: current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race "
+    logger.info [current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race].to_s
     abs_risk = calculator.calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
     avg_risk = calculator.calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
     abs_risk90 = calculator.calculate_absolute_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
