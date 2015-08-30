@@ -162,6 +162,7 @@ $(document).ready(function() {
 		this._formatter = options.formatter;
 		this._columns = options.columns;
 		this._delay = options.delay;
+		this._url = options.url;
 	};
 
 	DataGridDataSource.prototype = {
@@ -171,7 +172,7 @@ $(document).ready(function() {
 		},
 
 		data: function (options, callback) {
-			var url = 'js/data/datagrid.json';
+			var url = this._url;
 			var self = this;
 
 			setTimeout(function () {
@@ -180,11 +181,11 @@ $(document).ready(function() {
 
 				$.ajax(url, {
 					dataType: 'json',
-					async: false,
+					async: true,
 					type: 'GET'
 				}).done(function (response) {
 
-					data = response.geonames;
+					data = response.people;
 					// SEARCHING
 					if (options.search) {
 						data = _.filter(data, function (item) {
@@ -204,11 +205,11 @@ $(document).ready(function() {
 					if (options.filter) {
 						data = _.filter(data, function (item) {
 							switch(options.filter.value) {
-								case 'lt5m':
-									if(item.population < 5000000) return true;
+								case 'onlyFemale':
+									if(item.gender == "F") return true;
 									break;
-								case 'gte5m':
-									if(item.population >= 5000000) return true;
+								case 'onlyMale':
+									if(item.gender == "M") return true;
 									break;
 								default:
 									return true;
@@ -251,28 +252,43 @@ $(document).ready(function() {
 			    // Column definitions for Datagrid
 			    columns: [
 					{
-						property: 'toponymName',
-						label: 'Name',
+						property: 'id',
+						label: 'Id',
 						sortable: true
 					},
 					{
-						property: 'countrycode',
-						label: 'Country',
+						property: 'name',
+						label: 'Nombre',
 						sortable: true
 					},
 					{
-						property: 'population',
-						label: 'Population',
+						property: 'surname',
+						label: 'Apellido',
 						sortable: true
 					},
 					{
-						property: 'fcodeName',
-						label: 'Type',
+						property: 'birth_date',
+						label: 'Fecha de Nac.',
+						sortable: true
+					},
+                    {
+						property: 'age',
+						label: 'Edad',
+						sortable: true
+					},
+                    {
+						property: 'gender',
+						label: 'Sexo',
 						sortable: true
 					},
 					{
-						property: 'geonameId',
-						label: 'Edit',
+						property: 'pedigree',
+						label: 'Pedigree',
+						sortable: true
+					},
+					{
+						property: 'edit',
+						label: 'Editar',
 						sortable: true
 					}
 				],
@@ -280,9 +296,12 @@ $(document).ready(function() {
 			    // Create IMG tag for each returned image
 			    formatter: function (items) {
 			      $.each(items, function (index, item) {
-			        item.geonameId = '<a href="#edit?geonameid='+item.geonameId+'"><i class="fa fa-pencil"></i></a>';
+			        item.edit = '<a href="#edit?id='+item.id+'"><i class="fa fa-pencil"></i></a>';
+			        item.pedigree = '<a href="pedigree.html?id='+item.id+'"><i class="fa fa-eye"></i></a>';
 			      });
-			    }
+			    },
+                url: 'js/data/patients.json'
+//                    '/api/pedigree?id=751'//
 		  })
 	    });
 	});
