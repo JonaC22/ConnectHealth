@@ -13,17 +13,22 @@ class Person
     @name = name
     @surname = surname
     @birth_date = birth_date
+    @age = age
     @gender = gender
     @medical_history = medical_history
     @diseases = diseases
   end
 
-  #TODO add diseases
   def self.create_from_neo patient_id
     node = Neography::Node.load patient_id
     patient = Person.new patient_id, node.nombre, node.apellido, node.fecha_nac, node.sexo
     patient.node = node
-    patient.diseases.push *node.outgoing(:PADECE)
+
+    diseases = []
+    diseases.push *node.outgoing(:PADECE)
+    diseases = diseases.map {|d| d.nombre}
+    patient.diseases.push *diseases
+
     patient
   end
 
@@ -85,20 +90,62 @@ class Person
     end
 
     ret = []
-    ret.push *@node.both(:MADRE)
-    ret.push *@node.both(:PADRE)
+    #Se obtiene la madre, las hermanas, y las hijas de la paciente
+    query = " match (he)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(he)
+              where id(he) <> id(n) and id(n) = #{@id}
+              return he as nodo
+              UNION
+              match (n)-[:MADRE]->(m)
+              where id(n) = #{@id}
+              return m as nodo
+              UNION
+              match (n)<-[:MADRE]-(hi)
+              where id(n) = #{@id}
+              return hi as nodo"
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
 
     relatives = {}
-    rel_ids = ret.map{|rel| rel.neo_id}
-    rel_ids.each do |relative_id|
-      n = Neography::Node.load relative_id
-      diseases = []
-      diseases.push *n.outgoing(:PADECE)
-      diseases = diseases.map {|d| d.nombre}
-      relatives.store relative_id, diseases
+
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        relative_id = node['metadata']['id']
+        n = Neography::Node.load relative_id
+        diseases = []
+        diseases.push *n.outgoing(:PADECE)
+        diseases = diseases.map {|d| d.nombre}
+        relatives.store relative_id, diseases
+      end
     end
 
     relatives
+  end
+
+  #Devuelve la edad a la que tuvo el primer hijo nacido vivo, sino tuvo hijos devuelve 0
+  def get_first_live_birth_age
+
+    if @node.nil?
+      get_node
+    end
+
+    ret = []
+    ret.push *@node.incoming(:MADRE)
+
+    birth_ages = []
+    patient_age = age
+    rel_ids = ret.map{|rel| rel.neo_id}
+    rel_ids.each do |relative_id|
+      child = Person::create_from_neo relative_id
+      birth_ages.push (patient_age - child.age)
+    end
+
+    if birth_ages.empty?
+      0
+    else
+      birth_ages.min
+    end
+
   end
 
 end

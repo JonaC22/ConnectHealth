@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ConnectHealth</title>
+  <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/font.css" type="text/css" cache="false" />
+  <link rel="stylesheet" href="css/plugin.css" type="text/css" />
+  <link rel="stylesheet" href="css/app.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="js/ie/respond.min.js" cache="false"></script>
+    <script src="js/ie/html5.js" cache="false"></script>
+    <script src="js/ie/fix.js" cache="false"></script>
+  <![endif]-->
+</head>
+<body>
+  <section class="hbox stretch">
+      <!-- .aside -->
+      <aside class="bg-success dker aside-sm nav-vertical" id="nav">
+          <section class="vbox">
+              <header class="bg-black nav-bar">
+                  <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+                      <i class="fa fa-bars"></i>
+                  </a>
+                  <a href="#" class="nav-brand" data-toggle="fullscreen"><img src="./images/logo_notext.png"></a>
+                  <a class="btn btn-link visible-xs" data-toggle="collapse" data-target=".navbar-collapse">
+                      <i class="fa fa-comment-o"></i>
+                  </a>
+              </header>
+              <section>
+                  <!-- nav -->
+                  <nav class="nav-primary hidden-xs">
+                      <ul class="nav">
+                          <li class="active">
+                              <a href="index.html">
+                                  <i class="fa fa-eye"></i>
+                                  <span>Inicio</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="pacientes.html">
+                                  <i class="fa fa-users"></i>
+                                  <span>Pacientes</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="pedigree.html">
+                                  <i class="fa fa-sitemap"></i>
+                                  <span>Pedigree</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="enfermedades.html">
+                                  <i class="fa fa-stethoscope"></i>
+                                  <span>Enfermedades</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="estadisticas.html">
+                                  <i class="fa fa-bar-chart-o"></i>
+                                  <span>Estadísticas</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="tasks.html">
+                                  <i class="fa fa-tasks"></i>
+                                  <span>Tareas</span>
+                              </a>
+                          </li>
+                          <li>
+                              <a href="notes.html">
+                                  <i class="fa fa-pencil"></i>
+                                  <span>Notas</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </nav>
+                  <!-- / nav -->
+              </section>
+              <footer class="footer bg-gradient hidden-xs">
+                  <a href="modal.lockme.html" data-toggle="ajaxModal" class="btn btn-sm btn-link m-r-n-xs pull-right">
+                      <i class="fa fa-power-off"></i>
+                  </a>
+                  <a href="#nav" data-toggle="class:nav-vertical" class="btn btn-sm btn-link m-l-n-sm">
+                      <i class="fa fa-bars"></i>
+                  </a>
+              </footer>
+          </section>
+      </aside>
+      <!-- /.aside -->
+    <!-- .vbox -->
+    <section id="content">
+        <header class="header bg-black navbar navbar-inverse">
+            <div class="collapse navbar-collapse pull-in">
+                <ul class="nav navbar-nav m-l-n">
+                </ul>
+                <form class="navbar-form navbar-left m-t-sm" role="search">
+                    <div class="form-group">
+                        <div class="input-group input-s">
+                            <input type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-sm btn-success btn-icon"><i class="fa fa-search"></i></button>
+                  </span>
+                        </div>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="hidden-xs">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o text-white"></i>
+                            <span class="badge up bg-info m-l-n-sm">2</span>
+                        </a>
+                        <section class="dropdown-menu animated fadeInUp input-s-lg">
+                            <section class="panel bg-white">
+                                <header class="panel-heading">
+                                    <strong>You have <span class="count-n">2</span> notifications</strong>
+                                </header>
+                                <div class="list-group">
+                                    <a href="#" class="media list-group-item">
+                        <span class="pull-left thumb-sm">
+                          <img src="images/avatar.jpg" alt="John said" class="img-circle">
+                        </span>
+                        <span class="media-body block m-b-none">
+                          Use awesome animate.css<br>
+                          <small class="text-muted">28 Aug 13</small>
+                        </span>
+                                    </a>
+                                    <a href="#" class="media list-group-item">
+                        <span class="media-body block m-b-none">
+                          1.0 initial released<br>
+                          <small class="text-muted">27 Aug 13</small>
+                        </span>
+                                    </a>
+                                </div>
+                                <footer class="panel-footer text-sm">
+                                    <a href="#" class="pull-right"><i class="fa fa-cog"></i></a>
+                                    <a href="#">See all the notifications</a>
+                                </footer>
+                            </section>
+                        </section>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">
+                    <img src="images/avatar.jpg">
+                  </span>
+                            John.Smith <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu animated fadeInLeft">
+                            <li>
+                                <a href="#">Settings</a>
+                            </li>
+                            <li>
+                                <a href="profile.html">Profile</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <span class="badge bg-danger pull-right">3</span>
+                                    Notifications
+                                </a>
+                            </li>
+                            <li>
+                                <a href="docs.html">Help</a>
+                            </li>
+                            <li>
+                                <a href="signin.html">Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </header>
+      <section class="hbox stretch" id="noteapp">
+        <aside>
+          <section class="vbox">
+            <header class="header bg-light lter bg-gradient b-b">
+              <button class="btn btn-success pull-right btn-sm" id="new-note"><i class="fa fa-plus"></i> NUEVO</button>
+              <p>Notas</p>
+            </header>
+            <section class="bg-light lter">
+              <section class="hbox stretch">
+                <!-- .aside -->
+                <aside>
+                  <section class="vbox b-b">
+                    <section class="paper" id="note-detail">
+                      <!-- note detail -->
+                      <script type="text/template" id="note-template">
+                        <textarea type="text" class="form-control scrollable" placeholder="Type your note here"><%- description %></textarea>
+                      </script>
+                      <!-- note detail -->
+                    </section>
+                  </section>
+                </aside>
+                <!-- /.aside -->
+              </section>
+            </section>
+          </section>
+        </aside>
+        <!-- .aside -->
+        <aside class="aside-lg bg-light lter b-l" id="note-list">
+          <section class="vbox">
+            <header class="header bg-light lter bg-gradient clearfix b-b">
+              <div class="input-group m-t-sm">
+                <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+                <input type="text" class="form-control input-sm" id="search-note" placeholder="Buscar">
+              </div>
+            </header>
+            <section class="scrollable">
+              <div class="wrapper">
+                <!-- note list -->
+                <ul id="note-items" class="list-group"></ul>
+                  <!-- templates -->
+                  <script type="text/template" id="item-template">
+                    <div class="view" id="note-<%- id %>">
+                      <button class="destroy close hover-action">&times;</button>
+                      <div class="note-name">
+                        <strong>
+                        <%- (name && name.length) ? name : 'New note' %>
+                        </strong>
+                      </div>
+                      <div class="note-desc">
+                        <%- description.replace(name,'').length ? description.replace(name,'') : 'empty note' %>
+                      </div>
+                      <span class="text-xs text-muted"><%- moment(parseInt(date)).format('MMM Do, h:mm a') %></span>
+                    </div>
+                  </script>
+                  <!-- / template  -->
+                <!-- note list -->
+              </div>
+            </section>
+          </section>          
+        </aside>
+        <!-- /.aside -->
+      </section>
+    </section>
+    <!-- /.vbox -->
+  </section>
+	<script src="js/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="js/bootstrap.js"></script>
+  <!-- App -->
+  <script src="js/app.js"></script>
+  <script src="js/app.plugin.js"></script>
+  <script src="js/app.data.js"></script>  
+  <script src="js/libs/underscore-min.js"></script>
+  <script src="js/libs/backbone-min.js"></script>
+  <script src="js/libs/backbone.localStorage-min.js"></script>  
+  <script src="js/libs/moment.min.js"></script>
+  <!-- Notes -->
+  <script src="js/apps/notes.js" cache="false"></script>
+</body>
+</html>
