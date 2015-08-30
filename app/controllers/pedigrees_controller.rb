@@ -3,7 +3,7 @@ class PedigreesController < BaseController
   def index
     id_current_patient = params[:id]
     if id_current_patient != 'null'
-      get_pedigree id_current_patient
+      pedigree params
     else
       results = []
       render json: results
