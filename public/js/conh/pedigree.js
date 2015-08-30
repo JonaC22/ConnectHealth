@@ -18,7 +18,7 @@ function calculateGail() {
     var numberBiopsy = $("#gailBiopsies").val();
 
     toggleLoading(true);
-    $.getJSON("api/pedigree/gailModelCalculate?id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
+    $.getJSON("api/pedigrees/gailModelCalculate?id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
 
         console.log(data);
         $("#statsWidgets").show();
@@ -59,7 +59,7 @@ var familia;
 
 toggleLoading(true);
 $("#current_patient").hide();
-$.getJSON("api/pedigree?id=" + $.urlParam('id'), function (data) {
+$.getJSON("api/pedigrees?id=" + $.urlParam('id'), function (data) {
 
     var family = data;
     console.log(data);
