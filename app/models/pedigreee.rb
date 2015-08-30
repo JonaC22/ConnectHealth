@@ -1,4 +1,4 @@
-class Pedigree
+class Pedigreee
 
 	attr_accessor :id, :current_patient
 	@people = []
