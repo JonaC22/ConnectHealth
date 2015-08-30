@@ -70,6 +70,20 @@ Modernizr.addTest('ios7 ipad',function(){return!!navigator.userAgent.match(/iPad
 
 Date.now = Date.now || function() { return +new Date; };
 
+function toggleLoading(toogle){
+    if(toogle){
+        $('#ajaxModal').remove();
+        var $this = $(this)
+            , $modal = $('<div class="modal" id="ajaxModal"><div class="modal-body"></div></div>');
+        $('body').append($modal);
+        $modal.modal();
+        $modal.load('./modal.html');
+    }else{
+        $('#ajaxModal').modal('hide');
+    }
+};
+
+
 !function ($) {
 
   $(function(){

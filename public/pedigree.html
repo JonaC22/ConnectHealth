@@ -195,26 +195,24 @@
                 <section class="hbox">
                     <div class="slim-scroll wrapper" data-height="auto" data-disable-fade-out="true" data-distance="0">
                         <div id="statsWidgets" class="row" style="display: none">
-                            <div class="col-lg-12">
-                                <label id="current_patient"></label>
-                            </div>
+
                             <div class="col-lg-6">
-                                <section class="panel bg-warning no-borders">
+                                <section class="panel bg-info no-borders">
                                     <div class="row">
                                         <div class="col-xs-6">
                                             <div class="wrapper">
-                                                <p>All time sales</p>
-                                                <p class="h2 font-bold">32.5%</p>
+                                                <p>Riesgo absoluto</p>
+                                                <p class="h2 font-bold">0%</p>
                                                 <div class="progress progress-xs progress-striped active m-b-sm">
-                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="32.5%" style="width: 32.5%"></div>
+                                                    <div  class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
                                                 </div>
-                                                <div class="text-sm">of visitors purchased this item.</div>
+                                                <div class="text-sm"> de este paciente en 5 años</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6 wrapper text-center">
                                             <div class="inline m-t-sm">
-                                                <div class="easypiechart" data-percent="32.5" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
-                                                    <span class="h2">32.5</span>%
+                                                <div id="chart1" class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
                                                 </div>
                                             </div>
                                         </div>
@@ -226,18 +224,64 @@
                                     <div class="row">
                                         <div class="col-xs-6">
                                             <div class="wrapper">
-                                                <p>All time sales</p>
-                                                <p class="h2 font-bold">32.5%</p>
+                                                <p>Riesgo promedio</p>
+                                                <p class="h2 font-bold">0%</p>
                                                 <div class="progress progress-xs progress-striped active m-b-sm">
-                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="32.5%" style="width: 32.5%"></div>
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
                                                 </div>
-                                                <div class="text-sm">of visitors purchased this item.</div>
+                                                <div class="text-sm">de una persona en 5 años</div>
                                             </div>
                                         </div>
                                         <div class="col-xs-6 wrapper text-center">
                                             <div class="inline m-t-sm">
-                                                <div class="easypiechart" data-percent="32.5" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
-                                                    <span class="h2">32.5</span>%
+                                                <div id="chart2"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-6">
+                                <section class="panel bg-warning no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo absoluto</p>
+                                                <p class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div class="text-sm">de este paciente hasta los 90 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart3"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-6">
+                                <section class="panel bg-info no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo promedio</p>
+                                                <p id="perc4" class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div class="text-sm">de una persona hasta los 90 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart4"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
                                                 </div>
                                             </div>
                                         </div>
@@ -251,30 +295,34 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="panel">
-                                    <div class="panel-heading">
-                                        <a class="accordion-toggle collapsed font-bold" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
-                                            <div data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cancer de Mama">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
+                                        <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Cancer de Mama">
                                                 Calcular Algoritmo de Gail
-                                            </div>
                                         </a>
                                     </div>
                                     <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <form role="form">
+                                                <form id="gailForm" role="form">
                                                     <div class="form-group">
                                                         <label>Edad de <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Primera menstruación">Menarca</a></label>
-                                                        <input type="text" class="form-control" placeholder="Edad">
+                                                        <input type="number" id="gailMenarcheAge" class="form-control" placeholder="Edad">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Cantidad de Biopsas realizadas</label>
-                                                        <input type="text" class="form-control" placeholder="Biopsias">
+                                                        <input type="number" id="gailBiopsies" class="form-control" placeholder="Bippsias">
                                                     </div>
-                                                    <button type="submit" class="btn btn-sm btn-default">Calcular</button>
+                                                    <button type="button" id="gailAccept" value="Calcular" onclick="calculateGail()" class="btn btn-sm btn-default">Calcular</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <label id="current_patient"></label>
+                                <div id="gailResults">
+
                                 </div>
                             </div>
                         </div>
@@ -295,6 +343,7 @@
 <script src="js/app.js"></script>
 <script src="js/app.plugin.js"></script>
 <script src="js/app.data.js"></script>
+<script type="text/javascript" src="js/conh/pedigree.js"></script>
 <script src="js/libs/jquery.pjax.js" cache="false"></script>
 <!-- Sparkline Chart -->
 <script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
