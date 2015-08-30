@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Web Application | todo</title>
+  <title>ConnectHealth</title>
   <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
@@ -192,7 +192,7 @@
           <section class="vbox">
             <header class="header bg-light lter bg-gradient b-b">
               <button class="btn btn-success btn-sm pull-right btn-icon" id="new-task"><i class="fa fa-plus"></i></button>
-              <p>Tasks</p>
+              <p>Tareas</p>
             </header>            
             <section class="bg-light lter">
               <section class="hbox stretch">          
@@ -208,7 +208,7 @@
                             <button class="destroy close hover-action">&times;</button>
                             <div class="checkbox">
                               <input class="toggle" type="checkbox" <%= done ? 'checked="checked"' : '' %> />
-                              <span class="task-name"><%- (name && name.length) ? name : 'New task' %></span>
+                              <span class="task-name"><%- (name && name.length) ? name : 'Nueva Tarea' %></span>
                               <input class="edit form-control" type="text" value="<%- name %>" />
                             </div>
                           </div>
@@ -236,7 +236,7 @@
                 <span class="text-muted">Created:</span> <%- moment(date).format('MMM Do, h:mm a') %>
               </p>
               <div class="lter pull-in b-t m-t-xxs">
-              <textarea type="text" class="form-control form-control-trans scrollable" placeholder="Task description"><%- desc %></textarea>
+              <textarea type="text" class="form-control form-control-trans scrollable" placeholder="Descripción de la tarea"><%- desc %></textarea>
               </div>
             </header>
             <section>
