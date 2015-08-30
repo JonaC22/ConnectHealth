@@ -3,6 +3,13 @@ function showGailForm() {
     $("#gailForm").show();
 }
 
+function searchPerson(){
+ var id = $("#searchPersonInput").val();
+    if(id>0){
+        window.location = "pedigree.html?id="+id;
+    }
+}
+
 function calculateGail() {
 //    $("#gailForm").hide();
 //    $("#calcularGailButton").show();
