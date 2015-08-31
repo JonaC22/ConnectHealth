@@ -23,8 +23,18 @@ class Patient < ActiveRecord::Base
 
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
+  before_create :create_node
 
   attr_accessor :diseases
+
+  def create_node
+    node = neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    neo.add_node_to_index('ind_paciente', 'id', @id, node)
+  end
+
+  def node
+    @node = Neography::Node.find('ind_paciente', 'id', @id)
+  end
 
   def add_disease(disease)
     neo = Neography::Rest.new
@@ -46,5 +56,9 @@ class Patient < ActiveRecord::Base
     @mother = Patient.create! name: nombre, gender: 'M'
     neo.create_relationship('PADRE', get_node, @father.get_node)
     @father
+  end
+
+  def neo
+    @neo ||= Neography::Rest.new ENV['NEO4J']
   end
 end

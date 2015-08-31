@@ -14,7 +14,6 @@ class PedigreeController < BaseController
       results = []
       render json: results
     end
-
   end
 
   def get_pedigree id_current_patient
