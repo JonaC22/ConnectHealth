@@ -13,6 +13,7 @@
 #  updated_at      :datetime         not null
 #  gender          :string(255)
 #  birth_date      :date
+#  node            :string(255)
 #
 
 class PatientSerializer < ActiveModel::Serializer
