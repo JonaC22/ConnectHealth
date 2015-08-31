@@ -1,5 +1,4 @@
 class PedigreeController < BaseController
-
   attr_accessor :pedigree
 
   skip_before_filter :verify_authenticity_token

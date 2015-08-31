@@ -22,7 +22,7 @@ class PedigreesController < BaseController
 
   def visualize(pedigree, id_current_patient)
     relations = []
-
+    p pedigree.patients
     # Se extraen relaciones
     pedigree.patients.each do |person|
       node = Neography::Node.load(person.id, @neo)
