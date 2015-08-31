@@ -195,7 +195,9 @@
                   <section class="panel">
                       <header class="panel-heading">
                           Pacientes
-                          <i class="fa fa-info-sign text-muted" data-toggle="tooltip" data-placement="bottom" data-title="ajax to load the data."></i>
+                          <!--<a href="#" class="btn btn-white pull-right"><i class="fa fa-plus"></i>  Nuevo Paciente</a>-->
+                          <a href="#modal-form" data-toggle="modal" class="btn label bg-success pull-right"><i class="fa fa-plus text-muted" ></i> Nuevo Paciente</a>
+                          <!--<i class="fa fa-info text-muted" data-toggle="tooltip" data-placement="bottom" data-title="ajax to load the data."></i>-->
                       </header>
                       <div class="table-responsive">
                           <table id="MyStretchGrid" class="table table-striped datagrid m-b-sm">
@@ -287,6 +289,46 @@
     </section>
     <!-- /.vbox -->
   </section>
+  <div class="modal fade" id="modal-form">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-sm-12 b-r">
+                          <h3 class="m-t-none m-b">Paciente</h3>
+                          <p>Ingresa un nuevo paciente</p>
+                          <form role="form">
+                              <div class="form-group">
+                                  <label>Nombre</label>
+                                  <input type="text" class="form-control" placeholder="Nombre del paciente">
+                              </div>
+                              <div class="form-group">
+                                  <label>Apellido</label>
+                                  <input type="text" class="form-control" placeholder="Apellido del paciente">
+                              </div>
+                              <div class="form-group">
+                                  <label>Fecha de Nacimiento</label>
+                                  <input type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                              </div>
+                              <div class="form-group">
+                                  <label>Sexo</label>
+                                  <div class="checkbox m-t-lg">
+                                      <label><input name="genderForm" type="radio" value="M"> Masculino</label>
+                                      <label><input name="genderForm" type="radio" value="F"> Femenino</label>
+                                  </div>
+
+                              </div>
+                              <div class="checkbox m-t-lg">
+                                  <button type="submit" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs"><strong>Crear</strong></button>
+
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+  </div>
 	<script src="js/jquery.min.js"></script>
   <!-- Bootstrap -->
   <script src="js/bootstrap.js"></script>
