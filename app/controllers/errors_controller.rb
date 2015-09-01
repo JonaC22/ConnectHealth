@@ -28,6 +28,6 @@ class ErrorsController < BaseController
   end
 
   def exception(error)
-    render json: { error: error.message.downcase }, status: 500
+    render json: { error: error.message }, status: 500
   end
 end

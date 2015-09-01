@@ -13,13 +13,14 @@
 #  updated_at      :datetime         not null
 #  gender          :string(255)
 #  birth_date      :date
-#  node            :string(255)
 #
 
 class Patient < ActiveRecord::Base
   include Positionable
   has_one :medical_history
   belongs_to :pedigree
+  has_many :patients_diseases
+  has_many :diseases, through: :patients_diseases
 
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
@@ -28,37 +29,36 @@ class Patient < ActiveRecord::Base
   attr_accessor :diseases
 
   def create_node
-    node = neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
-    neo.add_node_to_index('ind_paciente', 'id', @id, node)
+    @node = neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    neo.add_node_to_index('ind_paciente', 'id', @id, @node)
   end
 
   def node
-    @node = Neography::Node.find('ind_paciente', 'id', @id)
+    @node ||= Neography::Node.find('ind_paciente', 'id', @id)
   end
 
-  def add_disease(disease)
-    neo = Neography::Rest.new
-    enf_rel = neo.create_relationship('PADECE', get_node, disease.get_node)
-    neo.reset_relationship_properties(enf_rel, 'edad_diagnostico' => disease.edad_diagnostico)
+  def add_disease(disease_name, disease_diagnostic)
+    disease = Disease.find_by_name!(disease_name)
+    relationship = neo.create_relationship('PADECE', node, disease.node)
+    neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
     diseases.append(disease)
+    patients_diseases.find_by_disease(disease).age = disease_diagnostic
   end
 
-  def create_mother(nombre, apellido)
+  def generate_mother(nombre, apellido)
     # fecha_nac=DateTime.strptime(self.birth_date, "%Y-%m-%d %H:%M:%S")
-    neo = Neography::Rest.new
-    @mother = Patient.create! name: nombre, lastname: apellido, gender: 'F'
-    neo.create_relationship('MADRE', get_node, @mother.get_node)
+    @mother = Patient.create!(name: nombre, lastname: apellido, birth_date: birth_date - 365 * 10, gender: 'F', pedigree: pedigree, active: true)
+    neo.create_relationship('MADRE', node, @mother.node)
     @mother
   end
 
-  def create_father(nombre)
-    neo = Neography::Rest.new
-    @mother = Patient.create! name: nombre, gender: 'M'
-    neo.create_relationship('PADRE', get_node, @father.get_node)
+  def generate_father(nombre)
+    @father = Patient.create!(name: nombre, lastname: lastname, birth_date: birth_date - 365 * 11, gender: 'M', pedigree: pedigree, active: true)
+    neo.create_relationship('PADRE', node, @father.node)
     @father
   end
 
   def neo
-    @neo ||= Neography::Rest.new ENV['NEO4J']
+    @neo ||= Neography::Rest.new
   end
 end
