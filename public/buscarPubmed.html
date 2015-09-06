@@ -330,7 +330,7 @@
               var pageIndex = options.pageIndex;
               var ids = this._resultsId.slice(start,start+options.pageSize).join();
 
-              $.getJSON("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&rettype=abstract&id="+ids,{},function(data){
+              $.getJSON("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&rettype=abstract&id="+ids,{},function(data){
                   console.log(data);
                   var itemPubs = [];
                   data.result.uids.forEach(function(uid) {
@@ -357,7 +357,7 @@
       };
 
       function search(){
-          $.getJSON('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=1000000&term='+'("breast%20neoplasms"%5BMeSH%20Terms%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"neoplasms"%5BAll%20Fields%5D)%20OR%20"breast%20neoplasms"%5BAll%20Fields%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"cancer"%5BAll%20Fields%5D)%20OR%20"breast%20cancer"%5BAll%20Fields%5D)%20AND%20(Review%5Bptyp%5D%20AND%20jsubsetaim%5Btext%5D)',{},function(data){
+          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=1000000&term='+'("breast%20neoplasms"%5BMeSH%20Terms%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"neoplasms"%5BAll%20Fields%5D)%20OR%20"breast%20neoplasms"%5BAll%20Fields%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"cancer"%5BAll%20Fields%5D)%20OR%20"breast%20cancer"%5BAll%20Fields%5D)%20AND%20(Review%5Bptyp%5D%20AND%20jsubsetaim%5Btext%5D)',{},function(data){
               console.log(data);
               var ids = data.esearchresult.idlist;
               console.log(ids);
@@ -432,7 +432,7 @@
           $('#modalTitle').text(title);
           $('#modalBody').text("Cargando...");
           $.ajax({
-              url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=text&rettype=abstract&id='+id,
+              url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=text&rettype=abstract&id='+id,
               dataType: 'text',
               type: 'GET',
               async: true,
