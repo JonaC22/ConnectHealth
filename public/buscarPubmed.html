@@ -398,7 +398,7 @@
                                   sortable: false
                               },
                               {
-                                  property: 'elsevier',
+                                  property: 'fullTextArticleLink',
                                   label: 'Full-text article',
                                   sortable: false
                               }
@@ -409,12 +409,21 @@
                               $.each(items, function (index, item) {
                                   item.ext_link = '<a target="_blank" href="http://www.ncbi.nlm.nih.gov/pubmed/'+item.uid+'"><i class="fa fa-user-md"></i></a>';
                                   item.extract = '<a href="#verExtracto" onclick="verExtracto(\''+item.uid+'\',\''+item.title+'\')"><i class="fa fa-eye"></i></a>';
-                                  item.elsevier = '';
-                                  item.articleids.forEach(function(articleId){
-                                     if (articleId.idtype == "pii"){
-                                         item.elsevier = '<a target="_blank" href="http://linkinghub.elsevier.com/retrieve/pii/'+articleId.value+'"><i class="fa fa-user-md"></i></a>';
-                                     }
-                                  });
+                                  item.fullTextArticleLink = '';
+                                  var bestArticleLink = item.articleids[0];
+                                  switch(bestArticleLink.idtype){
+                                      case "pii":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://linkinghub.elsevier.com/retrieve/pii/'+bestArticleLink.value+'"><img alt="Icon for Elsevier Science" title="Read full text in Elsevier Science" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--linkinghub.elsevier.com-ihub-images-PubMedLink.gif" border="0"></a>';
+                                          break;
+                                      case "doi":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://dx.doi.org/'+bestArticleLink.value+'"><img alt="Icon for Wiley" title="Read full text in Wiley" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--media.wiley.com-assets-2250-98-WileyOnlineLibrary_FullTextOnline_120x27.gif" border="0"></a>';
+                                          break;
+                                      case "pubmed":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://jcp.bmj.com/cgi/pmidlookup?view=long&pmid='+bestArticleLink.value+'"><img alt="Icon for HighWire" title="Read full text in HighWire" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--highwire.stanford.edu-icons-externalservices-pubmed-custom-bmjjournals_final.gif" border="0"></a>';
+                                          break;
+                                      default:
+                                          break;
+                                  }
                               });
                           },
                           resultsId: ids
