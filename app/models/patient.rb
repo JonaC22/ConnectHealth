@@ -19,17 +19,16 @@ class Patient < ActiveRecord::Base
   include Positionable
   has_one :medical_history
   belongs_to :pedigree
-  has_many :patients_diseases
-  has_many :diseases, through: :patients_diseases
+  has_many :patient_diseases
+  has_many :diseases, through: :patient_diseases
 
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
 
-  attr_accessor :diseases
-
   def create_node
-    @node = neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    @node ||= neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    @neo_id = @node["metadata"]["id"], @neo
     neo.add_node_to_index('ind_paciente', 'id', @id, @node)
   end
 
@@ -41,8 +40,7 @@ class Patient < ActiveRecord::Base
     disease = Disease.find_by_name!(disease_name)
     relationship = neo.create_relationship('PADECE', node, disease.node)
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
-    diseases.append(disease)
-    patients_diseases.find_by_disease(disease).age = disease_diagnostic
+    PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
   end
 
   def generate_mother(nombre, apellido)

@@ -29,10 +29,13 @@ class Disease < ActiveRecord::Base
     enfermedades.each do |disease_name|
       next if Disease.find_by_name(disease_name)
       disease = Disease.create! name: disease_name
-      neo = disease.neo
-      @node = neo.create_node('nombre' => disease_name)
-      neo.set_label(@node, 'ENFERMEDAD')
-      neo.add_node_to_index('enfermedad_index', 'nombre', disease_name, @node)
+      disease.create_node
     end
+  end
+
+  def create_node
+    @node = neo.create_node('nombre' => disease_name)
+    neo.set_label(@node, 'ENFERMEDAD')
+    neo.add_node_to_index('enfermedad_index', 'nombre', disease_name, @node)
   end
 end

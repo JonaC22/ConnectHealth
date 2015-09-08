@@ -6,7 +6,8 @@ class MakePedigreesController < BaseController
     nombres_m = @mysql.query('SELECT Nombre FROM pacientes WHERE Sexo ="m" and Nro_Afiliado < 10000 limit 100').map { |n| n['Nombre'] }
     apellidos = @mysql.query('SELECT Apellido FROM pacientes where Nro_Afiliado <  10000 limit 100').map { |n| n['Apellido'] }
     close_mysql
-    Disease.generate(%w('Cancer de Ovario','Cancer de Mama'))
+    pedigrees = []
+    Disease.generate(['Cancer de Ovario', 'Cancer de Mama'])
     pacientes.each do |patient|
       pedigree = Pedigree.create!
       pat = Patient.create!(name: patient['Nombre'], lastname: patient['Apellido'], birth_date: DateTime.strptime(patient['Fecha_Nac'], '%Y-%m-%d %H:%M:%S'), gender: patient['Sexo'], pedigree: pedigree, active: true)
@@ -16,8 +17,9 @@ class MakePedigreesController < BaseController
       end
       pat.generate_father(nombres_m.sample)
       pat.generate_mother(nombres_f.sample, apellidos.sample)
+      pedigrees << pedigree
     end
-    render json: {}
+    render json: pedigrees
   end
 
   def delete_all_nodes

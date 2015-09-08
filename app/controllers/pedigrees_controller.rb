@@ -25,8 +25,7 @@ class PedigreesController < BaseController
     p pedigree.patients
     # Se extraen relaciones
     pedigree.patients.each do |person|
-      node = Neography::Node.load(person.id, @neo)
-
+      node = person.node
       node.rels(:PADRE, :MADRE).outgoing.each do |relat|
         # person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)

@@ -30,7 +30,6 @@ class PedigreeController < BaseController
   end
 
   def visualize(patients, id_current_patient)
-
     relations = []
     @pedigree = Pedigree.new
 
