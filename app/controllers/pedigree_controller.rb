@@ -108,8 +108,7 @@ class PedigreeController < BaseController
     Resultado.new('OK', 200)
   end
 
-  #GET /api/pedigree/gailModelCalculate
-  def calculate_gail_model
+  def calculate_gail_model(patient, menarche_age, number_biopsy)
     # AgeIndicator: age ge 50 ind
     # 0=[20, 50)
     # 1=[50, 85)
@@ -145,7 +144,6 @@ class PedigreeController < BaseController
     #, Race			    //[race] 1-white 3-hispanic 6-unknown
 
     calculator = RiskCalculator.new
-    patient = Person.create_from_neo params[:id]
     current_age = patient.age
 
     if patient.gender == 'M'
@@ -179,11 +177,11 @@ class PedigreeController < BaseController
 
     projection_age=current_age+5
 
-    menarche_age = BcptConvert.MenarcheAge(params[:menarcheAge].to_i)
+    menarche_age = BcptConvert.MenarcheAge(menarche_age.to_i)
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age.to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy = params[:numberBiopsy].to_i > 0
-    number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(params[:numberBiopsy].to_i,true) : 0
+    number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(number_biopsy.to_i,true) : 0
     race = 1 # White or Unknown
     first_deg_relatives = BcptConvert.FirstDegRelatives(affected_relatives, race)
     ihyp=BcptConvert.hyperplasia(0, ever_had_biopsy)
@@ -208,21 +206,30 @@ class PedigreeController < BaseController
   #GET /api/pedigree/query
   def query
     id_current_patient = params[:id]
+    patient = Person.create_from_neo params[:id]
     type = params[:type] || nil
 
     #query genérica que devuelve todos los familiares que padecen una enfermedad
-    match = " match (n)-[r:PADECE]->(e)
-              where ((n)-[:PADRE|MADRE*]-(n2) and id(n2) = #{id_current_patient}) or
+    match = " match (n2)­[:PADRE|MADRE*]-(n)-[r:PADECE]->(e)
+              where id(n2) = #{id_current_patient} or
               id(n) = #{id_current_patient} "
     case type
       when 'integer'
         execute_and_render match << " return count(r) as cantidad_casos "
       when 'float'
-        execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
+        case params[:model]
+          when 'premm126' then
+            risk = PREMM126.calc_risk patient
+            render json:{"status" => "OK", "results" => risk}
+          else execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
+        end
       when 'table'
-        execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
+        case params[:model]
+          when 'gail' then calculate_gail_model patient, params[:menarcheAge], params[:numberBiopsy]
+          else execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
+        end
       when 'pedigree' #Obtiene el pedigree recortado
-        match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
+        match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2:PERSONA)-[:PADECE]->(e)
                   where id(n) = #{id_current_patient}
                   with nodes(ca) as nodos
                   unwind nodos as nodo
@@ -255,10 +262,6 @@ class PedigreeController < BaseController
   def get_pacientes_mysql
     get_mysql_connection
     pacientes = @mysql.query('SELECT * FROM pacientes')
-    result = Hash.new
-    result['pacientes']=pacientes
-    close_mysql
-    render json: result
   end
 
 end

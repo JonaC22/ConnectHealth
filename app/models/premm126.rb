@@ -20,15 +20,15 @@ class PREMM126
   #TODO implement methods in Person class
   def self.get_value(patient, i)
     case i
-      when 0 then get_proband_gender patient
-      when 1..2 then get_proband_crc_presence patient
-      when 3 then get_proband_ec_presence patient
-      when 4 then get_proband_ls_presence patient
-      when 5 then get_relatives_crc_presence patient
-      when 6 then get_relatives_ec_presence patient
-      when 7 then get_relatives_ls_presence patient
-      when 8 then get_youngest_age_crc_diagnosis patient
-      when 9 then get_youngest_age_ec_diagnosis patient
+      when 0 then 0#get_proband_gender patient
+      when 1..2 then 1#get_proband_crc_presence patient
+      when 3 then 0#get_proband_ec_presence patient
+      when 4 then 1#get_proband_ls_presence patient
+      when 5 then 0#get_relatives_crc_presence patient
+      when 6 then 1#get_relatives_ec_presence patient
+      when 7 then 0#get_relatives_ls_presence patient
+      when 8 then 1#get_youngest_age_crc_diagnosis patient
+      when 9 then 0#get_youngest_age_ec_diagnosis patient
       else 0
     end
   end
