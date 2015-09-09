@@ -15,8 +15,10 @@ class MakePedigreesController < BaseController
         nombre_enfermedad = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
         pat.add_disease(nombre_enfermedad, rand(35..70))
       end
-      pat.generate_father(nombres_m.sample)
-      pat.generate_mother(nombres_f.sample, apellidos.sample)
+      father = pat.generate_father(nombres_m.sample)
+      mother = pat.generate_mother(nombres_f.sample, apellidos.sample)
+      father.generate_father(nombres_m.sample)
+      mother.generate_mother(nombres_f.sample, apellidos.sample)
       pedigrees << pedigree
     end
     render json: pedigrees
@@ -24,5 +26,12 @@ class MakePedigreesController < BaseController
 
   def delete_all_nodes
     @neo.execute_query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
+  end
+
+  def generate_illness(patient)
+    if patient.gender == 'F' && rand > 0.5
+      nombre_enfermedad = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
+      patient.add_disease(nombre_enfermedad, rand(35..70))
+    end
   end
 end

@@ -1,13 +1,8 @@
 class PedigreesController < BaseController
   # GET /api/pedigree
   def index
-    id_current_patient = params[:id]
-    if id_current_patient != 'null'
-      pedigree params
-    else
-      results = []
-      render json: results
-    end
+    results = Pedigree.all.select(:id)
+    render json: results
   end
 
   def show
@@ -22,7 +17,6 @@ class PedigreesController < BaseController
 
   def visualize(pedigree, id_current_patient)
     relations = []
-    p pedigree.patients
     # Se extraen relaciones
     pedigree.patients.each do |person|
       node = person.node
@@ -30,14 +24,11 @@ class PedigreesController < BaseController
         # person es el nodo en cuestion y persona_related la persona con la que se relaciona
         relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
       end
-      node.rels(:PADECE).outgoing.each do |rel|
-        person.diseases.append(Disease.new rel.edad_diagnostico, rel.end_node.nombre)
-      end
     end
 
     pedigree.relations = relations
     pedigree.current_patient = id_current_patient
-    render json: pedigree.to_json
+    render json: pedigree
   end
 
   before_filter only: :create do

@@ -13,6 +13,7 @@
 #  updated_at      :datetime         not null
 #  gender          :string(255)
 #  birth_date      :date
+#  neo_id          :integer
 #
 
 require 'test_helper'

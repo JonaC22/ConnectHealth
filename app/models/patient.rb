@@ -13,6 +13,7 @@
 #  updated_at      :datetime         not null
 #  gender          :string(255)
 #  birth_date      :date
+#  neo_id          :integer
 #
 
 class Patient < ActiveRecord::Base
@@ -27,13 +28,13 @@ class Patient < ActiveRecord::Base
   before_create :create_node
 
   def create_node
-    @node ||= neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
-    @neo_id = @node["metadata"]["id"], @neo
-    neo.add_node_to_index('ind_paciente', 'id', @id, @node)
+    node ||= neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    self.neo_id = node['metadata']['id']
+    neo.add_node_to_index('ind_paciente', 'id', @id, node)
   end
 
   def node
-    @node ||= Neography::Node.find('ind_paciente', 'id', @id)
+    @node ||= Neography::Node.load(neo_id, neo)
   end
 
   def add_disease(disease_name, disease_diagnostic)

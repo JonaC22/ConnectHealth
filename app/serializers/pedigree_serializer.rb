@@ -8,8 +8,8 @@
 #
 
 class PedigreeSerializer < ActiveModel::Serializer
-  attributes :id, :patients, :relations, :current, :annotations
-
+  attributes :id, :relations, :current, :annotations
+  has_many :patients
   def relations
     object.relations
   end
@@ -17,5 +17,4 @@ class PedigreeSerializer < ActiveModel::Serializer
   def current
     object.current_patient
   end
-
 end

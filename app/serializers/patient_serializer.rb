@@ -13,8 +13,9 @@
 #  updated_at      :datetime         not null
 #  gender          :string(255)
 #  birth_date      :date
+#  neo_id          :integer
 #
 
 class PatientSerializer < ActiveModel::Serializer
-  attributes :id, :name, :lastname, :document_type, :document_number, :gender
+  attributes :id, :name, :lastname, :document_type, :document_number, :gender, :diseases, :patient_diseases, :neo_id, :birth_date, :active
 end
