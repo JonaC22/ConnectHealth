@@ -866,7 +866,7 @@ html.layout-box .vbox > footer {
     box-shadow: inset 0 1px 0 rgba(40,50,60,0.15);
   }
   #nav.nav-vertical {
-    width: 80px;
+    width: 90px;
   }
   #nav.nav-vertical.only-icon {
     width: 60px;
@@ -905,7 +905,7 @@ html.layout-box .vbox > footer {
   }
   #nav.nav-vertical .nav-primary > ul > li > a {
     position: relative;
-    padding: 12px 0;
+    padding: 10.5px 0;
     font-size: 11px;
     text-align: center;
   }

@@ -148,4 +148,36 @@ class Person
 
   end
 
+  def get_youngest_age_ec_diagnosis
+    # code hereº
+  end
+
+  def get_youngest_age_crc_diagnosis
+    # code here
+  end
+
+  def get_relatives_ls_presence
+    # code here
+  end
+
+  def get_relatives_ec_presence
+    # code here
+  end
+
+  def get_relatives_crc_presence
+    # code here
+  end
+
+  def get_proband_ls_presense
+    # code here
+  end
+
+  def get_proband_ec_presence
+    # code here
+  end
+
+  def get_proband_crc_presence
+    # code here
+  end
+
 end

@@ -1,0 +1,287 @@
+{"people": [
+    {
+        "id": 738,
+        "name": "Paula",
+        "surname": "Carvajal",
+        "birth_date": "1877-11-13",
+        "age": 137,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 736,
+        "name": "Rebeca",
+        "surname": "Herrera",
+        "birth_date": "1905-02-25T00:00:00.000+00:00",
+        "age": 110,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 737,
+        "name": "Amadis",
+        "surname": "Herrera",
+        "birth_date": "1879-09-17",
+        "age": 135,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 740,
+        "name": "Llanque",
+        "surname": "Suárez",
+        "birth_date": "1840-07-31",
+        "age": 175,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 739,
+        "name": "Abenamar",
+        "surname": "Herrera",
+        "birth_date": "1830-07-10",
+        "age": 185,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 741,
+        "name": "Iris",
+        "surname": "Carvajal",
+        "birth_date": "1843-03-30",
+        "age": 172,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 742,
+        "name": "Celica",
+        "surname": "Castillo",
+        "birth_date": "1840-02-11",
+        "age": 175,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 745,
+        "name": "Mariana",
+        "surname": "Herrera",
+        "birth_date": "1948-12-16",
+        "age": 66,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": [
+            {
+                "edad_diagnostico": 51,
+                "nombre": "Cancer de Ovario"
+            }
+        ]
+    },
+    {
+        "id": 743,
+        "name": "Myrna",
+        "surname": "García",
+        "birth_date": "1966-03-01T00:00:00.000+00:00",
+        "age": 49,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": [
+            {
+                "edad_diagnostico": 52,
+                "nombre": "Cancer de Ovario"
+            }
+        ]
+    },
+    {
+        "id": 744,
+        "name": "Liberato",
+        "surname": "García",
+        "birth_date": "1923-10-04",
+        "age": 91,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 747,
+        "name": "Celica",
+        "surname": "Hernández",
+        "birth_date": "1902-01-13",
+        "age": 113,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 746,
+        "name": "Paineco",
+        "surname": "García",
+        "birth_date": "1873-11-12",
+        "age": 141,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 749,
+        "name": "Agnece",
+        "surname": "Fuentes",
+        "birth_date": "1926-02-02",
+        "age": 89,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": [
+            {
+                "edad_diagnostico": 63,
+                "nombre": "Cancer de Mama"
+            }
+        ]
+    },
+    {
+        "id": 147,
+        "name": "Daniela",
+        "surname": "Herrera",
+        "birth_date": "1950-12-01",
+        "age": 64,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": [
+            {
+                "edad_diagnostico": 38,
+                "nombre": "Cancer de Mama"
+            }
+        ]
+    },
+    {
+        "id": 748,
+        "name": "Gregorio",
+        "surname": "Herrera",
+        "birth_date": "1898-05-30",
+        "age": 117,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 754,
+        "name": "Naylea",
+        "surname": "Mansilla",
+        "birth_date": "1856-06-01",
+        "age": 159,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 750,
+        "name": "Ain",
+        "surname": "Maidana",
+        "birth_date": "1944-08-17T00:00:00.000+00:00",
+        "age": 71,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 752,
+        "name": "Jamina",
+        "surname": "Moreno",
+        "birth_date": "1908-08-24",
+        "age": 107,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 756,
+        "name": "Kohuani",
+        "surname": "Ruiz",
+        "birth_date": "1890-01-26",
+        "age": 125,
+        "gender": "F",
+        "medical_history": null,
+        "diseases": [
+            {
+                "edad_diagnostico": 52,
+                "nombre": "Cancer de Mama"
+            }
+        ]
+    },
+    {
+        "id": 755,
+        "name": "Abenamar",
+        "surname": "Moreno",
+        "birth_date": "1879-08-27",
+        "age": 136,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 753,
+        "name": "Lucio",
+        "surname": "Maidana",
+        "birth_date": "1866-08-18",
+        "age": 149,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    },
+    {
+        "id": 751,
+        "name": "De las nieves",
+        "surname": "Maidana",
+        "birth_date": "1896-12-24",
+        "age": 118,
+        "gender": "M",
+        "medical_history": null,
+        "diseases": []
+    }
+], "relations": [
+    {
+        "from": 750,
+        "to": 751,
+        "name": "PADRE"
+    },
+    {
+        "from": 750,
+        "to": 752,
+        "name": "MADRE"
+    },
+    {
+        "from": 752,
+        "to": 755,
+        "name": "PADRE"
+    },
+    {
+        "from": 752,
+        "to": 756,
+        "name": "MADRE"
+    },
+    {
+        "from": 751,
+        "to": 753,
+        "name": "PADRE"
+    },
+    {
+        "from": 751,
+        "to": 754,
+        "name": "MADRE"
+    }
+], "current": {
+    "id": 751,
+    "name": "De las nieves",
+    "surname": "Maidana",
+    "birth_date": "1896-12-24",
+    "age": 118,
+    "gender": "M",
+    "medical_history": null,
+    "diseases": []
+}, "annotations": null}
