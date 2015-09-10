@@ -3,7 +3,7 @@ class PedigreeController < BaseController
   attr_accessor :pedigree
 
   skip_before_filter :verify_authenticity_token
-  
+
   # GET /api/pedigree
   def index
     #generate
@@ -146,6 +146,11 @@ class PedigreeController < BaseController
     calculator = RiskCalculator.new
     current_age = patient.age
 
+    unless patient.alive?
+      error = {status: 'ERROR', message: 'Paciente inválido (fallecido)'}
+      return render json: error
+    end
+
     if patient.gender == 'M'
       error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes de sexo masculino'}
       return render json: error
@@ -155,7 +160,7 @@ class PedigreeController < BaseController
       error = {status: 'ERROR', message: 'El paciente que ya padece la enfermedad'}
       return render json: error
     end
-    #TODO agregar validacion para pacientes fallecidos algoritmo no aplicable
+
     if current_age > 90
       error = {status: 'ERROR', message: 'Algoritmo no aplicable a pacientes mayores a 90 años'}
       return render json: error
@@ -181,7 +186,7 @@ class PedigreeController < BaseController
     first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age.to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy = params[:numberBiopsy].to_i > 0
-    number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(number_biopsy.to_i,true) : 0
+    number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(number_biopsy.to_i, true) : 0
     race = 1 # White or Unknown
     first_deg_relatives = BcptConvert.FirstDegRelatives(affected_relatives, race)
     ihyp=BcptConvert.hyperplasia(0, ever_had_biopsy)
@@ -199,7 +204,7 @@ class PedigreeController < BaseController
     # avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
     # abs_risk90 = RiskCalculator.new.calculate_absolute_risk(66,90,1,0,2,BcptConvert.FirstLiveBirthAge(17),2,0,99,1.0,1)
     # avg_risk90 = RiskCalculator.new.calculate_average_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    result = {'absoluteRiskIn5Years' => abs_risk, 'averageRiskIn5Years' => avg_risk,'absoluteRiskAt90yo' => abs_risk90, 'averageRiskAt90yo' => avg_risk90}
+    result = {'absoluteRiskIn5Years' => abs_risk, 'averageRiskIn5Years' => avg_risk, 'absoluteRiskAt90yo' => abs_risk90, 'averageRiskAt90yo' => avg_risk90}
     render json: result
   end
 
@@ -219,14 +224,21 @@ class PedigreeController < BaseController
       when 'float'
         case params[:model]
           when 'premm126' then
-            risk = PREMM126.calc_risk patient
-            render json:{"status" => "OK", "results" => risk}
-          else execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
+            unless patient.alive?
+              render json: {status: 'ERROR', message: 'Paciente inválido (fallecido)'}
+            else
+              risk = PREMM126.calc_risk patient
+              render json: {status: 'OK', results: risk}
+            end
+          else
+            execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
         end
       when 'table'
         case params[:model]
-          when 'gail' then calculate_gail_model patient, params[:menarcheAge], params[:numberBiopsy]
-          else execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
+          when 'gail' then
+            calculate_gail_model patient, params[:menarcheAge], params[:numberBiopsy]
+          else
+            execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
         end
       when 'pedigree' #Obtiene el pedigree recortado
         match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2:PERSONA)-[:PADECE]->(e)
@@ -238,7 +250,7 @@ class PedigreeController < BaseController
 
         visualize patients, id_current_patient
       else
-        result = {"status" => "ERROR", "results" => "Formato de respuesta no especificado"}
+        result = {status: 'ERROR', results: 'Formato de respuesta no especificado'}
         render json: result
     end
   end
