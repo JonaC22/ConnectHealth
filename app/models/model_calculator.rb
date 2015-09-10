@@ -82,7 +82,7 @@ class ModelCalculator
   def validate_gail_model(patient)
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes no vivos' unless patient.alive?
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes de sexo masculino' if patient.gender == 'M'
-    fail IncalculableModelException, 'El paciente que ya padece la enfermedad de Cancer de mama' if patient.diseases.include? 'Cancer de Mama'
+    fail IncalculableModelException, 'Algoritmo no aplicable a pacientes que ya padezcan la enfermedad de Cancer de mama' if patient.diseases.include? 'Cancer de Mama'
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes mayores a 90 años' if patient.age > 90
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes menores a 35 años' if patient.age < 35
   end
