@@ -12,9 +12,9 @@ Rails.application.routes.draw do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
     resources :make_pedigrees, only: [:index]
+    resources :model_calculator, only: [:index, :show]
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
-      get '/gailModelCalculate' => 'pedigree#calculate_gail_model'
       get '/medicos' => 'pedigree#get_medicos_mysql'
       get '/pacientes' => 'pedigree#get_pacientes_mysql'
     end

@@ -18,13 +18,13 @@ class PedigreeController < BaseController
 
   def get_pedigree id_current_patient
     query_busqueda_pacientes =
-        " match (n:PERSONA)-[r:PADRE|MADRE*]-(n2:PERSONA)
-        where id(n) = #{id_current_patient}
-        return n2 as nodo
-        UNION
-        match(n:PERSONA)
-        where id(n) = #{id_current_patient}
-        return n as nodo"
+    " match (n:PERSONA)-[r:PADRE|MADRE*]-(n2:PERSONA)
+    where id(n) = #{id_current_patient}
+    return n2 as nodo
+    UNION
+    match(n:PERSONA)
+    where id(n) = #{id_current_patient}
+    return n as nodo"
     patients = @neo.execute_query query_busqueda_pacientes
     visualize patients, id_current_patient
   end
@@ -98,9 +98,7 @@ class PedigreeController < BaseController
   def validate_relations(json, persona, tags)
     tags.each do |tag|
       count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
-      if count > 1
-        return Resultado.new("Relacion duplicada: #{tag}", 500)
-      end
+      return Resultado.new("Relacion duplicada: #{tag}", 500) if count > 1
     end
     Resultado.new('OK', 200)
   end
@@ -165,10 +163,10 @@ class PedigreeController < BaseController
       return render json: error
     end
 
-    fdr = patient.get_first_deg_relatives
+    fdr = patient.first_deg_relatives
 
     affected_relatives = fdr.count {
-        |key, value|
+      |key, value|
       unless value.nil?
         value.include? 'Cancer de Mama'
       end
@@ -177,7 +175,7 @@ class PedigreeController < BaseController
     projection_age=current_age+5
 
     menarche_age = BcptConvert.MenarcheAge(params[:menarcheAge].to_i)
-    first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.get_first_live_birth_age.to_i)
+    first_live_birth_age=BcptConvert.FirstLiveBirthAge(patient.first_live_birth_age.to_i)
     age_indicator=BcptConvert.CurrentAgeIndicator(current_age)
     ever_had_biopsy = params[:numberBiopsy].to_i > 0
     number_of_biopsy = ever_had_biopsy ? BcptConvert.number_of_biopsy(params[:numberBiopsy].to_i,true) : 0
@@ -209,34 +207,34 @@ class PedigreeController < BaseController
 
     #query genérica que devuelve todos los familiares que padecen una enfermedad
     match = " match (n)-[r:PADECE]->(e)
-              where ((n)-[:PADRE|MADRE*]-(n2) and id(n2) = #{id_current_patient}) or
-              id(n) = #{id_current_patient} "
+    where ((n)-[:PADRE|MADRE*]-(n2) and id(n2) = #{id_current_patient}) or
+    id(n) = #{id_current_patient} "
     case type
-      when 'integer'
-        execute_and_render match << " return count(r) as cantidad_casos "
-      when 'float'
-        execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
-      when 'table'
-        execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
+    when 'integer'
+      execute_and_render match << " return count(r) as cantidad_casos "
+    when 'float'
+      execute_and_render match << " return avg(r.edad_diagnostico) as promedio_edad_diagnostico "
+    when 'table'
+      execute_and_render match << " return r.edad_diagnostico as edad_diagnostico "
       when 'pedigree' #Obtiene el pedigree recortado
         match = " match ca = (n:PERSONA)-[:PADRE|MADRE*]-(n2), (n2:PERSONA)-[:PADECE]->(e)
-                  where id(n) = #{id_current_patient}
-                  with nodes(ca) as nodos
-                  unwind nodos as nodo
-                  return nodo "
+        where id(n) = #{id_current_patient}
+        with nodes(ca) as nodos
+        unwind nodos as nodo
+        return nodo "
         patients = @neo.execute_query match
 
         visualize patients, id_current_patient
       else
         result = {"status" => "ERROR", "results" => "Formato de respuesta no especificado"}
         render json: result
+      end
     end
-  end
 
-  def execute_and_render match
-    result = @neo.execute_query match
-    render json: result
-  end
+    def execute_and_render match
+      result = @neo.execute_query match
+      render json: result
+    end
 
   #GET metodo provisorio para ver la carga batch de medicos en mysql
   def get_medicos_mysql

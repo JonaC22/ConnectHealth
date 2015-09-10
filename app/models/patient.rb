@@ -22,6 +22,11 @@ class Patient < ActiveRecord::Base
   belongs_to :pedigree
   has_many :patient_diseases
   has_many :diseases, through: :patient_diseases
+  enum status: {
+    unborn: 0,
+    alive: 1,
+    dead: 2
+  }
 
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
@@ -31,6 +36,11 @@ class Patient < ActiveRecord::Base
     node ||= neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
     self.neo_id = node['metadata']['id']
     neo.add_node_to_index('ind_paciente', 'id', @id, node)
+  end
+
+  def age
+    now = Time.now.utc.to_date
+    now.year - birth_date.year - (birth_date.to_date.change(year: now.year) > now ? 1 : 0)
   end
 
   def node
@@ -59,5 +69,90 @@ class Patient < ActiveRecord::Base
 
   def neo
     @neo ||= Neography::Rest.new
+  end
+
+  def first_deg_relatives
+    # Se obtiene la madre, las hermanas, y las hijas de la paciente
+    query = " match (he)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(he)
+              where id(he) <> id(n) and id(n) = #{neo_id}
+              return he as nodo
+              UNION
+              match (n)-[:MADRE]->(m)
+              where id(n) = #{neo_id}
+              return m as nodo
+              UNION
+              match (n)<-[:MADRE]-(hi)
+              where id(n) = #{neo_id}
+              return hi as nodo"
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
+
+    relatives = {}
+
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        relative_id = node['metadata']['id']
+        n = Neography::Node.load relative_id
+        diseases = []
+        diseases.push *n.outgoing(:PADECE)
+        diseases = diseases.map(&:nombre)
+        relatives.store relative_id, diseases
+      end
+    end
+
+    relatives
+  end
+
+  # Devuelve la edad a la que tuvo el primer hijo nacido vivo, sino tuvo hijos devuelve 0
+  def first_live_birth_age
+    ret = []
+    ret.push *node.incoming(:MADRE)
+
+    birth_ages = []
+    patient_age = age
+    rel_ids = ret.map(&:neo_id)
+    rel_ids.each do |relative_id|
+      child = Patient.find_by! neo_id: relative_id
+      birth_ages << patient_age - child.age
+    end
+
+    if birth_ages.empty?
+      0
+    else
+      birth_ages.min.to_i
+    end
+  end
+
+  def youngest_age_ec_diagnosis
+    # code here
+  end
+
+  def youngest_age_crc_diagnosis
+    # code here
+  end
+
+  def relatives_ls_presence
+    # code here
+  end
+
+  def relatives_ec_presence
+    # code here
+  end
+
+  def relatives_crc_presence
+    # code here
+  end
+
+  def proband_ls_presense
+    # code here
+  end
+
+  def proband_ec_presence
+    # code here
+  end
+
+  def proband_crc_presence
+    # code here
   end
 end

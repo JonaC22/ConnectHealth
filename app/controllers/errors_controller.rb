@@ -6,6 +6,7 @@ class ErrorsController < BaseController
     return parameter_missing error if error.is_a? ActionController::ParameterMissing
     return record_invalid error if error.is_a? ActiveRecord::RecordInvalid
     return record_duplicated error if error.is_a? ActiveRecord::RecordNotUnique
+    return incalculable_model error if error.is_a? IncalculableModelException
     exception error
   end
 
@@ -25,6 +26,10 @@ class ErrorsController < BaseController
 
   def record_duplicated(_error)
     render json: { error: { message: 'relationship already exists', details: 'relationship already exists' } }
+  end
+
+  def incalculable_model(error)
+    render json: { error: error.message }, status: 400
   end
 
   def exception(error)
