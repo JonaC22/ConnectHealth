@@ -119,7 +119,7 @@
             <form class="navbar-form navbar-left m-t-sm" role="search">
               <div class="form-group">
                 <div class="input-group input-s">
-                  <input type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
+                  <input id="search-box"type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-success btn-icon" onclick="search()"><i class="fa fa-search"></i></button>
                   </span>
@@ -304,6 +304,20 @@
       </div><!-- /.modal-dialog -->
   </div>
   <script type="text/javascript">
+
+      function toggleLoading(toogle){
+          if(toogle){
+              $('#ajaxModal').remove();
+              var $this = $(this)
+                      , $modal = $('<div class="modal" id="ajaxModal"><div class="modal-body"></div></div>');
+              $('body').append($modal);
+              $modal.modal();
+              $modal.load('./modal.html');
+          }else{
+              $('#ajaxModal').modal('hide');
+          }
+      };
+
       var PubMedDataSource = function (options) {
           this._formatter = options.formatter;
           this._columns = options.columns;
@@ -360,8 +374,13 @@
           }
       };
 
+      //TODO limpiar tabla antes de volver a repopular
       function search(){
-          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=1000000&term='+'("breast%20neoplasms"%5BMeSH%20Terms%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"neoplasms"%5BAll%20Fields%5D)%20OR%20"breast%20neoplasms"%5BAll%20Fields%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"cancer"%5BAll%20Fields%5D)%20OR%20"breast%20cancer"%5BAll%20Fields%5D)%20AND%20(Review%5Bptyp%5D%20AND%20jsubsetaim%5Btext%5D)',{},function(data){
+          var search_term = $('#search-box').val();
+          console.log(search_term);
+          toggleLoading(true);
+
+          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=10000&term='+search_term,{},function(data){
               console.log(data);
               var ids = data.esearchresult.idlist;
               console.log(ids);
@@ -434,6 +453,7 @@
                       })
                   });
               });
+              toggleLoading(false);
           });
 
       }
