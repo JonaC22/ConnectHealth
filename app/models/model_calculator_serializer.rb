@@ -1,3 +1,3 @@
 class ModelCalculatorSerializer < ActiveModel::Serializer
-  attributes :model, :calulations
+  attributes :model, :calculations
 end

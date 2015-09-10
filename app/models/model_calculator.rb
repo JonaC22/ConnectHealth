@@ -38,7 +38,6 @@ class ModelCalculator
     # , FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
     # , RHyperPlasia     //[rhyp] 0 no, 1 yes, 99 unknown
     # , Race         //[race] 1-white 3-hispanic 6-unknown
-
     calculator = RiskCalculator.new
     params = gail_params(params) # evita parametros de mas y valida que esten los necesarios
     patient = Patient.find_by!(id: params[:patient_id])
@@ -63,8 +62,8 @@ class ModelCalculator
     rhyp = BcptConvert.r_hyperplasia(ihyp)
 
     # calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
-    logger.info 'Gail Params: current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race '
-    logger.info [current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race].to_s
+    # logger.info 'Gail Params: current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race '
+    # logger.info [current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race].to_s
     abs_risk = calculator.calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
     avg_risk = calculator.calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
     abs_risk90 = calculator.calculate_absolute_risk(current_age, 90, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, race)
@@ -73,8 +72,9 @@ class ModelCalculator
     # avg_risk = RiskCalculator.new.calculate_average_risk(38,43,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
     # abs_risk90 = RiskCalculator.new.calculate_absolute_risk(66,90,1,0,2,BcptConvert.FirstLiveBirthAge(17),2,0,99,1.0,1)
     # avg_risk90 = RiskCalculator.new.calculate_average_risk(38,90,0,0,2,BcptConvert.FirstLiveBirthAge(0),2,0,0,1.0,1)
-    result = { absoluteRiskIn5Years: abs_risk, averageRiskIn5Years: avg_risk, absoluteRiskAt90yo: abs_risk90, averageRiskAt90yo: avg_risk90 }
-    render json: result
+    self.model = 'gail'
+    self.calculations = { absoluteRiskIn5Years: abs_risk, averageRiskIn5Years: avg_risk, absoluteRiskAt90yo: abs_risk90, averageRiskAt90yo: avg_risk90 }
+    self
   end
 
   private
@@ -90,7 +90,7 @@ class ModelCalculator
   def gail_params(params)
     {
       patient_id: params.require(:patient_id),
-      menarchAge: params.require(:menarchAge).to_i,
+      menarcheAge: params.require(:menarcheAge).to_i,
       numberBiopsy: params.require(:numberBiopsy).to_i
     }
   end
