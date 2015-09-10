@@ -74,6 +74,13 @@
                     </a>
                 </li>
                 <li>
+                    <a href="usuarios.html">
+                        <i class="fa fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <!--
+                <li>
                     <a href="tasks.html">
                         <i class="fa fa-tasks"></i>
                         <span>Tareas</span>
@@ -85,6 +92,7 @@
                         <span>Notas</span>
                     </a>
                 </li>
+                -->
             </ul>
           </nav>
           <!-- / nav -->
@@ -111,7 +119,7 @@
             <form class="navbar-form navbar-left m-t-sm" role="search">
               <div class="form-group">
                 <div class="input-group input-s">
-                  <input type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
+                  <input id="search-box"type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
                   <span class="input-group-btn">
                     <button type="button" class="btn btn-sm btn-success btn-icon" onclick="search()"><i class="fa fa-search"></i></button>
                   </span>
@@ -120,10 +128,6 @@
             </form>
             <ul class="nav navbar-nav navbar-right">
               <li class="hidden-xs">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <i class="fa fa-bell-o text-white"></i>
-                  <span class="badge up bg-info m-l-n-sm">2</span>
-                </a>
                 <section class="dropdown-menu animated fadeInUp input-s-lg">
                   <section class="panel bg-white">
                     <header class="panel-heading">
@@ -300,6 +304,20 @@
       </div><!-- /.modal-dialog -->
   </div>
   <script type="text/javascript">
+
+      function toggleLoading(toogle){
+          if(toogle){
+              $('#ajaxModal').remove();
+              var $this = $(this)
+                      , $modal = $('<div class="modal" id="ajaxModal"><div class="modal-body"></div></div>');
+              $('body').append($modal);
+              $modal.modal();
+              $modal.load('./modal.html');
+          }else{
+              $('#ajaxModal').modal('hide');
+          }
+      };
+
       var PubMedDataSource = function (options) {
           this._formatter = options.formatter;
           this._columns = options.columns;
@@ -356,8 +374,13 @@
           }
       };
 
+      //TODO limpiar tabla antes de volver a repopular
       function search(){
-          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=1000000&term='+'("breast%20neoplasms"%5BMeSH%20Terms%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"neoplasms"%5BAll%20Fields%5D)%20OR%20"breast%20neoplasms"%5BAll%20Fields%5D%20OR%20("breast"%5BAll%20Fields%5D%20AND%20"cancer"%5BAll%20Fields%5D)%20OR%20"breast%20cancer"%5BAll%20Fields%5D)%20AND%20(Review%5Bptyp%5D%20AND%20jsubsetaim%5Btext%5D)',{},function(data){
+          var search_term = $('#search-box').val();
+          console.log(search_term);
+          toggleLoading(true);
+
+          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=10000&term='+search_term,{},function(data){
               console.log(data);
               var ids = data.esearchresult.idlist;
               console.log(ids);
@@ -430,6 +453,7 @@
                       })
                   });
               });
+              toggleLoading(false);
           });
 
       }

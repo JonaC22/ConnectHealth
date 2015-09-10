@@ -10,29 +10,65 @@ function searchPerson(){
     }
 }
 
-function calculateGail() {
-//    $("#gailForm").hide();
-//    $("#calcularGailButton").show();
-    $("#gailResults").empty();
-    var menarcheAge = $("#gailMenarcheAge").val();
-    var numberBiopsy = $("#gailBiopsies").val();
+function calculatePREMM126(){
 
+    $("#calc_results").empty();
+    $("#statsWidgets").hide();
     toggleLoading(true);
-    $.getJSON("api/pedigrees/gailModelCalculate?id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
+
+    $.getJSON("api/pedigree/query?type=float&model=premm126&id=" + currentPatient.id, function (data) {
 
         console.log(data);
-        $("#statsWidgets").show();
-        var result = $("#gailResults");
-        if (data.status == "ERROR")
+        var result = $("#calc_results");
+        if (data.status == "ERROR") {
+            $("#statsWidgets").hide();
             result.append("ERROR: " + data.message);
+        }
         else {
-            result.append("Riesgo absoluto de este paciente en 5 años: " + (data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
+            $("#statsWidgets").show();
+            $('#text_chart_group1').hide();
+            $('#chart_group2').hide();
+            $('#chart_group3').hide();
+            $('#chart_group4').hide();
+            $('#chart1').data('easyPieChart').update((data.results * 100));
+            $('#perc1').text((data.results * 100).toFixed(2) + "%");
+        }
+
+        toggleLoading(false);
+    });
+}
+function calculateGail() {
+
+    $("#calc_results").empty();
+    var menarcheAge = $("#gailMenarcheAge").val();
+    var numberBiopsy = $("#gailBiopsies").val();
+    $("#statsWidgets").hide();
+    toggleLoading(true);
+    $.getJSON("api/pedigree/query?type=table&model=gail&id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
+
+        console.log(data);
+
+        var result = $("#calc_results");
+        if (data.status == "ERROR") {
+            $("#statsWidgets").hide();
+            result.append("ERROR: " + data.message);
+        }
+        else {
+            $("#statsWidgets").show();
+            $('#text_chart_group1').show();
+            $('#chart_group2').show();
+            $('#chart_group3').show();
+            $('#chart_group4').show();
+            //result.append("Riesgo absoluto de este paciente en 5 años: " + (data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
             $('#chart1').data('easyPieChart').update((data.absoluteRiskIn5Years * 100));
-            result.append("<br>Riesgo promedio de una persona en 5 años: " + (data.averageRiskIn5Years * 100).toFixed(2) + "%");
+            $('#perc1').text((data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo promedio de una persona en 5 años: " + (data.averageRiskIn5Years * 100).toFixed(2) + "%");
             $('#chart2').data('easyPieChart').update((data.averageRiskIn5Years * 100));
-            result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (data.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+            $('#perc2').text((data.averageRiskIn5Years * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (data.absoluteRiskAt90yo * 100).toFixed(2) + "%");
             $('#chart3').data('easyPieChart').update((data.absoluteRiskAt90yo * 100));
-            result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (data.averageRiskAt90yo * 100).toFixed(2) + "%");
+            $('#perc3').text((data.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (data.averageRiskAt90yo * 100).toFixed(2) + "%");
             $('#chart4').data('easyPieChart').update((data.averageRiskAt90yo * 100));
             $('#perc4').text((data.averageRiskAt90yo * 100).toFixed(2) + "%");
         }
