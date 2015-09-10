@@ -1,4 +1,4 @@
-class Person < Positionable
+class Person
 
   attr_accessor :node, :name, :surname, :birth_date, :gender, :medical_history, :diseases
   @diseases = []
