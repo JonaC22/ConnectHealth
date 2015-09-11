@@ -87,8 +87,8 @@ GEM
     mime-types (2.6.1)
     minitest (5.8.0)
     multi_json (1.11.2)
-    mysql2 (0.3.19)
-    mysql2 (0.3.19-x64-mingw32)
+    mysql2 (0.3.20)
+    mysql2 (0.3.20-x64-mingw32)
     nenv (0.2.0)
     neography (1.7.2)
       excon (>= 0.33.0)
@@ -224,7 +224,7 @@ DEPENDENCIES
   guard-rspec
   jbuilder (~> 2.0)
   jquery-rails
-  mysql2
+  mysql2 (= 0.3.20)
   neography
   puma
   rails (= 4.1.8)
