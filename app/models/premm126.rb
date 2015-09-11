@@ -182,21 +182,23 @@ class PREMM126
   end
 
   #Returns intermediate values for gene risk probabilities
-  def self.get_lp_values(patient)
-    {mlh1: get_lp(patient, :mlh1), msh2: get_lp(patient, :msh2), msh6: get_lp(patient, :msh6)}
+  def self.get_lp_values(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9)
+    {mlh1: get_lp(patient, :mlh1, v1, v2, v3, v4, v5, v6, v7, v8, v9),
+     msh2: get_lp(patient, :msh2, v1, v2, v3, v4, v5, v6, v7, v8, v9),
+     msh6: get_lp(patient, :msh6, v1, v2, v3, v4, v5, v6, v7, v8, v9)}
   end
 
   #Returns individual risk mutation for specified gen
-  def self.get_lp(patient, gen)
+  def self.get_lp(patient, gen, v1, v2, v3, v4, v5, v6, v7, v8, v9)
     c = @const_lp[gen]
     v = get_secondary_values patient, gen
-    c[0] + c[1]*v[0] + c[2]*v[1] + c[3]*v[2] + c[4]*v[3] + c[5]*v[4] +
-        c[6]*v[5] + c[7]*v[6] + c[8]*v[7] + c[9]*v[8] / 10 + c[10]*v[9] / 10
+    c[0] + c[1]*v[0] + c[2]*v1 + c[3]*v2 + c[4]*v3 + c[5]*v4 +
+        c[6]*v5 + c[7]*v6 + c[8]*v7 + c[9]*v8 / 10 + c[10]*v9 / 10
   end
 
   #Returns a hash with each gene mutation risk
-  def self.get_mutation_probabilities(patient)
-    lp = get_lp_values patient
+  def self.get_mutation_probabilities(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9)
+    lp = get_lp_values patient, v1, v2, v3, v4, v5, v6, v7, v8, v9
     exp_mlh1 = Math.exp(lp[:mlh1])
     exp_msh2 = Math.exp(lp[:msh2])
     exp_msh6 = Math.exp(lp[:msh6])
@@ -208,12 +210,12 @@ class PREMM126
     }
   end
 
-  def self.calc_risk(patient)
-    get_mutation_probabilities(patient).map { |_, v| v }.reduce(:+)
+  def self.calc_risk(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9)
+    get_mutation_probabilities(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9).map { |_, v| v }.reduce(:+)
   end
 
-  def self.get_no_mutation_probability(patient)
-    1 - calc_risk(patient)
+  def self.get_no_mutation_probability(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9)
+    1 - calc_risk(patient, v1, v2, v3, v4, v5, v6, v7, v8, v9)
   end
 
   #Set min or max age if the value is out of bound

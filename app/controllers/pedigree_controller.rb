@@ -227,7 +227,16 @@ class PedigreeController < BaseController
             unless patient.alive?
               render json: {status: 'ERROR', message: 'Paciente inválido (fallecido)'}
             else
-              risk = PREMM126.calc_risk patient
+              risk = PREMM126.calc_risk patient,
+                                        params[:v1].to_i,
+                                        params[:v2].to_i,
+                                        params[:v3].to_i,
+                                        params[:v4].to_i,
+                                        params[:v5].to_i,
+                                        params[:v6].to_i,
+                                        params[:v7].to_i,
+                                        params[:v8].to_i,
+                                        params[:v9].to_i
               render json: {status: 'OK', results: risk}
             end
           else
