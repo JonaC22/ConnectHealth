@@ -148,4 +148,9 @@ class Person < Positionable
 
   end
 
+  #TODO reemplazar por consulta al atributo fecha_fallecimiento
+  def alive?
+    age <= 90
+  end
+
 end

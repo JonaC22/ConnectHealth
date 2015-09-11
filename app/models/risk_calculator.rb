@@ -1394,7 +1394,7 @@ class BcptConvert
       rval = 0
     elsif number_of_prev_biopsy == 1 or (number_of_prev_biopsy == 99 and ever_had_biopsy == 1) then
       rval = 1
-    elsif number_of_prev_biopsy > 1 and number_of_prev_biopsy <= 30 then
+    elsif number_of_prev_biopsy > 1 then#and number_of_prev_biopsy <= 30 then
       rval = 2
     end
     return rval

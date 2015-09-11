@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ConnectHealth</title>
+    <meta name="description"
+          content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="css/animate.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font.css" type="text/css" cache="false"/>
+    <link rel="stylesheet" href="css/plugin.css" type="text/css"/>
+    <link rel="stylesheet" href="js/fuelux/fuelux.css" type="text/css" />
+    <link rel="stylesheet" href="css/app.css" type="text/css"/>
+    <!--[if lt IE 9]>
+    <script src="js/ie/respond.min.js" cache="false"></script>
+    <script src="js/ie/html5.js" cache="false"></script>
+    <script src="js/ie/fix.js" cache="false"></script>
+    <![endif]-->
+</head>
+<body>
+  <section class="hbox stretch">
+    <!-- .aside -->
+    <aside class="bg-success dker aside-sm nav-vertical" id="nav">
+      <section class="vbox">
+        <header class="bg-black nav-bar">
+          <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+            <i class="fa fa-bars"></i>
+          </a>
+          <a href="#" class="nav-brand" data-toggle="fullscreen"><img src="./images/logo_notext.png"></a>
+          <a class="btn btn-link visible-xs" data-toggle="collapse" data-target=".navbar-collapse">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </header>
+        <section>
+          <!-- nav -->
+          <nav class="nav-primary hidden-xs">
+            <ul class="nav">
+                <li>
+                    <a href="index.html">
+                        <i class="fa fa-eye"></i>
+                        <span>Inicio</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pacientes.html">
+                        <i class="fa fa-users"></i>
+                        <span>Pacientes</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="pedigree.html">
+                        <i class="fa fa-sitemap"></i>
+                        <span>Pedigree</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="enfermedades.html">
+                        <i class="fa fa-stethoscope"></i>
+                        <span>Enfermedades</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="estadisticas.html">
+                        <i class="fa fa-bar-chart-o"></i>
+                        <span>Estadísticas</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="buscarPubmed.html">
+                        <i class="fa fa-user-md"></i>
+                        <span>Buscar en Pubmed</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="usuarios.html">
+                        <i class="fa fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <!--
+                <li>
+                    <a href="tasks.html">
+                        <i class="fa fa-tasks"></i>
+                        <span>Tareas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="notes.html">
+                        <i class="fa fa-pencil"></i>
+                        <span>Notas</span>
+                    </a>
+                </li>
+                -->
+            </ul>
+          </nav>
+          <!-- / nav -->
+        </section>
+        <footer class="footer bg-gradient hidden-xs">
+          <a href="modal.lockme.html" data-toggle="ajaxModal" class="btn btn-sm btn-link m-r-n-xs pull-right">
+            <i class="fa fa-power-off"></i>
+          </a>
+          <a href="#nav" data-toggle="class:nav-vertical" class="btn btn-sm btn-link m-l-n-sm">
+            <i class="fa fa-bars"></i>
+          </a>
+        </footer>
+      </section>
+    </aside>
+    <!-- /.aside -->
+    <!-- .vbox -->
+    <section id="content">
+      <section class="vbox">
+        <header class="header bg-black navbar navbar-inverse">
+          <div class="collapse navbar-collapse pull-in">
+            <ul class="nav navbar-nav m-l-n">
+              <li class="active"><a href="#">PubMed</a></li>
+            </ul>
+            <form class="navbar-form navbar-left m-t-sm" role="search">
+              <div class="form-group">
+                <div class="input-group input-s">
+                  <input id="search-box"type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-sm btn-success btn-icon" onclick="search()"><i class="fa fa-search"></i></button>
+                  </span>
+                </div>
+              </div>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="hidden-xs">
+                <section class="dropdown-menu animated fadeInUp input-s-lg">
+                  <section class="panel bg-white">
+                    <header class="panel-heading">
+                      <strong>You have <span class="count-n">2</span> notifications</strong>
+                    </header>
+                    <div class="list-group">
+                      <a href="#" class="media list-group-item">
+                        <span class="pull-left thumb-sm">
+                          <img src="images/avatar.jpg" alt="John said" class="img-circle">
+                        </span>
+                        <span class="media-body block m-b-none">
+                          Use awesome animate.css<br>
+                          <small class="text-muted">28 Aug 13</small>
+                        </span>
+                      </a>
+                      <a href="#" class="media list-group-item">
+                        <span class="media-body block m-b-none">
+                          1.0 initial released<br>
+                          <small class="text-muted">27 Aug 13</small>
+                        </span>
+                      </a>
+                    </div>
+                    <footer class="panel-footer text-sm">
+                      <a href="#" class="pull-right"><i class="fa fa-cog"></i></a>
+                      <a href="#">See all the notifications</a>
+                    </footer>
+                  </section>
+                </section>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">
+                    <img src="images/avatar.jpg">
+                  </span>
+                  John.Smith <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated fadeInLeft">
+                  <li>
+                    <a href="#">Settings</a>
+                  </li>
+                  <li>
+                    <a href="profile.html">Profile</a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <span class="badge bg-danger pull-right">3</span>
+                      Notifications
+                    </a>
+                  </li>
+                  <li>
+                    <a href="docs.html">Help</a>
+                  </li>
+                  <li>
+                    <a href="signin.html">Logout</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </header>
+        <section class="scrollable" id="pjax-container">
+          <section  class="hbox">
+              <div class="tab-content" id="datagrid" style="margin: 15px;">
+                  <section class="panel">
+                      <header class="panel-heading">
+                          PubMed
+                          <!--<a href="#" class="btn btn-white pull-right"><i class="fa fa-plus"></i>  Nuevo Paciente</a>-->
+                          <!--<a href="#modal-form" data-toggle="modal" class="btn label bg-success pull-right"><i class="fa fa-plus text-muted" ></i> Nuevo Paciente</a>-->
+                          <!--<i class="fa fa-info text-muted" data-toggle="tooltip" data-placement="bottom" data-title="ajax to load the data."></i>-->
+                      </header>
+                      <div class="table-responsive">
+                          <table id="PubMedGrid" class="table table-striped datagrid m-b-sm">
+                              <thead>
+                              <tr>
+                                  <th>
+                                      <div class="row">
+                                          <!--<div class="col-sm-8 m-t-xs m-b-xs">-->
+                                              <!--<div class="select filter" data-resize="auto">-->
+                                                  <!--<button data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle">-->
+                                                      <!--<span class="dropdown-label"></span>-->
+                                                      <!--<span class="caret"></span>-->
+                                                  <!--</button>-->
+                                                  <!--<ul class="dropdown-menu">-->
+                                                      <!--<li data-value="all" data-selected="true"><a href="#">Sin filtro de sexo</a></li>-->
+                                                      <!--<li data-value="onlyFemale"><a href="#">Sólo pacientes femeninos</a></li>-->
+                                                      <!--<li data-value="onlyMale"><a href="#">Sólo pacientes masculinos</a></li>-->
+                                                  <!--</ul>-->
+                                              <!--</div>-->
+                                          <!--</div>-->
+
+                                          <!--<div class="col-sm-4 m-t-xs m-b-xs">-->
+                                              <!--<div class="input-group search datagrid-search">-->
+                                                  <!--<input type="text" class="input-sm form-control" placeholder="Buscar">-->
+                                                  <!--<div class="input-group-btn">-->
+                                                      <!--<button class="btn btn-white btn-sm"><i class="fa fa-search"></i></button>-->
+                                                  <!--</div>-->
+                                              <!--</div>-->
+                                          <!--</div>-->
+                                      </div>
+                                  </th>
+                              </tr>
+                              </thead>
+
+                              <tfoot>
+                              <tr>
+                                  <th class="row">
+                                      <div class="datagrid-footer-left col-sm-6 text-center-xs m-l-n" style="display:none;">
+                                          <div class="grid-controls m-t-sm">
+                              <span>
+                                <span class="grid-start"></span> -
+                                <span class="grid-end"></span> de
+                                <span class="grid-count"></span>
+                              </span>
+                                              <div class="select grid-pagesize dropup" data-resize="auto">
+                                                  <button data-toggle="dropdown" class="btn btn-sm btn-white dropdown-toggle">
+                                                      <span class="dropdown-label"></span>
+                                                      <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                      <li data-value="5"><a href="#">5</a></li>
+                                                      <li data-value="10"><a href="#">10</a></li>
+                                                      <li data-value="20" data-selected="true"><a href="#">20</a></li>
+                                                      <li data-value="50"><a href="#">50</a></li>
+                                                      <li data-value="100"><a href="#">100</a></li>
+                                                  </ul>
+                                              </div>
+                                              <span>Per Page</span>
+                                          </div>
+                                      </div>
+                                      <div class="datagrid-footer-right col-sm-6 text-right text-center-xs" style="display:none;">
+                                          <div class="grid-pager m-r-n">
+                                              <button type="button" class="btn btn-sm btn-white grid-prevpage"><i class="fa fa-chevron-left"></i></button>
+                                              <span>Page</span>
+                                              <div class="inline">
+                                                  <div class="input-group dropdown combobox">
+                                                      <input class="input-sm form-control" type="text">
+                                                      <div class="input-group-btn dropup">
+                                                          <button class="btn btn-sm btn-white" data-toggle="dropdown"><i class="caret"></i></button>
+                                                          <ul class="dropdown-menu pull-right"></ul>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <span>of <span class="grid-pages"></span></span>
+                                              <button type="button" class="btn btn-sm btn-white grid-nextpage"><i class="fa fa-chevron-right"></i></button>
+                                          </div>
+                                      </div>
+                                  </th>
+                              </tr>
+                              </tfoot>
+                          </table>
+                      </div>
+                  </section>
+              </div>
+
+          </section>
+        </section>
+      </section>
+      <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+    </section>
+    <!-- /.vbox -->
+  </section>
+  <div class="modal fade" id="modal-extracto">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-body">
+                  <div class="row">
+                      <div class="col-sm-12 b-r">
+                          <h3 class="m-t-none m-b" id="modalTitle"></h3>
+                          <p id="modalBody"></p>
+                      </div>
+                  </div>
+              </div>
+          </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+  </div>
+  <script type="text/javascript">
+
+      function toggleLoading(toogle){
+          if(toogle){
+              $('#ajaxModal').remove();
+              var $this = $(this)
+                      , $modal = $('<div class="modal" id="ajaxModal"><div class="modal-body"></div></div>');
+              $('body').append($modal);
+              $modal.modal();
+              $modal.load('./modal.html');
+          }else{
+              $('#ajaxModal').modal('hide');
+          }
+      };
+
+      var PubMedDataSource = function (options) {
+          this._formatter = options.formatter;
+          this._columns = options.columns;
+          this._resultsId = options.resultsId
+      };
+
+      PubMedDataSource.prototype = {
+
+          /**
+           * Returns stored column metadata
+           */
+          columns: function () {
+              return this._columns;
+          },
+
+          /**
+           * Called when Datagrid needs data. Logic should check the options parameter
+           * to determine what data to return, then return data by calling the callback.
+           * @param {object} options Options selected in datagrid (ex: {pageIndex:0,pageSize:5,search:'searchterm'})
+           * @param {function} callback To be called with the requested data.
+           */
+          data: function (options, callback) {
+
+//              var url = 'http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d6d798f51bbd5ec0a1f9e9f1e62c43ab&format=json';
+              var self = this;
+              var start = options.pageSize * options.pageIndex;
+              var pagesize = options.pageSize;
+              var pageIndex = options.pageIndex;
+              var ids = this._resultsId.slice(start,start+options.pageSize).join();
+
+              $.getJSON("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&retmode=json&rettype=abstract&id="+ids,{},function(data){
+                  console.log(data);
+                  var itemPubs = [];
+                  data.result.uids.forEach(function(uid) {
+                      console.log(data.result[uid]);
+                      itemPubs.push(data.result[uid]);
+                  });
+                  console.log(itemPubs);
+
+                  // Prepare data to return to Datagrid
+                  var count = self._resultsId.length;
+                  var startIndex = start;
+                  var endIndex = startIndex + pagesize;
+                  var end = (endIndex > count) ? count : endIndex;
+                  var pages = Math.ceil(count / pagesize);
+                  var page = pageIndex+1;
+
+                  // Allow client code to format the data
+                  if (self._formatter) self._formatter(itemPubs);
+
+                  // Return data to Datagrid
+                  callback({ data: itemPubs, start: startIndex, end: end, count: count, pages: pages, page: page });
+              });
+          }
+      };
+
+      //TODO limpiar tabla antes de volver a repopular
+      function search(){
+          var search_term = $('#search-box').val();
+          console.log(search_term);
+          toggleLoading(true);
+
+          $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=10000&term='+search_term,{},function(data){
+              console.log(data);
+              var ids = data.esearchresult.idlist;
+              console.log(ids);
+
+              $('#PubMedGrid').each(function() {
+                  $(this).datagrid({
+                      dataSource: new PubMedDataSource({
+                          // Column definitions for Datagrid
+                          columns: [
+                              {
+                                  property: 'uid',
+                                  label: 'Id',
+                                  sortable: true
+                              },
+                              {
+                                  property: 'title',
+                                  label: 'Título',
+                                  sortable: true
+                              },
+                              {
+                                  property: 'lastauthor',
+                                  label: 'Último autor',
+                                  sortable: true
+                              },
+                              {
+                                  property: 'pubdate',
+                                  label: 'Fecha de Pub.',
+                                  sortable: true
+                              },
+                              {
+                                  property: 'ext_link',
+                                  label: 'Pubmed Link',
+                                  sortable: false
+                              },
+                              {
+                                  property: 'extract',
+                                  label: 'Extracto',
+                                  sortable: false
+                              },
+                              {
+                                  property: 'fullTextArticleLink',
+                                  label: 'Full-text article',
+                                  sortable: false
+                              }
+                          ],
+
+                          // Create IMG tag for each returned image
+                          formatter: function (items) {
+                              $.each(items, function (index, item) {
+                                  item.ext_link = '<a target="_blank" href="http://www.ncbi.nlm.nih.gov/pubmed/'+item.uid+'"><i class="fa fa-user-md"></i></a>';
+                                  item.extract = '<a href="#verExtracto" onclick="verExtracto(\''+item.uid+'\',\''+item.title+'\')"><i class="fa fa-eye"></i></a>';
+                                  item.fullTextArticleLink = '';
+                                  var bestArticleLink = item.articleids[0];
+                                  switch(bestArticleLink.idtype){
+                                      case "pii":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://linkinghub.elsevier.com/retrieve/pii/'+bestArticleLink.value+'"><img alt="Icon for Elsevier Science" title="Read full text in Elsevier Science" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--linkinghub.elsevier.com-ihub-images-PubMedLink.gif" border="0"></a>';
+                                          break;
+                                      case "doi":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://dx.doi.org/'+bestArticleLink.value+'"><img alt="Icon for Wiley" title="Read full text in Wiley" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--media.wiley.com-assets-2250-98-WileyOnlineLibrary_FullTextOnline_120x27.gif" border="0"></a>';
+                                          break;
+                                      case "pubmed":
+                                          item.fullTextArticleLink = '<a target="_blank" href="http://jcp.bmj.com/cgi/pmidlookup?view=long&pmid='+bestArticleLink.value+'"><img alt="Icon for HighWire" title="Read full text in HighWire" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--highwire.stanford.edu-icons-externalservices-pubmed-custom-bmjjournals_final.gif" border="0"></a>';
+                                          break;
+                                      default:
+                                          break;
+                                  }
+                              });
+                          },
+                          resultsId: ids
+                      })
+                  });
+              });
+              toggleLoading(false);
+          });
+
+      }
+
+      function verExtracto(id,title){
+          $('#modal-extracto').modal({
+              show: 'true'
+          });
+          $('#modalTitle').text(title);
+          $('#modalBody').text("Cargando...");
+          $.ajax({
+              url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=text&rettype=abstract&id='+id,
+              dataType: 'text',
+              type: 'GET',
+              async: true,
+              success:function (response) {
+                      console.log(response);
+
+                  $('#modalBody').html(response.replace(/\r?\n/g, '<br />'));
+              }
+          });
+      }
+
+  </script>
+	<script src="js/jquery.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="js/bootstrap.js"></script>
+  <!-- Sparkline Chart -->
+  <script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
+  <!-- App -->
+  <script src="js/app.js"></script>
+  <script src="js/app.plugin.js"></script>
+  <script src="js/app.data.js"></script>
+  <script src="js/libs/jquery.pjax.js" cache="false"></script>
+  <!-- Sparkline Chart -->
+  <script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
+  <!-- Easy Pie Chart -->
+  <script src="js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+  <!-- fuelux -->
+  <script src="js/fuelux/fuelux.js"></script>
+  <script src="js/libs/underscore-min.js"></script>
+  <!-- Morris -->
+  <script src="js/charts/morris/raphael-min.js" cache="false"></script>
+  <script src="js/charts/morris/morris.min.js" cache="false"></script>
+</body>
+</html>

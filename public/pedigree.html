@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>ConnectHealth</title>
+    <meta name="description"
+          content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <link rel="stylesheet" href="css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="css/animate.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css"/>
+    <link rel="stylesheet" href="css/font.css" type="text/css" cache="false"/>
+    <link rel="stylesheet" href="css/plugin.css" type="text/css"/>
+    <link rel="stylesheet" href="css/app.css" type="text/css"/>
+    <script type="text/javascript" src="js/go/go-debug.js"></script>
+    <script type="text/javascript" id="code" src="js/go/GenogramLayoutGo.js"></script>
+    <!--[if lt IE 9]>
+    <script src="js/ie/respond.min.js" cache="false"></script>
+    <script src="js/ie/html5.js" cache="false"></script>
+    <script src="js/ie/fix.js" cache="false"></script>
+    <![endif]-->
+</head>
+<body>
+<section class="hbox stretch">
+    <!-- .aside -->
+    <aside class="bg-success dker aside-sm nav-vertical" id="nav">
+        <section class="vbox">
+            <header class="bg-black nav-bar">
+                <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a href="#" class="nav-brand" data-toggle="fullscreen"><img src="./images/logo_notext.png"></a>
+                <a class="btn btn-link visible-xs" data-toggle="collapse" data-target=".navbar-collapse">
+                    <i class="fa fa-comment-o"></i>
+                </a>
+            </header>
+            <section>
+                <!-- nav -->
+                <nav class="nav-primary hidden-xs">
+                    <ul class="nav">
+                        <li>
+                            <a href="index.html">
+                                <i class="fa fa-eye"></i>
+                                <span>Inicio</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="pacientes.html">
+                                <i class="fa fa-users"></i>
+                                <span>Pacientes</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="pedigree.html">
+                                <i class="fa fa-sitemap"></i>
+                                <span>Pedigree</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="enfermedades.html">
+                                <i class="fa fa-stethoscope"></i>
+                                <span>Enfermedades</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="estadisticas.html">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <span>Estadísticas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="buscarPubmed.html">
+                                <i class="fa fa-user-md"></i>
+                                <span>Buscar en Pubmed</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="usuarios.html">
+                                <i class="fa fa-users"></i>
+                                <span>Usuarios</span>
+                            </a>
+                        </li>
+                        <!--
+                        <li>
+                            <a href="tasks.html">
+                                <i class="fa fa-tasks"></i>
+                                <span>Tareas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="notes.html">
+                                <i class="fa fa-pencil"></i>
+                                <span>Notas</span>
+                            </a>
+                        </li>
+                        -->
+                    </ul>
+                </nav>
+                <!-- / nav -->
+            </section>
+            <footer class="footer bg-gradient hidden-xs">
+                <a href="modal.lockme.html" data-toggle="ajaxModal" class="btn btn-sm btn-link m-r-n-xs pull-right">
+                    <i class="fa fa-power-off"></i>
+                </a>
+                <a href="#nav" data-toggle="class:nav-vertical" class="btn btn-sm btn-link m-l-n-sm">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </footer>
+        </section>
+    </aside>
+    <!-- /.aside -->
+    <!-- .vbox -->
+    <section id="content">
+        <section class="vbox">
+            <header class="header bg-black navbar navbar-inverse">
+                <div class="collapse navbar-collapse pull-in">
+
+                    <form class="navbar-form navbar-left m-t-sm" role="search">
+                        <div class="form-group">
+                            <div class="input-group input-s">
+                                <input id="searchPersonInput" type="number" class="form-control input-sm no-border bg-dark" placeholder="Search id">
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-sm btn-success btn-icon" onclick="searchPerson()"><i class="fa fa-search"></i></button>
+                  </span>
+                            </div>
+                        </div>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="hidden-xs">
+                            <section class="dropdown-menu animated fadeInUp input-s-lg">
+                                <section class="panel bg-white">
+                                    <header class="panel-heading">
+                                        <strong>You have <span class="count-n">2</span> notifications</strong>
+                                    </header>
+                                    <div class="list-group">
+                                        <a href="#" class="media list-group-item">
+                        <span class="pull-left thumb-sm">
+                          <img src="images/avatar.jpg" alt="John said" class="img-circle">
+                        </span>
+                        <span class="media-body block m-b-none">
+                          Use awesome animate.css<br>
+                          <small class="text-muted">28 Aug 13</small>
+                        </span>
+                                        </a>
+                                        <a href="#" class="media list-group-item">
+                        <span class="media-body block m-b-none">
+                          1.0 initial released<br>
+                          <small class="text-muted">27 Aug 13</small>
+                        </span>
+                                        </a>
+                                    </div>
+                                    <footer class="panel-footer text-sm">
+                                        <a href="#" class="pull-right"><i class="fa fa-cog"></i></a>
+                                        <a href="#">See all the notifications</a>
+                                    </footer>
+                                </section>
+                            </section>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">
+                    <img src="images/avatar.jpg">
+                  </span>
+                                John.Smith <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInLeft">
+                                <li>
+                                    <a href="#">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="profile.html">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span class="badge bg-danger pull-right">3</span>
+                                        Notifications
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="docs.html">Help</a>
+                                </li>
+                                <li>
+                                    <a href="signin.html">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </header>
+            <section class="scrollable" id="pjax-container">
+                <section class="hbox">
+                    <div class="slim-scroll wrapper" data-height="auto" data-disable-fade-out="true" data-distance="0">
+                        <div id="calc_results" style="font-size: 20px;"></div>
+                        <div id="statsWidgets" class="row" style="display: none">
+
+                            <div id="chart_group1" class="col-lg-6">
+                                <section class="panel bg-info no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo absoluto</p>
+                                                <p id="perc1" class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div id="text_chart_group1" class="text-sm"> de este paciente en 5 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart1" class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div id="chart_group2" class="col-lg-6">
+                                <section class="panel bg-warning no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo promedio</p>
+                                                <p id="perc2" class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div class="text-sm">de una persona en 5 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart2"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div id="chart_group3" class="col-lg-6">
+                                <section class="panel bg-warning no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo absoluto</p>
+                                                <p id="perc3" class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div class="text-sm">de este paciente hasta los 90 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart3"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div id="chart_group4" class="col-lg-6">
+                                <section class="panel bg-info no-borders">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <div class="wrapper">
+                                                <p>Riesgo promedio</p>
+                                                <p id="perc4" class="h2 font-bold">0%</p>
+                                                <div class="progress progress-xs progress-striped active m-b-sm">
+                                                    <div class="progress-bar progress-bar-warning" data-toggle="tooltip" data-original-title="0%" style="width: 0%"></div>
+                                                </div>
+                                                <div class="text-sm">de una persona hasta los 90 años</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-6 wrapper text-center">
+                                            <div class="inline m-t-sm">
+                                                <div id="chart4"  class="easypiechart" data-percent="0" data-line-width="8" data-bar-color="#ffffff" data-track-Color="#c79d43" data-scale-Color="false" data-size="100">
+                                                    <span class="h2">0</span>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px; "></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="panel">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
+                                        <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de Cáncer de Mama">
+                                                Calcular Algoritmo de Gail
+                                        </a>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div class="panel-body text-sm">
+                                            <div class="panel-body">
+                                                <form id="gailForm" role="form">
+                                                    <div class="form-group">
+                                                        <label>Edad de <a data-toggle="tooltip" data-placement="top" title="" data-original-title="Primera menstruación">Menarca</a></label>
+                                                        <input type="number" id="gailMenarcheAge" class="form-control" placeholder="Edad">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Cantidad de Biopsas realizadas</label>
+                                                        <input type="number" id="gailBiopsies" class="form-control" placeholder="Biopsias">
+                                                    </div>
+                                                    <button type="button" id="gailAccept" value="Calcular" onclick="calculateGail()" class="btn btn-sm btn-default">Calcular</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="panel">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" aria-expanded="false">
+                                        <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de mutación en genes MLH1, MSH2, MSH6">
+                                            Calcular Algoritmo PREMM 1,2,6
+                                        </a>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div class="panel-body text-sm">
+                                            <div class="panel-body">
+                                                <form id="premm126Form" role="form">
+                                                    <button type="button" id="premm126Accept" value="Calcular" onclick="calculatePREMM126()" class="btn btn-sm btn-default">Calcular</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div id="current_patient" style="font-size: 20px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </section>
+        <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+    </section>
+    <!-- /.vbox -->
+</section>
+<script src="js/jquery.min.js"></script>
+<!-- Bootstrap -->
+<script src="js/bootstrap.js"></script>
+<!-- Sparkline Chart -->
+<script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
+<!-- App -->
+<script src="js/app.js"></script>
+<script src="js/app.plugin.js"></script>
+<script src="js/app.data.js"></script>
+<script type="text/javascript" src="js/conh/pedigree.js"></script>
+<script src="js/libs/jquery.pjax.js" cache="false"></script>
+<!-- Sparkline Chart -->
+<script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
+<!-- Easy Pie Chart -->
+<script src="js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+<!-- Morris -->
+<script src="js/charts/morris/raphael-min.js" cache="false"></script>
+<script src="js/charts/morris/morris.min.js" cache="false"></script>
+</body>
+</html>
