@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150819190143) do
+ActiveRecord::Schema.define(version: 20150910191808) do
 
   create_table "annotations", force: true do |t|
     t.integer  "pedigree_id"
@@ -23,6 +23,12 @@ ActiveRecord::Schema.define(version: 20150819190143) do
   end
 
   add_index "annotations", ["pedigree_id"], name: "index_annotations_on_pedigree_id", using: :btree
+
+  create_table "diseases", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "functions", force: true do |t|
     t.string   "description"
@@ -39,40 +45,16 @@ ActiveRecord::Schema.define(version: 20150819190143) do
 
   add_index "medical_histories", ["patient_id"], name: "index_medical_histories_on_patient_id", using: :btree
 
-  create_table "medicos", primary_key: "﻿Id_Medico", force: true do |t|
-    t.string "Nombre",               limit: 45
-    t.string "Apellido",             limit: 45
-    t.string "Sexo",                 limit: 45
-    t.string "Tipo_Doc",             limit: 45
-    t.string "Nro_Doc",              limit: 45
-    t.string "Direccion",            limit: 45
-    t.string "Telefono",             limit: 45
-    t.string "Mail",                 limit: 45
-    t.string "Fecha_Nac",            limit: 45
-    t.string "Nro_Matricula",        limit: 45
-    t.string "Fecha_Atencion_Desde", limit: 45
-    t.string "Fecha_Atencion_Hasta", limit: 45
-    t.string "Habilitado",           limit: 45
+  create_table "patient_diseases", force: true do |t|
+    t.integer  "patient_id"
+    t.integer  "disease_id"
+    t.integer  "age"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "pacientes", primary_key: "Nro_Afiliado", force: true do |t|
-    t.string "Nombre",               limit: 45
-    t.string "Apellido",             limit: 45
-    t.string "Sexo",                 limit: 45
-    t.string "Tipo_Doc",             limit: 45
-    t.string "Nro_Doc",              limit: 45
-    t.string "Direccion",            limit: 45
-    t.string "Mail",                 limit: 45
-    t.string "Telefono",             limit: 45
-    t.string "Fecha_Nac",            limit: 45
-    t.string "Cod_Plan",             limit: 45
-    t.string "Estado_Civil",         limit: 45
-    t.string "Nro_Titular",          limit: 45
-    t.string "Nro_Conyuge",          limit: 45
-    t.string "Fecha_Baja",           limit: 45
-    t.string "Nro_Consulta",         limit: 45
-    t.string "CantFamiliaresACargo", limit: 45
-  end
+  add_index "patient_diseases", ["disease_id"], name: "index_patient_diseases_on_disease_id", using: :btree
+  add_index "patient_diseases", ["patient_id"], name: "index_patient_diseases_on_patient_id", using: :btree
 
   create_table "patients", force: true do |t|
     t.integer  "pedigree_id"
@@ -85,6 +67,8 @@ ActiveRecord::Schema.define(version: 20150819190143) do
     t.datetime "updated_at",                      null: false
     t.string   "gender"
     t.date     "birth_date"
+    t.integer  "neo_id"
+    t.integer  "status"
   end
 
   add_index "patients", ["document_number"], name: "index_patients_on_document_number", unique: true, using: :btree
@@ -152,6 +136,14 @@ ActiveRecord::Schema.define(version: 20150819190143) do
     t.boolean  "active",          default: true
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
+  end
+
+  create_table "widgets", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "stock"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

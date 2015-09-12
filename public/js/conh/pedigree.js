@@ -104,7 +104,7 @@ var familia;
 
 toggleLoading(true);
 $("#current_patient").hide();
-$.getJSON("api/pedigrees?id=" + $.urlParam('id'), function (data) {
+$.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     var family = data;
     console.log(data);
