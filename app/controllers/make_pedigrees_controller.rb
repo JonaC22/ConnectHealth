@@ -15,10 +15,10 @@ class MakePedigreesController < BaseController
         nombre_enfermedad = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
         pat.add_disease(nombre_enfermedad, rand(35..70))
       end
-      father = pat.generate_father(nombres_m.sample)
-      mother = pat.generate_mother(nombres_f.sample, apellidos.sample)
-      father.generate_father(nombres_m.sample)
-      mother.generate_mother(nombres_f.sample, apellidos.sample)
+      father = pat.generate_father(name: nombres_m.sample)
+      mother = pat.generate_mother(name: nombres_f.sample, lastname: apellidos.sample)
+      father.generate_father(name: nombres_m.sample)
+      mother.generate_mother(name: nombres_f.sample, lastname: apellidos.sample)
       pedigrees << pedigree
     end
     render json: pedigrees

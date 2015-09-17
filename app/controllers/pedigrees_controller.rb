@@ -15,7 +15,7 @@ class PedigreesController < BaseController
     visualize pedigree, params[:current_patient]
   end
 
-  def visualize(pedigree, id_current_patient)
+  def visualize(pedigree, id_current_patient = nil)
     relations = []
     # Se extraen relaciones
     pedigree.patients.each do |person|
@@ -31,22 +31,14 @@ class PedigreesController < BaseController
     render json: pedigree
   end
 
-  before_filter only: :create do
-    @json = JSON.parse(request.body.read)
-    unless @json.key?('personas') && @json.key?('relations')
-      render nothing: true, status: :bad_request
-    end
-  end
-
   def create
+    @json = JSON.parse(request.body.read)
+    fail ImposibleRelationException, 'Missing personas or relations' unless @json.key?('personas') && @json.key?('relations')
     @pedigree = Pedigree.new
     @json['personas'].each do |persona|
-      Patient.create! name: persona['nombre'], lastname: persona['apellido'], document_number: persona['dni'], document_type: persona['tipo'], pedigree: @pedigree
-      tags = %w('MADRE', 'PADRE')
-      error = validate_relations @json, persona, tags
-      return render json: error if error.err_number == 500
-      node = @neo.create_node('edad' => persona['edad'], 'nombre' => persona['nombre'], 'apellido' => persona['apellido'], 'sexo' => persona['sexo'])
-      @neo.set_label(node, 'PERSONA')
+      tags = %w(MADRE PADRE)
+      validate_relations @json, persona, tags
+      Patient.create! name: persona['nombre'], lastname: persona['apellido'], document_number: persona['dni'], document_type: persona['tipo'], pedigree: @pedigree, birth_age: persona['fecha_nacimiento']
       personas[persona['id']] = node
     end
 
@@ -54,8 +46,7 @@ class PedigreesController < BaseController
       @neo.create_relationship(rel['name'], personas[rel['from']], personas[rel['to']])
     end
 
-    resultado = Resultado.new('Pedigree ingresado exitosamente', 200)
-    render json: resultado
+    render json: (visualize @pedigree)
   end
 
   # GET /api/pedigree/query
@@ -105,8 +96,7 @@ class PedigreesController < BaseController
   def validate_relations(json, persona, tags)
     tags.each do |tag|
       count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
-      return Resultado.new("Relacion duplicada: #{tag}", 500) if count > 1
+      fail ImposibleRelationException, "Relacion duplicada: #{tag}" if count > 1
     end
-    Resultado.new('OK', 200)
   end
 end

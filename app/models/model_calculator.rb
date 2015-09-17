@@ -4,6 +4,13 @@ class ModelCalculator
 
   attr_accessor :model, :calculations
 
+  def premm126(params)
+    params = premm_params(params)
+    params[:patient] = Patient.find_by_neo_id!(params[:patient])
+    validate_premm126(params[:patient])
+    PREMM126.calc_risk(params)
+  end
+
   def gail(params)
     # AgeIndicator: age ge 50 ind
     # 0=[20, 50)
@@ -41,7 +48,7 @@ class ModelCalculator
     calculator = RiskCalculator.new
     params = gail_params(params) # evita parametros de mas y valida que esten los necesarios
     patient = Patient.find_by!(id: params[:patient_id])
-    validate_gail_model(patient)
+    validate_gail(patient)
     current_age = patient.age
 
     fdr = patient.first_deg_relatives
@@ -79,7 +86,7 @@ class ModelCalculator
 
   private
 
-  def validate_gail_model(patient)
+  def validate_gail(patient)
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes no vivos' unless patient.alive?
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes de sexo masculino' if patient.gender == 'M'
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes que ya padezcan la enfermedad de Cancer de mama' if patient.diseases.include? 'Cancer de Mama'
@@ -87,11 +94,30 @@ class ModelCalculator
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes menores a 35 años' if patient.age < 35
   end
 
+  def validate_premm126(patient)
+    fail IncalculableModelException, 'Algoritmo no aplicable a pacientes no vivos' unless patient.alive?
+  end
+
   def gail_params(params)
     {
       patient_id: params.require(:patient_id),
       menarcheAge: params.require(:menarcheAge).to_i,
       numberBiopsy: params.require(:numberBiopsy).to_i
+    }
+  end
+
+  def premm_params(params)
+    {
+      patient: params.require(:patient_id),
+      v1: params.require(:v1).to_i,
+      v2: params.require(:v2).to_i,
+      v3: params.require(:v3).to_i,
+      v4: params.require(:v4).to_i,
+      v5: params.require(:v5).to_i,
+      v6: params.require(:v6).to_i,
+      v7: params.require(:v7).to_i,
+      v8: params.require(:v8).to_i,
+      v9: params.require(:v9).to_i
     }
   end
 end

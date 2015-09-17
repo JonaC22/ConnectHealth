@@ -33,7 +33,8 @@ class Patient < ActiveRecord::Base
   before_create :create_node
 
   def create_node
-    node ||= neo.create_node('id' => @id, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    node ||= neo.create_node('id' => @id, 'edad' => age, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    neo.set_label(@node, 'PERSONA')
     self.neo_id = node['metadata']['id']
     neo.add_node_to_index('ind_paciente', 'id', @id, node)
   end
@@ -54,15 +55,19 @@ class Patient < ActiveRecord::Base
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
   end
 
-  def generate_mother(nombre, apellido)
+  def generate_mother(params)
     # fecha_nac=DateTime.strptime(self.birth_date, "%Y-%m-%d %H:%M:%S")
-    @mother = Patient.create!(name: nombre, lastname: apellido, birth_date: birth_date - 365 * 10, gender: 'F', pedigree: pedigree, active: true)
+    @mother = Patient.create!(name: params[:name], lastname: params[:lastname], birth_date: birth_date - 365 * 10, gender: 'F', pedigree: pedigree, active: true)
     neo.create_relationship('MADRE', node, @mother.node)
+    if rand > 0.5
+      disease_name = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
+      @mother.add_disease(disease_name, rand(35..70))
+    end
     @mother
   end
 
-  def generate_father(nombre)
-    @father = Patient.create!(name: nombre, lastname: lastname, birth_date: birth_date - 365 * 11, gender: 'M', pedigree: pedigree, active: true)
+  def generate_father(params)
+    @father = Patient.create!(name: params[:name], lastname: lastname, birth_date: birth_date - 365 * 11, gender: 'M', pedigree: pedigree, active: true)
     neo.create_relationship('PADRE', node, @father.node)
     @father
   end
