@@ -314,31 +314,36 @@
 
                         <p>Ingresa un nuevo paciente</p>
 
-                        <form role="form">
+                        <form id="patientForm" onsubmit="createPatient(this)">
                             <div class="form-group">
                                 <label>Nombre</label>
-                                <input type="text" class="form-control" placeholder="Nombre del paciente">
+                                <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Apellido</label>
-                                <input type="text" class="form-control" placeholder="Apellido del paciente">
+                                <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>DNI</label>
+                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Sexo</label>
 
                                 <div class="checkbox m-t-lg">
-                                    <label><input name="genderForm" type="radio" value="M"> Masculino</label>
-                                    <label><input name="genderForm" type="radio" value="F"> Femenino</label>
+                                    <label><input name="gender" type="radio" value="M"> Masculino</label>
+                                    <label><input name="gender" type="radio" value="F"> Femenino</label>
                                 </div>
 
                             </div>
                             <div class="checkbox m-t-lg">
-                                <button type="submit" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
-                                    <strong>Crear</strong></button>
+                                <button type="button" onclick="createPatient()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Crear</strong>
+                                </button>
 
                             </div>
                         </form>
@@ -350,6 +355,16 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<script type="text/javascript">
+    function createPatient(){
+        console.log( $("#patientForm" ).serialize());
+        $.post("/api/patients", $( "#patientForm" ).serialize())
+                .done(function(data){
+                    console.log(data);
+                });
+    }
+
+</script>
 <script src="js/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
