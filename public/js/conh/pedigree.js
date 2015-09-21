@@ -106,18 +106,18 @@ toggleLoading(true);
 $("#current_patient").hide();
 $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
-    var family = data;
+    var family = data.pedigree;
     console.log(data);
     var nodos = {};
     var people = [];
 
     currentPatient = data.current;
 
-    $.each(data.people, function (key, val) {
-        nodos[val.id] = val;
+    $.each(data.pedigree.patients, function (key, val) {
+        nodos[val.neo_id] = val;
         val.attributes_go = [];
         for (var i = 0; i < val.diseases.length; i++) {
-            var enf = val.diseases[i].nombre;
+            var enf = val.diseases[i].name;
 
             switch (enf) {
                 case "Cancer de Ovario":
@@ -133,7 +133,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
         }
     });
 
-    $.each(data.relations, function (key, val) {
+    $.each(data.pedigree.relations, function (key, val) {
         if (val.name == "MADRE") {
             nodos[val.from].mother = val.to;
             if (nodos[val.from].father != undefined) {
@@ -161,7 +161,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
             p.n = val.name + " " + val.surname + ", edad: " + val.age;
         }
 
-        p.key = val.id;
+        p.key = val.neo_id;
 
         p.s = val.gender.toUpperCase();
         if (val.mother != undefined) p.m = val.mother;
@@ -180,12 +180,12 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     myDiagram.addDiagramListener("ObjectSingleClicked",
         function (e) {
             var part = e.subject.part;
-            var patient = get_patient_object(family.people, part.data.key);
+            var patient = get_patient_object(family.patients, part.data.key);
             if (!(part instanceof go.Link)) set_current_patient(patient);
         });
 
     toggleLoading(false);
-    set_current_patient(currentPatient);
+//    set_current_patient(currentPatient);
 });
 
 function set_current_patient(patient) {
