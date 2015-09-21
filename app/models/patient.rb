@@ -31,10 +31,17 @@ class Patient < ActiveRecord::Base
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
+  before_create :set_defaults
+
+
+  def set_defaults
+    self.active = active.nil? ? true : active
+    self.status ||= 'alive'
+  end
 
   def create_node
     node ||= neo.create_node('id' => @id, 'edad' => age, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
-    neo.set_label(@node, 'PERSONA')
+    # neo.set_label(@node, 'PERSONA')
     self.neo_id = node['metadata']['id']
     neo.add_node_to_index('ind_paciente', 'id', @id, node)
   end

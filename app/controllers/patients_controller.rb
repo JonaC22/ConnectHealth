@@ -33,6 +33,7 @@ class PatientsController < BaseController
       lastname: params[:lastname],
       document_type: params[:document_type],
       document_number: params[:document_number],
+      birth_date: params[:birth_date],
       gender: params[:gender]
     }
   end
