@@ -361,6 +361,7 @@
         $.post("/api/patients", $( "#patientForm" ).serialize())
                 .done(function(data){
                     console.log(data);
+                    $("#modal-form").modal("hide")
                 });
     }
 

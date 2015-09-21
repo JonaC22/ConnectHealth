@@ -297,7 +297,7 @@ $(document).ready(function() {
 			    formatter: function (items) {
 			      $.each(items, function (index, item) {
 			        item.edit = '<a href="#edit?id='+item.id+'"><i class="fa fa-pencil"></i></a>';
-			        item.pedigree = '<a href="pedigree.html?id='+item.id+'"><i class="fa fa-eye"></i></a>';
+			        item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-eye"></i></a>';
 			      });
 			    },
                 url: '/api/patients' //'js/data/patients.json'
