@@ -24,21 +24,21 @@ default: &default
 
 development:
   <<: *default
-  database: connecthealth
+  database: heroku_7c99704f99bd301
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
   # the same name as the operating system user that initialized the database.
-  username: connecthealth
+  username: b30bcaef8b63b3
 
   # The password associated with the postgres role (username).
-  password: conh999
+  password: c0e998f7
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
   # domain sockets, so uncomment these lines.
-  host: 127.0.0.1
+  host: us-cdbr-iron-east-02.cleardb.net
 
   # The TCP port the server listens on. Defaults to 5432.
   # If your server runs on a different port number, change accordingly.

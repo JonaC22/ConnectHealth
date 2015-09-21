@@ -18,5 +18,5 @@
 
 class PatientSerializer < ActiveModel::Serializer
   attributes :id, :name, :lastname, :document_type, :document_number, :gender, :neo_id, :birth_date, :active, :status
-  has_many :diseases
+  # has_many :diseases
 end
