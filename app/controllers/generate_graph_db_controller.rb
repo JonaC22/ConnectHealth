@@ -37,12 +37,10 @@ class GenerateGraphDbController < BaseController
         result['abuela_mat'].add_disease(cancer)
       end
       familias.append(result) {}
-
     end
     close_mysql
     render json: familias
   end
-
 
   def delete_all_nodes
     @neo.execute_query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
@@ -54,6 +52,6 @@ class GenerateGraphDbController < BaseController
       name: paciente['Nombre'],
       lastname: paciente['Apellido'],
       gender: paciente['Sexo']
-      }
+    }
   end
 end

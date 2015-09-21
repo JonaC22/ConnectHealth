@@ -18,6 +18,8 @@
 
 class Patient < ActiveRecord::Base
   include Positionable
+  include Filterable
+
   has_one :medical_history
   belongs_to :pedigree
   has_many :patient_diseases
@@ -28,11 +30,14 @@ class Patient < ActiveRecord::Base
     dead: 2
   }
 
+  scope :patient_name, -> (name) { where('name like ? or lastname like ?', "%#{name}%", "%#{name}%") }
+  scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
+  scope :patient_gender, -> (gender) { where(gender: gender) }
+
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
   before_create :set_defaults
-
 
   def set_defaults
     self.active = active.nil? ? true : active
