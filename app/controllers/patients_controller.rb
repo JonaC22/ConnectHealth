@@ -1,6 +1,11 @@
 class PatientsController < BaseController
   def index
-    render json: Patient.all
+    if params[:name]
+      name = params[:name].split(' ') if params[:name]
+      params[:patient_name] = name[0]
+      params[:patient_lastname] = name[1]
+    end
+    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender))
   end
 
   def show
