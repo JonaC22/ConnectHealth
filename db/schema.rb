@@ -45,6 +45,41 @@ ActiveRecord::Schema.define(version: 20150910191808) do
 
   add_index "medical_histories", ["patient_id"], name: "index_medical_histories_on_patient_id", using: :btree
 
+  create_table "medicos", primary_key: "﻿Id_Medico", force: true do |t|
+    t.string "Nombre",               limit: 45
+    t.string "Apellido",             limit: 45
+    t.string "Sexo",                 limit: 45
+    t.string "Tipo_Doc",             limit: 45
+    t.string "Nro_Doc",              limit: 45
+    t.string "Direccion",            limit: 45
+    t.string "Telefono",             limit: 45
+    t.string "Mail",                 limit: 45
+    t.string "Fecha_Nac",            limit: 45
+    t.string "Nro_Matricula",        limit: 45
+    t.string "Fecha_Atencion_Desde", limit: 45
+    t.string "Fecha_Atencion_Hasta", limit: 45
+    t.string "Habilitado",           limit: 45
+  end
+
+  create_table "pacientes", primary_key: "Nro_Afiliado", force: true do |t|
+    t.string "Nombre",               limit: 45
+    t.string "Apellido",             limit: 45
+    t.string "Sexo",                 limit: 45
+    t.string "Tipo_Doc",             limit: 45
+    t.string "Nro_Doc",              limit: 45
+    t.string "Direccion",            limit: 45
+    t.string "Mail",                 limit: 45
+    t.string "Telefono",             limit: 45
+    t.string "Fecha_Nac",            limit: 45
+    t.string "Cod_Plan",             limit: 45
+    t.string "Estado_Civil",         limit: 45
+    t.string "Nro_Titular",          limit: 45
+    t.string "Nro_Conyuge",          limit: 45
+    t.string "Fecha_Baja",           limit: 45
+    t.string "Nro_Consulta",         limit: 45
+    t.string "CantFamiliaresACargo", limit: 45
+  end
+
   create_table "patient_diseases", force: true do |t|
     t.integer  "patient_id"
     t.integer  "disease_id"
@@ -136,14 +171,6 @@ ActiveRecord::Schema.define(version: 20150910191808) do
     t.boolean  "active",          default: true
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-  end
-
-  create_table "widgets", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.integer  "stock"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
 end

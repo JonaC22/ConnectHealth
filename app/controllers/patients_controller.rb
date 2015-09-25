@@ -5,7 +5,7 @@ class PatientsController < BaseController
       params[:patient_name] = name[0]
       params[:patient_lastname] = name[1]
     end
-    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender))
+    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type))
   end
 
   def show
@@ -39,7 +39,8 @@ class PatientsController < BaseController
       document_type: params[:document_type],
       document_number: params[:document_number],
       birth_date: params[:birth_date],
-      gender: params[:gender]
+      gender: params[:gender],
+      type: 'patient'
     }
   end
 

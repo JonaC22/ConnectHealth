@@ -14,6 +14,8 @@
 #  gender          :string(255)
 #  birth_date      :date
 #  neo_id          :integer
+#  status          :integer
+#  type            :integer
 #
 
 require 'test_helper'

@@ -27,7 +27,7 @@ class PedigreesController < BaseController
     end
 
     pedigree.relations = relations
-    pedigree.current_patient = id_current_patient
+    pedigree.current_patient = id_current_patient || Patient.where(pedigree: pedigree.id, patient_type: 'patient')
     render json: pedigree
   end
 
@@ -38,7 +38,7 @@ class PedigreesController < BaseController
     @json['personas'].each do |persona|
       tags = %w(MADRE PADRE)
       validate_relations @json, persona, tags
-      Patient.create! name: persona['nombre'], lastname: persona['apellido'], document_number: persona['dni'], document_type: persona['tipo'], pedigree: @pedigree, birth_age: persona['fecha_nacimiento']
+      Patient.create! name: persona['nombre'], lastname: persona['apellido'], document_number: persona['dni'], document_type: persona['tipo'], pedigree: @pedigree, birth_age: persona['fecha_nacimiento'], type: 'relative'
       personas[persona['id']] = node
     end
 

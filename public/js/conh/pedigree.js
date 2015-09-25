@@ -151,14 +151,14 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     $.each(nodos, function (key, val) {
         var p = {};
-
+        console.log(val.age)
         //si es mayor de 90, tachar con una raya roja
         if (val.age > 90) {
             val.attributes_go.push("S");
-            p.n = val.name + " " + val.surname;
+            p.n = val.name + " " + val.lastname;
         }
         else {
-            p.n = val.name + " " + val.surname + ", edad: " + val.age;
+            p.n = val.name + " " + val.lastname + ", edad: " + val.age;
         }
 
         p.key = val.neo_id;
@@ -190,7 +190,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
 function set_current_patient(patient) {
     currentPatient = patient;
-    $("#current_patient").text(patient.name + " " + patient.surname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
+    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
     $("#current_patient").show();
 }
 

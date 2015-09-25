@@ -14,6 +14,8 @@
 #  gender          :string(255)
 #  birth_date      :date
 #  neo_id          :integer
+#  status          :integer
+#  type            :integer
 #
 
 class Patient < ActiveRecord::Base
@@ -29,10 +31,15 @@ class Patient < ActiveRecord::Base
     alive: 1,
     dead: 2
   }
+  enum patient_type: {
+    patient: 0,
+    relative: 1
+  }
 
   scope :patient_name, -> (name) { where('name like ? or lastname like ?', "%#{name}%", "%#{name}%") }
   scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
   scope :patient_gender, -> (gender) { where(gender: gender) }
+  scope :type, -> (type) { where(patient_type: type) }
 
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8

@@ -14,9 +14,15 @@
 #  gender          :string(255)
 #  birth_date      :date
 #  neo_id          :integer
+#  status          :integer
+#  type            :integer
 #
 
 class PatientSerializer < ActiveModel::Serializer
-  attributes :id, :name, :lastname, :document_type, :document_number, :gender, :neo_id, :birth_date, :active, :status, :pedigree_id
+  attributes :id, :name, :lastname, :document_type, :document_number, :gender, :neo_id, :birth_date, :active, :status, :pedigree_id, :patient_type, :age
   has_many :diseases
+
+  def age
+    object.age
+  end
 end
