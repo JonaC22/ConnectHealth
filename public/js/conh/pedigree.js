@@ -151,9 +151,8 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     $.each(nodos, function (key, val) {
         var p = {};
-        console.log(val.age)
         //si es mayor de 90, tachar con una raya roja
-        if (val.age > 90) {
+        if (val.status == 'dead') {
             val.attributes_go.push("S");
             p.n = val.name + " " + val.lastname;
         }
@@ -180,7 +179,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     myDiagram.addDiagramListener("ObjectSingleClicked",
         function (e) {
             var part = e.subject.part;
-            var patient = get_patient_object(family.patients, part.data.key);
+            var patient = family.current || get_patient_object(family.patients, part.data.key);
             if (!(part instanceof go.Link)) set_current_patient(patient);
         });
 
@@ -195,7 +194,6 @@ function set_current_patient(patient) {
 }
 
 function get_patient_object(people, id) {
-    console.log("people", people);
     var patient;
     $.each(people, function (key, val) {
         console.log("patient", val);

@@ -27,7 +27,7 @@ class PedigreesController < BaseController
     end
 
     pedigree.relations = relations
-    pedigree.current_patient = id_current_patient || Patient.where(pedigree: pedigree.id, patient_type: 'patient')
+    pedigree.current_patient = id_current_patient || Patient.where(pedigree: pedigree.id, patient_type: 'patient').first
     render json: pedigree
   end
 
