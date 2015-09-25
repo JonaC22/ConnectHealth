@@ -1,6 +1,6 @@
 class ModelCalculatorController < BaseController
   def index
-    render json: { models: %w(gail) }
+    render json: { models: %w(gail premm126) }
   end
 
   def show

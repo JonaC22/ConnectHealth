@@ -40,13 +40,14 @@ class PatientsController < BaseController
       document_number: params[:document_number],
       birth_date: params[:birth_date],
       gender: params[:gender],
-      type: 'patient'
+      patient_type: params[:type] || 'patient',
+      pedigree: params[:pedigree] || (params[:type] && params[:type] != 'patient') ? nil : Pedigree.create!
     }
   end
 
   def patient_find_params
     {
-      version: params.require(:id)
+      id: params.require(:id)
     }
   end
 

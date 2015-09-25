@@ -47,8 +47,10 @@ class Patient < ActiveRecord::Base
   before_create :set_defaults
 
   def set_defaults
-    self.active = active.nil? ? true : active
+    self.active = true
     self.status ||= 'alive'
+    return unless document_number
+    self.document_type ||= 'dni'
   end
 
   def create_node
@@ -59,6 +61,7 @@ class Patient < ActiveRecord::Base
   end
 
   def age
+    return unless birth_date
     now = Time.now.utc.to_date
     now.year - birth_date.year - (birth_date.to_date.change(year: now.year) > now ? 1 : 0)
   end
