@@ -10,7 +10,7 @@ class MakePedigreesController < BaseController
     Disease.generate(['Cancer de Ovario', 'Cancer de Mama'])
     pacientes.each do |patient|
       pedigree = Pedigree.create!
-      pat = Patient.create!(name: patient['Nombre'], lastname: patient['Apellido'], birth_date: DateTime.strptime(patient['Fecha_Nac'], '%Y-%m-%d %H:%M:%S'), gender: patient['Sexo'], pedigree: pedigree, active: true, status: 'alive')
+      pat = Patient.create!(name: patient['Nombre'], lastname: patient['Apellido'], birth_date: DateTime.strptime(patient['Fecha_Nac'], '%Y-%m-%d %H:%M:%S'), gender: patient['Sexo'], pedigree: pedigree, active: true, status: 'alive', type: 'patient')
       if pat.gender == 'F' && rand > 0.5
         nombre_enfermedad = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
         pat.add_disease(nombre_enfermedad, rand(35..70))

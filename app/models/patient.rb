@@ -77,6 +77,7 @@ class Patient < ActiveRecord::Base
 
   def add_disease(disease_name, disease_diagnostic)
     disease = Disease.find_by_name!(disease_name)
+    return if PatientDisease.find_by(patient: self, disease: disease)
     relationship = neo.create_relationship('PADECE', node, disease.node)
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
@@ -84,7 +85,7 @@ class Patient < ActiveRecord::Base
 
   def generate_mother(params)
     # fecha_nac=DateTime.strptime(self.birth_date, "%Y-%m-%d %H:%M:%S")
-    @mother = Patient.create!(name: params[:name], lastname: params[:lastname], birth_date: birth_date - 365 * 10, gender: 'F', pedigree: pedigree, active: true)
+    @mother = Patient.create!(name: params[:name], lastname: params[:lastname], birth_date: birth_date - 365 * 10, gender: 'F', pedigree: pedigree, active: true, type: 'relative')
     neo.create_relationship('MADRE', node, @mother.node)
     if rand > 0.5
       disease_name = rand > 0.5 ? 'Cancer de Mama' : 'Cancer de Ovario'
@@ -94,7 +95,7 @@ class Patient < ActiveRecord::Base
   end
 
   def generate_father(params)
-    @father = Patient.create!(name: params[:name], lastname: lastname, birth_date: birth_date - 365 * 11, gender: 'M', pedigree: pedigree, active: true)
+    @father = Patient.create!(name: params[:name], lastname: lastname, birth_date: birth_date - 365 * 11, gender: 'M', pedigree: pedigree, active: true, type: 'relative')
     neo.create_relationship('PADRE', node, @father.node)
     @father
   end
