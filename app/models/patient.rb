@@ -46,6 +46,11 @@ class Patient < ActiveRecord::Base
   before_create :create_node
   before_create :set_defaults
 
+  def create!(params)
+    params[:pedigree_id] = params.require(:pedigree_id).to_i if params[:type] == 'relative'
+    super
+  end
+
   def set_defaults
     self.active = true
     self.status ||= 'alive'

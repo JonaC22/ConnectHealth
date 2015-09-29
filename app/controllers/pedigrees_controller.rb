@@ -49,6 +49,27 @@ class PedigreesController < BaseController
     render json: (visualize @pedigree)
   end
 
+  def update
+    @json = JSON.parse(request.body.read)
+    fail ImposibleRelationException, 'Missing personas or relations' unless @json.key?('personas') && @json.key?('relations')
+    @json['personas'].each do |persona|
+      tags = %w(MADRE PADRE)
+      validate_relations @json, persona, tags
+    end
+    params = pedigree_find_params
+
+    @json['relations'].each do |rel|
+      @neo.create_relationship(rel['name'], rel['from'], rel['to'])
+    end
+
+    @json['diseases'].each do |dis|
+      Patient.find_by_neo_id!(dis['person'].to_i).add_disease(dis['disease'], dis['age'])
+    end
+    @pedigree = Pedigree.find_by_id!(params[:id])
+
+    visualize @pedigree
+  end
+
   # GET /api/pedigree/query
   def query
     id_current_patient = params[:id]
@@ -95,7 +116,7 @@ class PedigreesController < BaseController
 
   def validate_relations(json, persona, tags)
     tags.each do |tag|
-      count = json['relations'].count { |rel| rel['from'] == persona['id'] && rel['name'] == tag }
+      count = json['relations'].count { |rel| rel['from'] == persona && rel['name'] == tag }
       fail ImposibleRelationException, "Relacion duplicada: #{tag}" if count > 1
     end
   end

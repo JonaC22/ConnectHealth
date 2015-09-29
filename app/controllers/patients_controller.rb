@@ -41,7 +41,7 @@ class PatientsController < BaseController
       birth_date: params[:birth_date],
       gender: params[:gender],
       patient_type: params[:type] || 'patient',
-      pedigree: params[:pedigree] || (params[:type] && params[:type] != 'patient') ? nil : Pedigree.create!
+      pedigree_id: params[:pedigree_id]
     }
   end
 
