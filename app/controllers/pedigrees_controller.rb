@@ -51,21 +51,15 @@ class PedigreesController < BaseController
 
   def update
     @json = JSON.parse(request.body.read)
-    fail ImposibleRelationException, 'Missing personas or relations' unless @json.key?('personas') && @json.key?('relations')
-    @json['personas'].each do |persona|
-      tags = %w(MADRE PADRE)
-      validate_relations @json, persona, tags
-    end
+    fail ImposibleRelationException, 'Missing relations' unless @json.key?('relations')
     params = pedigree_find_params
+    @pedigree = Pedigree.find_by!(params)
 
     @json['relations'].each do |rel|
-      @neo.create_relationship(rel['name'], rel['from'], rel['to'])
+      pat = Patient.find_by!(pedigree: @pedigree, neo_id: rel['from'])
+      relative = Patient.find_by!(pedigree: @pedigree, neo_id: rel['to'])
+      pat.create_relationship(rel['name'].to_sym, relative)
     end
-
-    @json['diseases'].each do |dis|
-      Patient.find_by_neo_id!(dis['person'].to_i).add_disease(dis['disease'], dis['age'])
-    end
-    @pedigree = Pedigree.find_by_id!(params[:id])
 
     visualize @pedigree
   end
@@ -109,8 +103,8 @@ class PedigreesController < BaseController
   private
 
   def pedigree_find_params
-    { id: params[:id],
-      current_patient: params[:current_patient]
+    {
+      id: params[:id]
     }
   end
 

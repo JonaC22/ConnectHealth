@@ -8,6 +8,7 @@ class ErrorsController < BaseController
     return record_duplicated error if error.is_a? ActiveRecord::RecordNotUnique
     return incalculable_model error if error.is_a? IncalculableModelException
     return imposible_relation error if error.is_a? ImposibleRelationException
+    return duplicated_relation error if error.is_a? DuplicatedRelationException
     exception error
   end
 
@@ -34,6 +35,10 @@ class ErrorsController < BaseController
   end
 
   def imposible_relation(error)
+    render json: { error: error.message }, status: 400
+  end
+
+  def duplicated_relation(error)
     render json: { error: error.message }, status: 400
   end
 

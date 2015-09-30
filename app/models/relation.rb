@@ -6,4 +6,7 @@ class Relation
     @to = to
     @name = name
   end
+  def self.unique?(relation)
+    %w(MADRE PADRE).include? relation.to_s
+  end
 end

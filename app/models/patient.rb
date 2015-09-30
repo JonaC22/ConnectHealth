@@ -77,10 +77,15 @@ class Patient < ActiveRecord::Base
 
   def add_disease(disease_name, disease_diagnostic)
     disease = Disease.find_by_name!(disease_name)
-    return if PatientDisease.find_by(patient: self, disease: disease)
+    return if PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
     relationship = neo.create_relationship('PADECE', node, disease.node)
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
+  end
+
+  def create_relationship(relationship, relation_receiver)
+    fail DuplicatedRelationException, "Duplicated relation: #{relationship} for patient:#{name} and patient:#{relation_receiver.name}" if Relation.unique?(relationship) && node.rel?(:outgoing, relationship)
+    Neography::Relationship.create(relationship, node, relation_receiver.node)
   end
 
   def generate_mother(params)

@@ -20,7 +20,7 @@
 
 class PatientSerializer < ActiveModel::Serializer
   attributes :id, :name, :lastname, :document_type, :document_number, :gender, :neo_id, :birth_date, :active, :status, :pedigree_id, :patient_type, :age
-  has_many :diseases
+  has_many :patient_diseases
 
   def age
     object.age
