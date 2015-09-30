@@ -59,7 +59,7 @@ class Patient < ActiveRecord::Base
   end
 
   def create_node
-    node ||= neo.create_node('id' => @id, 'edad' => age, 'fecha_nac' => @birth_date, 'nombre' => @name, 'apellido' => @lastname, 'sexo' => @gender)
+    node ||= neo.create_node('edad' => age, 'fecha_nac' => birth_date, 'nombre' => name, 'apellido' => lastname, 'sexo' => gender)
     # neo.set_label(@node, 'PERSONA')
     self.neo_id = node['metadata']['id']
     neo.add_node_to_index('ind_paciente', 'id', @id, node)

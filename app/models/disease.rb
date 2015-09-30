@@ -11,6 +11,15 @@
 class Disease < ActiveRecord::Base
   has_many :patient_diseases
   has_many :patients, through: :patient_diseases
+
+  before_save :lower_case_name
+
+  validates :name, uniqueness: true
+
+  def lower_case_name
+    self.name = name.downcase if name_changed?
+  end
+
   def node
     @node ||= Neography::Node.find('enfermedad_index', 'nombre', @nombre)
   rescue Neography::NeographyError => err

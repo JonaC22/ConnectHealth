@@ -15,15 +15,14 @@ class PatientsController < BaseController
 
   def create
     @patient = Patient.create! patient_create_params
+    handle_diseases(@patient, params)
     render json: @patient
   end
 
   def update
     @patient = Patient.find_by! patient_find_params
     @patient.update!(patient_update_params)
-    params[:diseases].each do |dis|
-      @patient.add_disease dis[:disease], dis[:age].to_i
-    end
+    handle_diseases(@patient, params)
     render json: @patient
   end
 
@@ -59,5 +58,11 @@ class PatientsController < BaseController
     par[:name] = params[:name] if params[:name]
     par[:lastname] = params[:lastname] if params[:lastname]
     par
+  end
+
+  def handle_diseases(patient, params)
+    params[:diseases].each do |dis|
+      patient.add_disease dis.require(:disease).downcase, dis[:age].to_i
+    end
   end
 end

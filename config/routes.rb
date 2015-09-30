@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   scope '/api' do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
+    resources :diseases, only: [:index, :show, :create, :destroy]
     resources :make_pedigrees, only: [:index]
     resources :model_calculator, only: [:index, :show]
     scope '/pedigrees' do
