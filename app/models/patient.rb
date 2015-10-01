@@ -40,7 +40,7 @@ class Patient < ActiveRecord::Base
   scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
   scope :patient_gender, -> (gender) { where(gender: gender) }
   scope :type, -> (type) { where(patient_type: type) }
-
+  validates :name, presence: true
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
