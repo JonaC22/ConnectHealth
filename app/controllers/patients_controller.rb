@@ -61,7 +61,7 @@ class PatientsController < BaseController
   end
 
   def handle_diseases(patient, params)
-    params[:diseases].each do |dis|
+    params[:diseases] && params[:diseases].each do |dis|
       patient.add_disease dis.require(:disease).downcase, dis[:age].to_i
     end
   end

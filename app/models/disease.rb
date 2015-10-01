@@ -21,12 +21,12 @@ class Disease < ActiveRecord::Base
   end
 
   def node
-    @node ||= Neography::Node.find('enfermedad_index', 'nombre', @nombre)
+    @node = Neography::Node.find('enfermedad_index', 'nombre', @nombre)
   rescue Neography::NeographyError => err
     puts err.message
-    @node = neo.create_node('nombre' => @name)
+    @node = neo.create_node('nombre' => name)
     neo.set_label(@node, 'ENFERMEDAD')
-    neo.add_node_to_index('enfermedad_index', 'nombre', @name, @node)
+    neo.add_node_to_index('enfermedad_index', 'nombre', name, @node)
     return @node
   end
 
