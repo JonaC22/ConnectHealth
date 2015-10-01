@@ -15,7 +15,7 @@
 #  birth_date      :date
 #  neo_id          :integer
 #  status          :integer
-#  type            :integer
+#  patient_type    :integer
 #
 
 require 'test_helper'

@@ -8,9 +8,9 @@
 #
 
 class Pedigree < ActiveRecord::Base
-  has_many :patients
-  has_many :annotations
-  has_many :queries
+  has_many :patients, dependent: :destroy
+  has_many :annotations, dependent: :destroy
+  has_many :queries, dependent: :destroy
 
   attr_accessor :current_patient, :elements, :relations
 end
