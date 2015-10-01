@@ -15,4 +15,5 @@ class User < ActiveRecord::Base
   has_many :queries
   has_many :statistical_reports
   has_many :user_roles
+  validates :username, presence: true, uniqueness: { case_sentitive: false }
 end

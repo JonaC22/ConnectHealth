@@ -14,14 +14,14 @@ class Disease < ActiveRecord::Base
 
   before_save :lower_case_name
 
-  validates :name, uniqueness: true
+  validates :name, presence: true, uniqueness: { case_sentitive: false }
 
   def lower_case_name
     self.name = name.downcase if name_changed?
   end
 
   def node
-    @node = Neography::Node.find('enfermedad_index', 'nombre', @nombre)
+    @node = Neography::Node.find('enfermedad_index', 'nombre', nombre)
   rescue Neography::NeographyError => err
     puts err.message
     @node = neo.create_node('nombre' => name)
