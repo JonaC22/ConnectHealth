@@ -43,8 +43,8 @@ class Disease < ActiveRecord::Base
   end
 
   def create_node
-    @node = neo.create_node('nombre' => disease_name)
+    @node = neo.create_node('nombre' => name)
     neo.set_label(@node, 'ENFERMEDAD')
-    neo.add_node_to_index('enfermedad_index', 'nombre', disease_name, @node)
+    neo.add_node_to_index('enfermedad_index', 'nombre', name, @node)
   end
 end
