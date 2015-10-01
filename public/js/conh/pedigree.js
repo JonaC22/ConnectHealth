@@ -116,8 +116,8 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     $.each(data.pedigree.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
-        for (var i = 0; i < val.diseases.length; i++) {
-            var enf = val.diseases[i].name;
+        for (var i = 0; i < val.patient_diseases.length; i++) {
+            var enf = val.patient_diseases[i].name;
 
             switch (enf) {
                 case "Cancer de Ovario":

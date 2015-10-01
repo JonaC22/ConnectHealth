@@ -292,6 +292,23 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="panel">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseZero" aria-expanded="false">
+                                            Acciones
+                                    </div>
+                                    <div id="collapseZero" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+                                        <div class="panel-body text-sm">
+                                            <div class="panel-body">
+                                                <a href="#" class="btn btn-info"><i class="fa fa-"></i> Agregar Hijo/a</a>
+                                                <a href="#" class="btn btn-info"><i class="fa fa-css3"></i> Agregar Hijo/a</a>
+                                                <a href="#" class="btn btn-info"><i class="fa fa-css3"></i> Agregar Hijo/a</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="panel">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
                                         <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de Cáncer de Mama">
                                                 Calcular Algoritmo de Gail
@@ -382,6 +399,58 @@
     </section>
     <!-- /.vbox -->
 </section>
+
+<div class="modal fade" id="modal-create-family-member">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b">Paciente</h3>
+
+                        <p>Ingresa un nuevo paciente</p>
+
+                        <form id="patientForm" onsubmit="createPatient(this)">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido</label>
+                                <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>DNI</label>
+                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha de Nacimiento</label>
+                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Sexo</label>
+
+                                <div class="checkbox m-t-lg">
+                                    <label><input name="gender" type="radio" value="M"> Masculino</label>
+                                    <label><input name="gender" type="radio" value="F"> Femenino</label>
+                                </div>
+
+                            </div>
+                            <div class="checkbox m-t-lg">
+                                <button type="button" onclick="createPatient()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Crear</strong>
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <script src="js/jquery.min.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
