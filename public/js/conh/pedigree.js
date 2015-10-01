@@ -111,7 +111,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     var nodos = {};
     var people = [];
 
-    currentPatient = data.current;
+    currentPatient = data.pedigree.current;
 
     $.each(data.pedigree.patients, function (key, val) {
         nodos[val.neo_id] = val;
@@ -174,7 +174,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 //        people.push( { key: 999, n: "abuela", s: "F", a: ["B","H", "L"] });
     console.log(people);
 
-    setupDiagram(myDiagram, people, null);
+    setupDiagram(myDiagram, people, currentPatient.neo_id);
 
     myDiagram.addDiagramListener("ObjectSingleClicked",
         function (e) {
