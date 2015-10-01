@@ -111,7 +111,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     var nodos = {};
     var people = [];
 
-    currentPatient = data.pedigree.current;
+    currentPatient =(data.pedigree.current);
 
     $.each(data.pedigree.patients, function (key, val) {
         nodos[val.neo_id] = val;
@@ -171,7 +171,6 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
         people.push(p);
     });
 
-//        people.push( { key: 999, n: "abuela", s: "F", a: ["B","H", "L"] });
     console.log(people);
 
     setupDiagram(myDiagram, people, currentPatient.neo_id);
@@ -179,12 +178,12 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     myDiagram.addDiagramListener("ObjectSingleClicked",
         function (e) {
             var part = e.subject.part;
-            var patient = family.current || get_patient_object(family.patients, part.data.key);
+            var patient = get_patient_object(family.patients, part.data.key);
             if (!(part instanceof go.Link)) set_current_patient(patient);
         });
 
     toggleLoading(false);
-//    set_current_patient(currentPatient);
+    set_current_patient(currentPatient);
 });
 
 function set_current_patient(patient) {
@@ -197,7 +196,7 @@ function get_patient_object(people, id) {
     var patient;
     $.each(people, function (key, val) {
         console.log("patient", val);
-        if (val.id == id) patient = val;
+        if (val.neo_id == id) patient = val;
     });
 
     return patient;
