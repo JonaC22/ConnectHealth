@@ -6,8 +6,6 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
 
-  root 'welcome#index'
-
   scope '/api' do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
@@ -29,7 +27,6 @@ Rails.application.routes.draw do
     delete 'logout' => 'sessions#destroy'
   end
   # Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
-  post '/', to: 'welcome#delete_paciente'
   get '*path', to: 'base#routing_error'
   delete '*path', to: 'base#routing_error'
   post '*path', to: 'base#routing_error'

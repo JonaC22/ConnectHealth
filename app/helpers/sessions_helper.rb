@@ -40,4 +40,17 @@ module SessionsHelper
     session.delete(:user_id)
     @current_user = nil
   end
+  
+  def logged_in_user
+    fail ForbiddenUserException, 'please log in' unless logged_in?
+  end
+
+  def correct_user
+    @user = User.find(params[:id])
+    fail ForbiddenUserException, 'not the correct user' unless current_user?(@user)
+  end
+
+  def admin_user
+    fail ForbiddenUserException, 'must be admin to perform this task' unless current_user.admin?
+  end
 end
