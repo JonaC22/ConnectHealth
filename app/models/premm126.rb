@@ -82,7 +82,7 @@ class PREMM126
     when 1 then
       proband_crc_presence patient
     when 2 then
-      0 # proband_ec_presence patient
+      proband_ec_presence patient
     when 3 then
       0 # proband_ls_presence patient
     when 4 then
@@ -159,8 +159,11 @@ class PREMM126
 
   # V3 only valid for women
   def self.proband_ec_presence(patient)
-    # patient.proband_ec_presence
-    0 if patient.gender != 'F'
+    if patient.diseases_diagnoses('cancer de endometrio').length > 0 || patient.gender == 'F'
+      1
+    else
+      0
+    end
   end
 
   # V1 and V2 output format [V1, V2]
@@ -190,7 +193,8 @@ class PREMM126
   def self.lp(params)
     c = @const_lp[params[:gen]]
     v = secondary_values params[:patient], params[:gen]
-    c[0] + c[1] * v[0] + c[2] * params[:v1] + c[3] * params[:v2] + c[4] * params[:v3] + c[5] * params[:v4] +
+    # puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]}")
+    c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * params[:v4] +
       c[6] * params[:v5] + c[7] * params[:v6] + c[8] * params[:v7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
   end
 
