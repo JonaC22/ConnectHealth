@@ -108,7 +108,7 @@ class PREMM126
   end
 
   # V8 and V9
-  def self.youngest_age_diagnosis(_patient, values, gen, disease)
+  def self.youngest_age_diagnosis(patient, values, gen, disease)
     # hash = patient.youngest_age_diagnosis disease
     hash = { p: 15, fdr: 82, sdr: nil }
     hash = validate_bounds(hash, values, gen, disease)
@@ -121,7 +121,7 @@ class PREMM126
   end
 
   # V6 output format {:A, :B, :C, :D}
-  def self.relatives_ec_presence(_patient)
+  def self.relatives_ec_presence(patient)
     # patient.relatives_ec_presence
     a = 0
     b = 0
@@ -137,7 +137,7 @@ class PREMM126
   end
 
   # V5 output format {:A, :B, :C, :D}
-  def self.relatives_crc_presence(_patient)
+  def self.relatives_crc_presence(patient)
     # patient.relatives_crc_presence
     a = 0
     b = 0
@@ -154,7 +154,7 @@ class PREMM126
 
   # V4
   def self.proband_ls_presence(patient)
-    patient.proband_ls_presence
+    # patient.proband_ls_presence
   end
 
   # V3 only valid for women
@@ -164,9 +164,12 @@ class PREMM126
   end
 
   # V1 and V2 output format [V1, V2]
-  def self.proband_crc_presence(_patient)
-    # patient.proband_crc_presence
-    [1, 0]
+  def self.proband_crc_presence(patient)
+    case patient.diseases_diagnoses('cancer colon rectal').length
+      when 0 then [0,0]
+      when 1 then [1,0]
+      else [0,1]
+    end
   end
 
   # V0
