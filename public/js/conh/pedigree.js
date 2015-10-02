@@ -100,20 +100,14 @@ $.urlParam = function (name) {
 };
 init();
 var currentPatient;
-var familia;
-
+var family;
 toggleLoading(true);
 $("#current_patient").hide();
-$.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
-
-    var family = data.pedigree;
-    console.log(data);
+function getPeopleNodesFromFamily(family) {
     var nodos = {};
     var people = [];
 
-    currentPatient =(data.pedigree.current);
-
-    $.each(data.pedigree.patients, function (key, val) {
+    $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
         for (var i = 0; i < val.patient_diseases.length; i++) {
@@ -133,7 +127,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
         }
     });
 
-    $.each(data.pedigree.relations, function (key, val) {
+    $.each(family.relations, function (key, val) {
         if (val.name == "MADRE") {
             nodos[val.from].mother = val.to;
             if (nodos[val.from].father != undefined) {
@@ -172,7 +166,15 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     });
 
     console.log(people);
+    return people;
+}
+$.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
+    family = data.pedigree;
+    console.log(data);
+    currentPatient =(data.pedigree.current);
+
+    var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 
     myDiagram.addDiagramListener("ObjectSingleClicked",
@@ -185,6 +187,61 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     toggleLoading(false);
     set_current_patient(currentPatient);
 });
+
+function reloadDiagram(){
+    var people = getPeopleNodesFromFamily(family);
+    setupDiagram(myDiagram, people, currentPatient.neo_id);
+}
+
+function addChild(newChild){
+    family.patients.push(newChild);
+    var newRelation = {
+        "from": newChild.neo_id,
+        "to": currentPatient.neo_id,
+        "name": currentPatient.gender == "M" ? "PADRE" : "MADRE"
+    };
+
+    family.relations.push(newRelation);
+    reloadDiagram();
+}
+
+function addMadre(madre){
+    family.patients.push(madre);
+    var newRelation = {
+        "from": currentPatient.neo_id,
+        "to": madre.neo_id,
+        "name": "MADRE"
+    };
+
+    family.relations.push(newRelation);
+    reloadDiagram();
+}
+
+function addPadre(padre){
+    family.patients.push(padre);
+    var newRelation = {
+        "from": currentPatient.neo_id,
+        "to": padre.neo_id,
+        "name":  "PADRE"
+    };
+
+    family.relations.push(newRelation);
+    reloadDiagram();
+}
+
+function showCreateModal(){
+    $("#modal-create-family-member").modal("show")
+}
+
+function createRelative(){
+    console.log( $("#patientForm" ).serialize());
+    $.post("/api/patients", $( "#patientForm" ).serialize())
+        .done(function(data){
+            console.log(data);
+            addChild(data.patient);
+            $("#modal-create-family-member").modal("hide")
+        });
+}
 
 function set_current_patient(patient) {
     currentPatient = patient;

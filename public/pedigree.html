@@ -298,7 +298,7 @@
                                     <div id="collapseZero" class="panel-collapse collapse in">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <a href="#" class="btn btn-info" style="width: 100%"><i class="fa fa-user"></i> Agregar Hijo/a</a><br><br>
+                                                <a href="#" onclick="showCreateModal()" class="btn btn-info" style="width: 100%"><i class="fa fa-user"></i> Agregar Hijo/a</a><br><br>
                                                 <a href="#" class="btn btn-warning" style="width: 100%"><i class="fa fa-male"></i> Agregar Padre</a><br><br>
                                                 <a href="#" class="btn btn-success" style="width: 100%"><i class="fa fa-female"></i> Agregar Madre</a><br><br>
 
@@ -410,7 +410,7 @@
 
                         <p>Ingresa un nuevo paciente</p>
 
-                        <form id="patientForm" onsubmit="createPatient(this)">
+                        <form id="patientForm" onsubmit="createRelative()">
                             <div class="form-group">
                                 <label>Nombre</label>
                                 <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
@@ -436,8 +436,9 @@
                                 </div>
 
                             </div>
+                            <input type="hidden" name="typeRelation" value="CHILD">
                             <div class="checkbox m-t-lg">
-                                <button type="button" onclick="createPatient()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                <button type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
                                     <strong>Crear</strong>
                                 </button>
 
