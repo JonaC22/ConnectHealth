@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :diseases, only: [:index, :show, :create, :destroy]
     resources :make_pedigrees, only: [:index]
     resources :model_calculator, only: [:index, :show]
+    resources :users
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
     end
@@ -23,6 +24,9 @@ Rails.application.routes.draw do
       get '/reports' => 'statistics#get_reports'
     end
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
+    get 'login' => 'sessions#new'
+    post 'login' => 'sessions#create'
+    delete 'logout' => 'sessions#destroy'
   end
   # Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
   post '/', to: 'welcome#delete_paciente'

@@ -1,0 +1,2 @@
+class ForbiddenUserException < BaseException
+end
