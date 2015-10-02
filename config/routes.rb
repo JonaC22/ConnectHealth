@@ -6,14 +6,13 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
 
-  root 'welcome#index'
-
   scope '/api' do
     resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
     resources :patients, only: [:index, :show, :create, :update, :destroy]
     resources :diseases, only: [:index, :show, :create, :destroy]
     resources :make_pedigrees, only: [:index]
     resources :model_calculator, only: [:index, :show]
+    resources :users
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
     end
@@ -23,9 +22,11 @@ Rails.application.routes.draw do
       get '/reports' => 'statistics#get_reports'
     end
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
+    get 'login' => 'sessions#new'
+    post 'login' => 'sessions#create'
+    delete 'logout' => 'sessions#destroy'
   end
   # Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
-  post '/', to: 'welcome#delete_paciente'
   get '*path', to: 'base#routing_error'
   delete '*path', to: 'base#routing_error'
   post '*path', to: 'base#routing_error'

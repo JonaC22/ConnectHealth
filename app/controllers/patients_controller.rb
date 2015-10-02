@@ -1,11 +1,12 @@
 class PatientsController < BaseController
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
   def index
     if params[:name]
       name = params[:name].split(' ') if params[:name]
       params[:patient_name] = name[0]
       params[:patient_lastname] = name[1]
     end
-    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type))
+    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true)
   end
 
   def show
@@ -28,7 +29,7 @@ class PatientsController < BaseController
 
   def destroy
     @patient = Patient.find_by! patient_find_params
-    @patient.destroy!
+    @patient.update! active: false
     render json: @patient
   end
 
@@ -54,10 +55,7 @@ class PatientsController < BaseController
   end
 
   def patient_update_params
-    par = {}
-    par[:name] = params[:name] if params[:name]
-    par[:lastname] = params[:lastname] if params[:lastname]
-    par
+    params.permit(:name, :lastname, :status, :document_number, :gender)
   end
 
   def handle_diseases(patient, params)
