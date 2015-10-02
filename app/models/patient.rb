@@ -162,6 +162,20 @@ class Patient < ActiveRecord::Base
     end
   end
 
+  def has_disease? name
+    diseases.any? do |disease|
+      disease.name == name
+    end
+  end
+
+  # name is optional
+  def diseases_diagnoses name
+    diagnoses = node.rels(:PADECE).outgoing
+    diagnoses = diagnoses.map{ |diagnosis| diagnosis }
+    diagnoses = diagnoses.select{|diagnosis| diagnosis.end_node.nombre == name} unless name.nil?
+    diagnoses
+  end
+
   def youngest_age_ec_diagnosis
     # code here
   end
