@@ -258,15 +258,21 @@ function logout() {
         .done(function (data) {
             console.log("user logout");
             console.log(data);
-            window.location = "/signin.html"
+            window.location = "/signin.html";
         });
 }
 $( "#logout" ).click(function() {
     logout();
 });
 
-$("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
-    '<img src="images/avatar_default.jpg">' +
-    '</span>' +
-    Cookies.get('user_display_name').replace("+"," ") +
-    '<b class="caret"></b>');
+
+
+if(Cookies.get('user_display_name')== undefined && window.location.pathname != "/signin.html" && window.location.pathname != "/signup.html"){
+    window.location = "/signin.html";
+}else{
+    $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
+        '<img src="images/avatar_default.jpg">' +
+        '</span>' +
+        Cookies.get('user_display_name').replace("+"," ") +
+        '<b class="caret"></b>');
+}
