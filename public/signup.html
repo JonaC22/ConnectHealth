@@ -19,35 +19,30 @@
 </head>
 <body>
   <section id="content" class="m-t-lg wrapper-md animated fadeInDown">
-    <a class="nav-brand" href="index.html">todo</a>
+    <a class="nav-brand"><img src="images/logo.png" style="max-height: 100px"></a>
     <div class="row m-n">
       <div class="col-md-4 col-md-offset-4 m-t-lg">
         <section class="panel">
           <header class="panel-heading bg bg-primary text-center">
-            Sign up
+            Crear usuario
           </header>
-          <form action="index.html" class="panel-body">
+          <form class="panel-body" onsubmit="createUser()">
             <div class="form-group">
-              <label class="control-label">Display name</label>
-              <input type="text" placeholder="eg. Your name or company" class="form-control">
+              <label class="control-label">Nombre de usuario</label>
+              <input type="text" id="displayName" placeholder="El nombre del usuario" class="form-control">
             </div>
             <div class="form-group">
-              <label class="control-label">Your email address</label>
-              <input type="email" placeholder="test@example.com" class="form-control">
+              <label class="control-label">Email el usuario</label>
+              <input type="email"  id="email" placeholder="test@example.com" class="form-control">
             </div>
             <div class="form-group">
-              <label class="control-label">Type a password</label>
+              <label class="control-label">Password</label>
               <input type="password" id="inputPassword" placeholder="Password" class="form-control">
             </div>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox"> Agree the <a href="#">terms and policy</a>
-              </label>
-            </div>
-            <button type="submit" class="btn btn-info">Sign up</button>
+            <button type="button" class="btn btn-info" onclick="createUser()">Crear usuario</button>
             <div class="line line-dashed"></div>
-            <p class="text-muted text-center"><small>Already have an account?</small></p>
-            <a href="signin.html" class="btn btn-white btn-block">Sign in</a>
+            <!--<p class="text-muted text-center"><small>Already have an account?</small></p>-->
+            <a href="signin.html" class="btn btn-white btn-block">Ingresar al sistema</a>
           </form>
         </section>
       </div>
@@ -57,11 +52,25 @@
   <footer id="footer">
     <div class="text-center padder clearfix">
       <p>
-        <small>Mobile first web app framework base on Bootstrap<br>&copy; 2013</small>
+        <small>ConnectHealth<br>&copy; 2015</small>
       </p>
     </div>
   </footer>
   <!-- / footer -->
+  <script type="text/javascript">
+      function createUser(){
+          var email = $("#email").val();
+          var displayName = $("#displayNAme").val();
+          var password = $("#inputPassword").val();
+          $.post("/api/users",  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
+                  .done(function (data) {
+                      console.log(data);
+                      window.location = "/signin.html"
+                  });
+      }
+
+
+  </script>
 	<script src="js/jquery.min.js"></script>
   <!-- Bootstrap -->
   <script src="js/bootstrap.js"></script>
