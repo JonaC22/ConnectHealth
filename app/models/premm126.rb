@@ -12,7 +12,7 @@
 #                         brain (glioblastoma multiforme), sebaceous glands
 #
 class PREMM126
-  
+
   attr_accessor :const_lp, :age_bounds, :ls_related_cancers
 
   @ls_related_cancers = [
@@ -142,17 +142,44 @@ class PREMM126
     { A: a, B: b, C: c, D: d, V: v }
   end
 
+  def self.neo
+    @neo ||= Neography::Rest.new
+  end
+
+  def self.load_node patient_id
+    Neography::Node.load(patient_id, neo)
+  end
+
+  # Devuelve una lista de pares (enfermedad, edad_diagnostico)
+  def self.diseases n
+    diagnoses = n.rels(:PADECE).outgoing
+    diag_ages = diagnoses.map(&:edad_diagnostico)
+    diag_diseases = diagnoses.map{|d| d.end_node.nombre}
+    diag_diseases.zip diag_ages
+  end
+
   # V5 output format {:A, :B, :C, :D}
   def self.relatives_crc_presence(patient)
-    relatives = patient.first_degree_relatives.map{|id| Patient.find_by_neo_id!(id)}
-
-    #puts relatives.inspect
-    #puts relatives.count{|relative| relative.has_disease?('cancer colon rectal')}
-
     a = 0
     b = 0
     c = 0
     d = 0
+
+    relatives = patient.first_degree_relatives
+    relatives = relatives.map{|r| load_node(r)}
+
+    #TODO refactorear para que los relatives sean instancias de Patient
+    case relatives.count{|relative| diseases(relative).map{|e|e.first}.include?('cancer colon rectal')}
+      when 0 then
+        a = 0
+        b = 0
+      when 1 then
+        a = 1
+        b = 0
+      else
+        a = 0
+        b = 1
+    end
 
     b = 0 if a == 1
     d = 0 if c == 1
