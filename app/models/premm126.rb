@@ -13,7 +13,7 @@
 #
 class PREMM126
 
-  attr_accessor :const_lp, :age_bounds, :ls_related_cancers
+  attr_accessor :const_lp, :age_bounds, :ls_related_cancers, :fdrelatives, :sdrelatives
 
   @ls_related_cancers = [
       'cancer de estomago', 'cancer de ovario', 'cancer de tracto urinario',
@@ -72,6 +72,9 @@ class PREMM126
   end
 
   def self.secondary_values(patient, gen)
+    @fdrelatives = patient.first_degree_relatives
+    @sdrelatives = patient.second_degree_relatives
+
     values = primary_values(patient).dup
     values.push secondary_value(patient, values, gen, 8)
     values.push secondary_value(patient, values, gen, 9)
@@ -93,11 +96,11 @@ class PREMM126
     when 3 then
       proband_ls_presence patient
     when 4 then
-      relatives_crc_presence patient
+      relatives_crc_presence
     when 5 then
-      relatives_ec_presence patient
+      relatives_ec_presence
     when 6 then
-      relatives_ls_presence patient
+      relatives_ls_presence
     else
       0
     end
@@ -131,9 +134,9 @@ class PREMM126
   end
 
   #TODO refactorear para que los relatives sean instancias de Patient
-  def self.count_disease_presence(patient, array_diseases)
-    fdr_total = count_presence(patient.first_degree_relatives, array_diseases)
-    sdr_total = count_presence(patient.second_degree_relatives, array_diseases)
+  def self.count_disease_presence(array_diseases)
+    fdr_total = count_presence(@fdrelatives, array_diseases)
+    sdr_total = count_presence(@sdrelatives, array_diseases)
     {fdr_count: fdr_total, sdr_count: sdr_total}
   end
 
@@ -175,17 +178,34 @@ class PREMM126
     { A: a, B: b, C: c, D: d, V: v }
   end
 
+  # Finds the minor age of disease's diagnosis for an array of patients
+  def self.min_age_diagnosis(patients, disease)
+    dis = case disease
+      when :crc then 'cancer colon rectal'
+      when :ec then 'cancer de endometrio'
+      else ''
+    end
+
+    patients = patients.map{|r| load_node(r)}
+    array_diseases = patients.map{|n| diseases(n)}
+
+    array_diseases.select{|d| d.first == dis}.map{|d| d[1]}.min
+  end
+
   # V8 and V9
   def self.youngest_age_diagnosis(patient, values, gen, disease)
-    # hash = patient.youngest_age_diagnosis disease
-    hash = { p: 15, fdr: 82, sdr: nil }
+    p_minage = min_age_diagnosis([patient.neo_id], disease)
+    fdr_minage = min_age_diagnosis(@fdrelatives, disease)
+    sdr_minage = min_age_diagnosis(@sdrelatives, disease)
+    # hash = { p: 15, fdr: 82, sdr: nil }
+    hash = {p: p_minage, fdr: fdr_minage, sdr: sdr_minage}
     hash = validate_bounds(hash, values, gen, disease)
     hash.map { |h| h - 45 }.reduce(:+)
   end
 
   # V7
-  def self.relatives_ls_presence(patient)
-    results = count_disease_presence(patient, @ls_related_cancers)
+  def self.relatives_ls_presence
+    results = count_disease_presence(@ls_related_cancers)
 
     a = 0
     b = 0
@@ -199,13 +219,13 @@ class PREMM126
   end
 
   # V6 output format {:A, :B, :C, :D}
-  def self.relatives_ec_presence(patient)
-    relatives_disease_presence count_disease_presence(patient, ['cancer de endometrio'])
+  def self.relatives_ec_presence
+    relatives_disease_presence count_disease_presence(['cancer de endometrio'])
   end
 
   # V5 output format {:A, :B, :C, :D}
-  def self.relatives_crc_presence(patient)
-    relatives_disease_presence count_disease_presence(patient, ['cancer colon rectal'])
+  def self.relatives_crc_presence
+    relatives_disease_presence count_disease_presence(['cancer colon rectal'])
   end
 
   # V4
