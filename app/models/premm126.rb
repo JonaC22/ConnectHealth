@@ -12,6 +12,7 @@
 #                         brain (glioblastoma multiforme), sebaceous glands
 #
 class PREMM126
+
   attr_accessor :const_lp, :age_bounds, :ls_related_cancers
 
   @ls_related_cancers = [
@@ -141,13 +142,44 @@ class PREMM126
     { A: a, B: b, C: c, D: d, V: v }
   end
 
+  def self.neo
+    @neo ||= Neography::Rest.new
+  end
+
+  def self.load_node patient_id
+    Neography::Node.load(patient_id, neo)
+  end
+
+  # Devuelve una lista de pares (enfermedad, edad_diagnostico)
+  def self.diseases n
+    diagnoses = n.rels(:PADECE).outgoing
+    diag_ages = diagnoses.map(&:edad_diagnostico)
+    diag_diseases = diagnoses.map{|d| d.end_node.nombre}
+    diag_diseases.zip diag_ages
+  end
+
   # V5 output format {:A, :B, :C, :D}
   def self.relatives_crc_presence(patient)
-    # patient.relatives_crc_presence
     a = 0
     b = 0
     c = 0
     d = 0
+
+    relatives = patient.first_degree_relatives
+    relatives = relatives.map{|r| load_node(r)}
+
+    #TODO refactorear para que los relatives sean instancias de Patient
+    case relatives.count{|relative| diseases(relative).map{|e|e.first}.include?('cancer colon rectal')}
+      when 0 then
+        a = 0
+        b = 0
+      when 1 then
+        a = 1
+        b = 0
+      else
+        a = 0
+        b = 1
+    end
 
     b = 0 if a == 1
     d = 0 if c == 1
@@ -204,8 +236,8 @@ class PREMM126
   def self.lp(params)
     c = @const_lp[params[:gen]]
     v = secondary_values params[:patient], params[:gen]
-    # puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
-    c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * params[:v4] +
+    puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
+    c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * v[4] +
       c[6] * params[:v5] + c[7] * params[:v6] + c[8] * params[:v7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
   end
 
