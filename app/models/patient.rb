@@ -109,6 +109,11 @@ class Patient < ActiveRecord::Base
     @neo ||= Neography::Rest.new
   end
 
+  def delete_all_relationships
+    node.rels(:outgoing, 'PADRE').each(&:del)
+    node.rels(:outgoing, 'MADRE').each(&:del)
+  end
+
   def first_deg_relatives
     # Se obtiene la madre, las hermanas, y las hijas de la paciente
     query = " match (he)-[:PADRE]->(p)<-[:PADRE]-(n)-[:MADRE]->(m)<-[:MADRE]-(he)

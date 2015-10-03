@@ -54,7 +54,7 @@ class PedigreesController < BaseController
     fail ImposibleRelationException, 'Missing relations' unless @json.key?('relations')
     params = pedigree_find_params
     @pedigree = Pedigree.find_by!(params)
-
+    @pedigree.patients.each(&:delete_all_relationships)
     @json['relations'].each do |rel|
       pat = Patient.find_by!(pedigree: @pedigree, neo_id: rel['from'])
       relative = Patient.find_by!(pedigree: @pedigree, neo_id: rel['to'])
