@@ -171,6 +171,7 @@ function getPeopleNodesFromFamily(family) {
 $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     family = data.pedigree;
+    $("#pedigreeId").val(family.id);
     console.log(data);
     currentPatient = (data.pedigree.current);
 
