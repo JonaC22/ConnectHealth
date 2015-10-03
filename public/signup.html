@@ -60,7 +60,7 @@
   <script type="text/javascript">
       function createUser(){
           var email = $("#email").val();
-          var displayName = $("#displayNAme").val();
+          var displayName = $("#displayName").val();
           var password = $("#inputPassword").val();
           $.post("/api/users",  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
                   .done(function (data) {

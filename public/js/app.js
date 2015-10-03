@@ -249,3 +249,20 @@ function toggleLoading(toogle){
 
   });
 }(window.jQuery);
+
+function logout() {
+    $.ajax({
+        url: "/api/logout",
+        type: 'DELETE'
+    })
+        .done(function (data) {
+            console.log("user logout");
+            console.log(data);
+            window.location = "/signin.html"
+        });
+}
+$( "#logout" ).click(function() {
+    logout();
+});
+
+$("#userDisplayName").text("HArry");
