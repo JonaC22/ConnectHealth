@@ -149,15 +149,56 @@ class Patient < ActiveRecord::Base
               where id(n)=#{neo_id}
               return padre as nodo
               UNION
-              //HERMANOS
-              match (n)-[:PADRE|:MADRE]->()<-[:PADRE|:MADRE]-(hermano)
+              // HERMANOS
+              match (hermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(hermano)
               where id(n)=#{neo_id}
               return hermano as nodo
               UNION
-              //HIJOS
+              // HIJOS
               match (n)<-[:PADRE|:MADRE]-(hijo)
               where id(n)=#{neo_id}
               return hijo as nodo"
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
+    relatives = []
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        relatives.push node['metadata']['id']
+      end
+    end
+    relatives
+  end
+
+  #Se obtiene nodos de abuelos, tios, y nietos
+  def second_degree_relatives
+    query = " // ABUELO
+              match (n)-[:PADRE|:MADRE*2]->(abuelo)
+              where id(n)=#{neo_id}
+              return abuelo as nodo
+              UNION
+              // NIETOS
+              match (n)<-[:PADRE|:MADRE*2]-(nieto)
+              where id(n)=#{neo_id}
+              return nieto as nodo
+              UNION
+              // SOBRINOS
+              match (hermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(hermano),
+              (sobrino)-[:PADRE|:MADRE]->(hermano)
+              where id(n)=#{neo_id}
+              return sobrino as nodo
+              UNION
+              // TIOS
+              match (n)-[:PADRE|:MADRE]->(padre),
+              (tio)-[:MADRE]->()<-[:MADRE]-(padre)-[:PADRE]->()<-[:PADRE]-(tio)
+              where id(n)=#{neo_id}
+              return tio as nodo
+              UNION
+              // MEDIO HERMANOS
+              match (n)-[:PADRE|:MADRE]->()<-[:PADRE|:MADRE]-(mhermano)
+              where id(n)=#{neo_id}
+              and not (mhermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(mhermano)
+              return mhermano as nodo"
 
     neo = Neography::Rest.new
     ret = neo.execute_query(query)
