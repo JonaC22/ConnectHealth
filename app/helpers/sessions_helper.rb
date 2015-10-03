@@ -1,11 +1,13 @@
 module SessionsHelper
   def log_in(user)
     session[:user_id] = user.id
+    session[:user_display_name] = user.display_name
   end
 
   def remember(user)
     user.remember
     cookies.permanent.signed[:user_id] = user.id
+    cookies.permanent[:user_display_name] = user.display_name
     cookies.permanent[:remember_token] = user.remember_token
   end
 
@@ -32,15 +34,17 @@ module SessionsHelper
   def forget(user)
     user.forget
     cookies.delete(:user_id)
+    cookies.delete(:user_display_name)
     cookies.delete(:remember_token)
   end
 
   def log_out
     forget(current_user)
     session.delete(:user_id)
+    session.delete(:user_display_name)
     @current_user = nil
   end
-  
+
   def logged_in_user
     fail ForbiddenUserException, 'please log in' unless logged_in?
   end

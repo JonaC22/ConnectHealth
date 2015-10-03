@@ -3,11 +3,15 @@
 # Table name: users
 #
 #  id              :integer          not null, primary key
-#  username        :string(255)
 #  password_digest :string(255)
 #  active          :boolean          default(TRUE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  remember_digest :string(255)
+#  admin           :boolean          default(FALSE)
+#  email           :string(255)
+#  photo_url       :string(255)
+#  display_name    :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -15,10 +19,12 @@ class User < ActiveRecord::Base
   has_many :queries
   has_many :statistical_reports
   has_many :user_roles
-  validates :username, presence: true, uniqueness: { case_sentitive: false }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(.\[a-z\d\-]+)*\.[a-z]+\z/i
+  validates :email, presence: true, uniqueness: { case_sentitive: false }, format: { with: VALID_EMAIL_REGEX }
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
-  before_save { username.downcase! }
+  before_save { email.downcase! }
+  validates :display_name, presence: true
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost

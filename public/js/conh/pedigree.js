@@ -3,14 +3,14 @@ function showGailForm() {
     $("#gailForm").show();
 }
 
-function searchPerson(){
- var id = $("#searchPersonInput").val();
-    if(id>0){
-        window.location = "pedigree.html?id="+id;
+function searchPerson() {
+    var id = $("#searchPersonInput").val();
+    if (id > 0) {
+        window.location = "pedigree.html?id=" + id;
     }
 }
 
-function calculatePREMM126(){
+function calculatePREMM126() {
 
     var v1 = $("#v1").val();
     var v2 = $("#v2").val();
@@ -25,7 +25,7 @@ function calculatePREMM126(){
     $("#statsWidgets").hide();
     toggleLoading(true);
 
-    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.id+"&v1="+v1+"&v2="+v2+"&v3="+v3+"&v4="+v4+"&v5="+v5+"&v6="+v6+"&v7="+v7+"&v8="+v8+"&v9="+v9, function (data) {
+    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.id + "&v1=" + v1 + "&v2=" + v2 + "&v3=" + v3 + "&v4=" + v4 + "&v5=" + v5 + "&v6=" + v6 + "&v7=" + v7 + "&v8=" + v8 + "&v9=" + v9, function (data) {
 
         console.log(data);
         var result = $("#calc_results");
@@ -171,8 +171,9 @@ function getPeopleNodesFromFamily(family) {
 $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     family = data.pedigree;
+    $("#pedigreeId").val(family.id);
     console.log(data);
-    currentPatient =(data.pedigree.current);
+    currentPatient = (data.pedigree.current);
 
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
@@ -188,12 +189,12 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     set_current_patient(currentPatient);
 });
 
-function reloadDiagram(){
+function reloadDiagram() {
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
 
-function addChild(newChild){
+function addChild(newChild) {
     family.patients.push(newChild);
     var newRelation = {
         "from": newChild.neo_id,
@@ -206,7 +207,7 @@ function addChild(newChild){
     reloadDiagram();
 }
 
-function addMother(madre){
+function addMother(madre) {
     family.patients.push(madre);
     var newRelation = {
         "from": currentPatient.neo_id,
@@ -219,12 +220,12 @@ function addMother(madre){
     reloadDiagram();
 }
 
-function addFather(padre){
+function addFather(padre) {
     family.patients.push(padre);
     var newRelation = {
         "from": currentPatient.neo_id,
         "to": padre.neo_id,
-        "name":  "PADRE"
+        "name": "PADRE"
     };
 
     family.relations.push(newRelation);
@@ -232,10 +233,10 @@ function addFather(padre){
     reloadDiagram();
 }
 
-function showCreateModal(type){
+function showCreateModal(type) {
     $("#patientForm")[0].reset();
     $("#typeRelationForm").val(type);
-    switch (type){
+    switch (type) {
         case "CHILD":
             break;
         case "MOTHER":
@@ -246,12 +247,12 @@ function showCreateModal(type){
     $("#modal-create-family-member").modal("show")
 }
 
-function createRelative(){
-    console.log( $("#patientForm" ).serialize());
-    $.post("/api/patients", $( "#patientForm" ).serialize())
-        .done(function(data){
+function createRelative() {
+    console.log($("#patientForm").serialize());
+    $.post("/api/patients", $("#patientForm").serialize())
+        .done(function (data) {
             console.log(data);
-            switch ($("#typeRelationForm").val){
+            switch ($("#typeRelationForm").val()) {
                 case "CHILD":
                     addChild(data.patient);
                     break;
@@ -262,7 +263,17 @@ function createRelative(){
                     addFather(data.patient);
                     break;
             }
-            $("#modal-create-family-member").modal("hide")
+            $.ajax({
+                url: "/api/pedigrees/" + family.id,
+                type: 'PUT',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({"relations": family.relations}),
+                dataType: "json"})
+                .done(function (data) {
+                    console.log("Pedigree Updated");
+                    console.log(data);
+                });
+            $("#modal-create-family-member").modal("hide");
         });
 }
 

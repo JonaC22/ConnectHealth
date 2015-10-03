@@ -15,7 +15,7 @@ class UsersController < BaseController
   def create
     @user = User.create!(user_params)
     log_in @user
-    render json: { message: "Welcome #{@user.username}!" }
+    render json: { message: "Welcome #{@user.display_name}!" }
   end
 
   def edit
@@ -38,6 +38,6 @@ class UsersController < BaseController
   private
 
   def user_params
-    params.require(:user).permit(:username, :password, :password_confirmation)
+    params.require(:user).permit(:email, :display_name, :password, :password_confirmation, :photo_url)
   end
 end
