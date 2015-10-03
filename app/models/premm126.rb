@@ -12,7 +12,12 @@
 #                         brain (glioblastoma multiforme), sebaceous glands
 #
 class PREMM126
-  attr_accessor :const_lp, :age_bounds
+  attr_accessor :const_lp, :age_bounds, :ls_related_cancers
+
+  @ls_related_cancers = [
+      'cancer de estomago', 'cancer de ovario', 'cancer de tracto urinario',
+      'cancer de intestino delgado', 'cancer de pancreas', 'cancer de vía bilial',
+      'cancer de cerebro', 'cancer de glandulas sebaceas']
 
   @const_lp = {
     mlh1: [-5.8, 0.66, 1.65, 2.87, 1.37, 0.87, 1.21, 0.96, 0.14, -0.66, -0.02],
@@ -84,7 +89,7 @@ class PREMM126
     when 2 then
       proband_ec_presence patient
     when 3 then
-      0 # proband_ls_presence patient
+      proband_ls_presence patient
     when 4 then
       relatives_crc_presence patient
     when 5 then
@@ -154,12 +159,18 @@ class PREMM126
 
   # V4
   def self.proband_ls_presence(patient)
-    # patient.proband_ls_presence
+    enf_padecidas = patient.diseases_diagnoses(nil).map{|diag| diag.end_node.nombre}
+    intersec = enf_padecidas & @ls_related_cancers
+    if intersec.length > 0
+      1
+    else
+      0
+    end
   end
 
   # V3 only valid for women
   def self.proband_ec_presence(patient)
-    if patient.diseases_diagnoses('cancer de endometrio').length > 0 || patient.gender == 'F'
+    if patient.diseases_diagnoses('cancer de endometrio').length > 0 && patient.gender == 'F'
       1
     else
       0
@@ -193,7 +204,7 @@ class PREMM126
   def self.lp(params)
     c = @const_lp[params[:gen]]
     v = secondary_values params[:patient], params[:gen]
-    # puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]}")
+    # puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
     c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * params[:v4] +
       c[6] * params[:v5] + c[7] * params[:v6] + c[8] * params[:v7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
   end
