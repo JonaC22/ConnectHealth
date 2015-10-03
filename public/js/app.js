@@ -265,4 +265,8 @@ $( "#logout" ).click(function() {
     logout();
 });
 
-$("#userDisplayName").text("HArry");
+$("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
+    '<img src="images/avatar_default.jpg">' +
+    '</span>' +
+    Cookies.get('user_display_name').replace("+"," ") +
+    '<b class="caret"></b>');
