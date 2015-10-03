@@ -142,6 +142,34 @@ class Patient < ActiveRecord::Base
     relatives
   end
 
+  #Se obtiene nodos de padres, hijos y hermanos
+  def first_degree_relatives
+    query = " // PADRES
+              match (n)-[:PADRE|:MADRE]->(padre)
+              where id(n)=#{neo_id}
+              return padre as nodo
+              UNION
+              //HERMANOS
+              match (n)-[:PADRE|:MADRE]->()<-[:PADRE|:MADRE]-(hermano)
+              where id(n)=#{neo_id}
+              return hermano as nodo
+              UNION
+              //HIJOS
+              match (n)<-[:PADRE|:MADRE]-(hijo)
+              where id(n)=#{neo_id}
+              return hijo as nodo"
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
+    relatives = []
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        relatives.push node['metadata']['id']
+      end
+    end
+    relatives
+  end
+
   # Devuelve la edad a la que tuvo el primer hijo nacido vivo, sino tuvo hijos devuelve 0
   def first_live_birth_age
     ret = []

@@ -12,6 +12,7 @@
 #                         brain (glioblastoma multiforme), sebaceous glands
 #
 class PREMM126
+  
   attr_accessor :const_lp, :age_bounds, :ls_related_cancers
 
   @ls_related_cancers = [
@@ -143,7 +144,11 @@ class PREMM126
 
   # V5 output format {:A, :B, :C, :D}
   def self.relatives_crc_presence(patient)
-    # patient.relatives_crc_presence
+    relatives = patient.first_degree_relatives.map{|id| Patient.find_by_neo_id!(id)}
+
+    #puts relatives.inspect
+    #puts relatives.count{|relative| relative.has_disease?('cancer colon rectal')}
+
     a = 0
     b = 0
     c = 0
@@ -204,8 +209,8 @@ class PREMM126
   def self.lp(params)
     c = @const_lp[params[:gen]]
     v = secondary_values params[:patient], params[:gen]
-    # puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
-    c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * params[:v4] +
+    puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
+    c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * v[4] +
       c[6] * params[:v5] + c[7] * params[:v6] + c[8] * params[:v7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
   end
 
