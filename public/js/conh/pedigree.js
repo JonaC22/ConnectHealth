@@ -202,10 +202,11 @@ function addChild(newChild){
     };
 
     family.relations.push(newRelation);
+    console.log(family);
     reloadDiagram();
 }
 
-function addMadre(madre){
+function addMother(madre){
     family.patients.push(madre);
     var newRelation = {
         "from": currentPatient.neo_id,
@@ -214,10 +215,11 @@ function addMadre(madre){
     };
 
     family.relations.push(newRelation);
+    console.log(family);
     reloadDiagram();
 }
 
-function addPadre(padre){
+function addFather(padre){
     family.patients.push(padre);
     var newRelation = {
         "from": currentPatient.neo_id,
@@ -226,10 +228,21 @@ function addPadre(padre){
     };
 
     family.relations.push(newRelation);
+    console.log(family);
     reloadDiagram();
 }
 
-function showCreateModal(){
+function showCreateModal(type){
+    $("#patientForm")[0].reset();
+    $("#typeRelationForm").val(type);
+    switch (type){
+        case "CHILD":
+            break;
+        case "MOTHER":
+            break;
+        case "FATHER":
+            break;
+    }
     $("#modal-create-family-member").modal("show")
 }
 
@@ -238,7 +251,17 @@ function createRelative(){
     $.post("/api/patients", $( "#patientForm" ).serialize())
         .done(function(data){
             console.log(data);
-            addChild(data.patient);
+            switch ($("#typeRelationForm").val){
+                case "CHILD":
+                    addChild(data.patient);
+                    break;
+                case "MOTHER":
+                    addMother(data.patient);
+                    break;
+                case "FATHER":
+                    addFather(data.patient);
+                    break;
+            }
             $("#modal-create-family-member").modal("hide")
         });
 }
