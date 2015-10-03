@@ -77,6 +77,7 @@ class PREMM126
     values.push secondary_value(patient, values, gen, 9)
     values[5] = values[5][:V]
     values[6] = values[6][:V]
+    values[7] = values[7][:V]
     values
   end
 
@@ -96,7 +97,7 @@ class PREMM126
     when 5 then
       relatives_ec_presence patient
     when 6 then
-      0 # relatives_ls_presence patient
+      relatives_ls_presence patient
     else
       0
     end
@@ -111,35 +112,6 @@ class PREMM126
     else
       0
     end
-  end
-
-  # V8 and V9
-  def self.youngest_age_diagnosis(patient, values, gen, disease)
-    # hash = patient.youngest_age_diagnosis disease
-    hash = { p: 15, fdr: 82, sdr: nil }
-    hash = validate_bounds(hash, values, gen, disease)
-    hash.map { |h| h - 45 }.reduce(:+)
-  end
-
-  # V7
-  def self.relatives_ls_presence(patient)
-    patient.relatives_ls_presence
-  end
-
-  # V6 output format {:A, :B, :C, :D}
-  def self.relatives_ec_presence(patient)
-    # patient.relatives_ec_presence
-    a = 0
-    b = 0
-    c = 0
-    d = 0
-
-    b = 0 if a == 1
-    d = 0 if c == 1
-
-    v = a + 2 * b + 0.5 * c + d
-
-    { A: a, B: b, C: c, D: d, V: v }
   end
 
   def self.neo
@@ -158,18 +130,20 @@ class PREMM126
     diag_diseases.zip diag_ages
   end
 
-  # V5 output format {:A, :B, :C, :D}
-  def self.relatives_crc_presence(patient)
-    a = 0
-    b = 0
-    c = 0
-    d = 0
+  #TODO refactorear para que los relatives sean instancias de Patient
+  def self.count_disease_presence(patient, array_diseases)
+    fdr_total = count_presence(patient.first_degree_relatives, array_diseases)
+    sdr_total = count_presence(patient.second_degree_relatives, array_diseases)
+    {fdr_count: fdr_total, sdr_count: sdr_total}
+  end
 
-    relatives = patient.first_degree_relatives
-    relatives = relatives.map{|r| load_node(r)}
+  def self.count_presence(array, array_diseases)
+    array = array.map{|r| load_node(r)}
+    array.count{|relative| (diseases(relative).map{|e|e.first} & array_diseases).length > 0}
+  end
 
-    #TODO refactorear para que los relatives sean instancias de Patient
-    case relatives.count{|relative| diseases(relative).map{|e|e.first}.include?('cancer colon rectal')}
+  def self.relatives_disease_presence results
+    case results[:fdr_count]
       when 0 then
         a = 0
         b = 0
@@ -181,12 +155,57 @@ class PREMM126
         b = 1
     end
 
+    case results[:sdr_count]
+      when 0 then
+        c = 0
+        d = 0
+      when 1 then
+        c = 1
+        d = 0
+      else
+        c = 0
+        d = 1
+    end
+
     b = 0 if a == 1
     d = 0 if c == 1
 
     v = a + 2 * b + 0.5 * c + d
 
     { A: a, B: b, C: c, D: d, V: v }
+  end
+
+  # V8 and V9
+  def self.youngest_age_diagnosis(patient, values, gen, disease)
+    # hash = patient.youngest_age_diagnosis disease
+    hash = { p: 15, fdr: 82, sdr: nil }
+    hash = validate_bounds(hash, values, gen, disease)
+    hash.map { |h| h - 45 }.reduce(:+)
+  end
+
+  # V7
+  def self.relatives_ls_presence(patient)
+    results = count_disease_presence(patient, @ls_related_cancers)
+
+    a = 0
+    b = 0
+
+    a = 1 if results[:fdr_count] > 0
+    b = 1 if results[:sdr_count] > 0
+
+    v = a + 0.5 * b
+
+    { A: a, B: b, V: v }
+  end
+
+  # V6 output format {:A, :B, :C, :D}
+  def self.relatives_ec_presence(patient)
+    relatives_disease_presence count_disease_presence(patient, ['cancer de endometrio'])
+  end
+
+  # V5 output format {:A, :B, :C, :D}
+  def self.relatives_crc_presence(patient)
+    relatives_disease_presence count_disease_presence(patient, ['cancer colon rectal'])
   end
 
   # V4
@@ -238,7 +257,7 @@ class PREMM126
     v = secondary_values params[:patient], params[:gen]
     puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
     c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * v[4] +
-      c[6] * params[:v5] + c[7] * params[:v6] + c[8] * params[:v7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
+      c[6] * v[5] + c[7] * v[6] + c[8] * v[7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
   end
 
   # Returns a hash with each gene mutation risk
