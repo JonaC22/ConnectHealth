@@ -15,7 +15,7 @@ class UsersController < BaseController
   def create
     @user = User.create!(user_params)
     log_in @user
-    render json: { message: "Welcome #{@user.username}!" }
+    render json: { message: "Welcome #{@user.display_name}!" }
   end
 
   def edit
