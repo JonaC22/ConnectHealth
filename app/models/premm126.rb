@@ -254,11 +254,11 @@ class PREMM126
   end
 
   def self.filter_diseases array, name
-    array.select{|dis| dis.first == name}
+    array.flatten(1).select{|dis| dis.first == name}
   end
 
   def self.name_diseases array
-    array.map{|d| d.first}
+    array.flatten(1).map{|d| d.first}
   end
 
   # Returns intermediate values for gene risk probabilities

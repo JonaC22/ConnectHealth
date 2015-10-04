@@ -12,20 +12,11 @@ function searchPerson() {
 
 function calculatePREMM126() {
 
-    var v1 = $("#v1").val();
-    var v2 = $("#v2").val();
-    var v3 = $("#v3").val();
-    var v4 = $("#v4").val();
-    var v5 = $("#v5").val();
-    var v6 = $("#v6").val();
-    var v7 = $("#v7").val();
-    var v8 = $("#v8").val();
-    var v9 = $("#v9").val();
     $("#calc_results").empty();
     $("#statsWidgets").hide();
     toggleLoading(true);
 
-    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.id + "&v1=" + v1 + "&v2=" + v2 + "&v3=" + v3 + "&v4=" + v4 + "&v5=" + v5 + "&v6=" + v6 + "&v7=" + v7 + "&v8=" + v8 + "&v9=" + v9, function (data) {
+    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.id, function (data) {
 
         console.log(data);
         var result = $("#calc_results");
