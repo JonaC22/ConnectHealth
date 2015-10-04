@@ -1,11 +1,11 @@
 neo4j_url = ENV['GRAPHENEDB_URL'] || 'http://localhost:7474' # default to local server
 
-if ENV['RACK_ENV'] == 'development'
+if ENV['ENV'] == 'development'
   uri = URI.parse(ENV['NEO4J_DEV'])
 else
-  uri = URI.parse(neo4j_url)
+  uri = URI.parse('http://app36674657:8Q61OyUC9w6d8jw7qpUb@app36674657.sb05.stations.graphenedb.com:24789')
 end
-uri = URI.parse('http://app36674657:8Q61OyUC9w6d8jw7qpUb@app36674657.sb05.stations.graphenedb.com:24789')
+
 require 'neography'
 
 Neography.configure do |conf|

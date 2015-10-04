@@ -7,7 +7,7 @@ class BaseController < ApplicationController
   attr_accessor :neo, :mysql
 
   def initialize
-    @neo ||= Neography::Rest.new ENV['NEO4J']
+    @neo ||= Neography::Rest.new
   end
 
   def mysql_connection
