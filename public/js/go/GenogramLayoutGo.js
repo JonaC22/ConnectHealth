@@ -217,13 +217,13 @@ function setupDiagram(diagram, array, focusId) {
     var node = diagram.findNodeForKey(focusId);
     if (node !== null) {
         diagram.select(node);
-        node.linksConnected.each(function (l) {
-            if (!l.isLabeledLink) return;
-            l.opacity = 0;
-            var spouse = l.getOtherNode(node);
-            spouse.opacity = 0;
-            spouse.pickable = false;
-        });
+//        node.linksConnected.each(function (l) {
+//            if (!l.isLabeledLink) return;
+//            l.opacity = 0;
+//            var spouse = l.getOtherNode(node);
+//            spouse.opacity = 0;
+//            spouse.pickable = false;
+//        });
     }
 }
 function findMarriage(diagram, a, b) {  // A and B are node keys
