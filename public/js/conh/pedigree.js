@@ -16,7 +16,7 @@ function calculatePREMM126() {
     $("#statsWidgets").hide();
     toggleLoading(true);
 
-    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.id, function (data) {
+    $.getJSON("/api/model_calculator/premm126?patient_id=" + currentPatient.neo_id, function (data) {
 
         console.log(data);
         var result = $("#calc_results");
@@ -44,7 +44,7 @@ function calculateGail() {
     var numberBiopsy = $("#gailBiopsies").val();
     $("#statsWidgets").hide();
     toggleLoading(true);
-    $.getJSON("api/pedigree/query?type=table&model=gail&id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
+    $.getJSON("api/model_calculator/gail?patient_id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
 
         console.log(data);
 
@@ -54,23 +54,24 @@ function calculateGail() {
             result.append("ERROR: " + data.message);
         }
         else {
+            var calc =  data.model_calculator.calculations;
             $("#statsWidgets").show();
             $('#text_chart_group1').show();
             $('#chart_group2').show();
             $('#chart_group3').show();
             $('#chart_group4').show();
             //result.append("Riesgo absoluto de este paciente en 5 años: " + (data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
-            $('#chart1').data('easyPieChart').update((data.absoluteRiskIn5Years * 100));
-            $('#perc1').text((data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo promedio de una persona en 5 años: " + (data.averageRiskIn5Years * 100).toFixed(2) + "%");
-            $('#chart2').data('easyPieChart').update((data.averageRiskIn5Years * 100));
-            $('#perc2').text((data.averageRiskIn5Years * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (data.absoluteRiskAt90yo * 100).toFixed(2) + "%");
-            $('#chart3').data('easyPieChart').update((data.absoluteRiskAt90yo * 100));
-            $('#perc3').text((data.absoluteRiskAt90yo * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (data.averageRiskAt90yo * 100).toFixed(2) + "%");
-            $('#chart4').data('easyPieChart').update((data.averageRiskAt90yo * 100));
-            $('#perc4').text((data.averageRiskAt90yo * 100).toFixed(2) + "%");
+            $('#chart1').data('easyPieChart').update((calc.absoluteRiskIn5Years * 100));
+            $('#perc1').text((calc.absoluteRiskIn5Years * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo promedio de una persona en 5 años: " + (calc.averageRiskIn5Years * 100).toFixed(2) + "%");
+            $('#chart2').data('easyPieChart').update((calc.averageRiskIn5Years * 100));
+            $('#perc2').text((calc.averageRiskIn5Years * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+            $('#chart3').data('easyPieChart').update((calc.absoluteRiskAt90yo * 100));
+            $('#perc3').text((calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+            //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (calc.averageRiskAt90yo * 100).toFixed(2) + "%");
+            $('#chart4').data('easyPieChart').update((calc.averageRiskAt90yo * 100));
+            $('#perc4').text((calc.averageRiskAt90yo * 100).toFixed(2) + "%");
         }
 
         toggleLoading(false);
