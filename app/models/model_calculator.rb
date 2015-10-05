@@ -111,15 +111,15 @@ class ModelCalculator
   def premm_params(params)
     {
       patient_id: params.require(:patient_id),
-      v1: 1,#params.require(:v1).to_i,
-      v2: 0,#params.require(:v2).to_i,
-      v3: 1,#params.require(:v3).to_i,
-      v4: 0,#params.require(:v4).to_i,
-      v5: 1,#params.require(:v5).to_i,
-      v6: 0,#params.require(:v6).to_i,
-      v7: 1,#params.require(:v7).to_i,
-      v8: 0,#params.require(:v8).to_i,
-      v9: 1#params.require(:v9).to_i
+      v1: 1, # params.require(:v1).to_i,
+      v2: 0, # params.require(:v2).to_i,
+      v3: 1, # params.require(:v3).to_i,
+      v4: 0, # params.require(:v4).to_i,
+      v5: 1, # params.require(:v5).to_i,
+      v6: 0, # params.require(:v6).to_i,
+      v7: 1, # params.require(:v7).to_i,
+      v8: 0, # params.require(:v8).to_i,
+      v9: 1 # params.require(:v9).to_i
     }
   end
 end
