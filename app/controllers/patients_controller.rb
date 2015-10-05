@@ -16,6 +16,7 @@ class PatientsController < BaseController
 
   def create
     @patient = Patient.create! patient_create_params
+    current_user.patients << @patient
     handle_diseases(@patient, params)
     render json: @patient
   end
