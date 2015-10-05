@@ -40,4 +40,9 @@ class UsersController < BaseController
   def user_params
     params.require(:user).permit(:email, :display_name, :password, :password_confirmation, :photo_url)
   end
+
+  def correct_user
+    @user = User.find(params[:id])
+    fail ForbiddenUserException, 'not the correct user' unless current_user?(@user)
+  end
 end
