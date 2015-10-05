@@ -6,7 +6,7 @@ class PatientsController < BaseController
       params[:patient_name] = name[0]
       params[:patient_lastname] = name[1]
     end
-    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true)
+    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true).joins(:patients_users).where(patients_users: { user_id: current_user.id })
   end
 
   def show

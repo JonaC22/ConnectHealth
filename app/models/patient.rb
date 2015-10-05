@@ -26,8 +26,7 @@ class Patient < ActiveRecord::Base
   belongs_to :pedigree
   has_many :patient_diseases
   has_many :diseases, through: :patient_diseases
-  has_many :user_patients
-  has_many :users, through: :user_patients
+  has_and_belongs_to_many :users
   enum status: {
     unborn: 0,
     alive: 1,
@@ -238,7 +237,7 @@ class Patient < ActiveRecord::Base
     end
   end
 
-  def has_disease?(name)
+  def disease?(name)
     diseases.any? do |disease|
       disease.name == name
     end
