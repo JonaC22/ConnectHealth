@@ -8,7 +8,9 @@ class ModelCalculator
     params = premm_params(params)
     params[:patient] = Patient.find_by_neo_id!(params[:patient_id])
     validate_premm126(params[:patient])
-    PREMM126.calc_risk(params)
+    self.calculations = { risk: PREMM126.calc_risk(params) }
+    self.model = 'premm126'
+    self
   end
 
   def gail(params)
