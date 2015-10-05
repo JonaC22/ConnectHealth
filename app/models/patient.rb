@@ -26,6 +26,8 @@ class Patient < ActiveRecord::Base
   belongs_to :pedigree
   has_many :patient_diseases
   has_many :diseases, through: :patient_diseases
+  has_many :user_patients
+  has_many :users, through: :user_patients
   enum status: {
     unborn: 0,
     alive: 1,
