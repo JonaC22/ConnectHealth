@@ -62,13 +62,12 @@ class PatientsController < BaseController
 
   def handle_diseases(patient, params)
     params[:diseases] && params[:diseases].each do |dis|
-      patient.add_disease dis.require(:disease).downcase, dis[:age].to_i
+      patient.add_disease dis.require(:name).downcase, dis[:age].to_i
     end
   end
 
   def correct_user
     @patient = current_user.patients.find_by(id: params[:id])
-    p @patient
     fail ForbiddenUserException, 'not the correct user' unless @patient
   end
 end
