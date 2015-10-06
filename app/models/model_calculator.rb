@@ -2,13 +2,16 @@ class ModelCalculator
   include ActiveModel::Model
   include ActiveModel::Serialization
 
-  attr_accessor :model, :calculations
+  attr_accessor :model, :calculations, :messages
 
   def premm126(params)
     params = premm_params(params)
     params[:patient] = Patient.find_by_neo_id!(params[:patient_id])
     validate_premm126(params[:patient])
     self.calculations = { risk: PREMM126.calc_risk(params) }
+    if self.calculations[:risk] > 0.05
+      self.messages = ['El riesgo es mayor o igual al 5%, se debe considerar realizar estudios de MSI (Microsatellite instability) y IHC (immunohistochemistry), en caso de no ser posible obtener una muestra del tumor se debe considerar realizar una secuenciación de linea germinal.']
+    end
     self.model = 'premm126'
     self
   end
@@ -110,16 +113,7 @@ class ModelCalculator
 
   def premm_params(params)
     {
-      patient_id: params.require(:patient_id),
-      v1: 1,#params.require(:v1).to_i,
-      v2: 0,#params.require(:v2).to_i,
-      v3: 1,#params.require(:v3).to_i,
-      v4: 0,#params.require(:v4).to_i,
-      v5: 1,#params.require(:v5).to_i,
-      v6: 0,#params.require(:v6).to_i,
-      v7: 1,#params.require(:v7).to_i,
-      v8: 0,#params.require(:v8).to_i,
-      v9: 1#params.require(:v9).to_i
+      patient_id: params.require(:patient_id)
     }
   end
 end

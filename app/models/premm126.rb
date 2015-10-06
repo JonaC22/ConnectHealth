@@ -276,7 +276,7 @@ class PREMM126
     v = secondary_values params[:patient], params[:gen]
     puts ("v0: #{v[0]} v1: #{v[1]} v2: #{v[2]} v3: #{v[3]} v4: #{v[4]} v5: #{v[5]} v6: #{v[6]} v7: #{v[7]} v8: #{v[8]} v9: #{v[9]}")
     c[0] + c[1] * v[0] + c[2] * v[1] + c[3] * v[2] + c[4] * v[3] + c[5] * v[4] +
-      c[6] * v[5] + c[7] * v[6] + c[8] * v[7] + c[9] * params[:v8] / 10 + c[10] * params[:v9] / 10
+      c[6] * v[5] + c[7] * v[6] + c[8] * v[7] + c[9] * v[8] / 10 + c[10] * v[9] / 10
   end
 
   # Returns a hash with each gene mutation risk
