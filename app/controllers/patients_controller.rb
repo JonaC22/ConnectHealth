@@ -16,6 +16,7 @@ class PatientsController < BaseController
   end
 
   def create
+    params[:pedigree_id] = params.require(:pedigree_id).to_i if params[:patient_type] == 'relative'
     @patient = Patient.create! patient_create_params
     current_user.patients << @patient
     handle_diseases(@patient, params)

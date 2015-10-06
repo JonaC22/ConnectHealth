@@ -54,11 +54,27 @@ class PedigreesController < BaseController
     fail ImposibleRelationException, 'Missing relations' unless @json.key?('relations')
     params = pedigree_find_params
     @pedigree = Pedigree.find_by!(params)
+    relations = []
+    @pedigree.patients.each do |patient|
+      patient.node.rels(:PADRE, :MADRE).outgoing.each do |relat|
+        relations << Relation.new(relat.start_node.neo_id.to_i, relat.end_node.neo_id.to_i, relat.rel_type)
+      end
+    end
     @pedigree.patients.each(&:delete_all_relationships)
-    @json['relations'].each do |rel|
-      pat = Patient.find_by!(pedigree: @pedigree, neo_id: rel['from'])
-      relative = Patient.find_by!(pedigree: @pedigree, neo_id: rel['to'])
-      pat.create_relationship(rel['name'].to_sym, relative)
+    begin
+      @json['relations'].each do |rel|
+        pat = Patient.find_by!(pedigree: @pedigree, neo_id: rel['from'])
+        relative = Patient.find_by!(pedigree: @pedigree, neo_id: rel['to'])
+        pat.create_relationship(rel['name'].to_sym, relative)
+      end
+    rescue StandardError
+      @pedigree.patients.each(&:delete_all_relationships)
+      relations.each do |rel|
+        pat = Patient.find_by!(pedigree: @pedigree, neo_id: rel.from)
+        relative = Patient.find_by!(pedigree: @pedigree, neo_id: rel.to)
+        pat.create_relationship(rel.name.to_sym, relative)
+      end
+      raise
     end
 
     visualize @pedigree

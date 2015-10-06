@@ -41,14 +41,15 @@ class Patient < ActiveRecord::Base
   scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
   scope :patient_gender, -> (gender) { where(gender: gender) }
   scope :type, -> (type) { where(patient_type: type) }
-  validates :name, presence: true
+  VALID_NAME_REGEX = /\A[a-zA-Z]+\z/i
+  validates :name, presence: true, format: { with: VALID_NAME_REGEX }
+  validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
   # validates :document_number, uniqueness: true
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
   before_create :set_defaults
 
   def create!(params)
-    params[:pedigree_id] = params.require(:pedigree_id).to_i if params[:patient_type] == 'relative'
     super
   end
 
@@ -57,6 +58,7 @@ class Patient < ActiveRecord::Base
     self.status ||= 'alive'
     return unless document_number
     self.document_type ||= 'dni'
+    self.pedigree = Pedigree.create! unless pedigree
   end
 
   def create_node
@@ -84,8 +86,13 @@ class Patient < ActiveRecord::Base
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
   end
 
-  def create_relationship(relationship, relation_receiver)
+  def validate_relationship(relationship, relation_receiver)
+    fail ImposibleRelationException, "The #{relationship} cannot be older" if Relation.decremental?(relationship) && age && relation_receiver.age && age > relation_receiver.age
     fail DuplicatedRelationException, "Duplicated relation: #{relationship} for patient:#{name} and patient:#{relation_receiver.name}" if Relation.unique?(relationship) && node.rel?(:outgoing, relationship)
+  end
+
+  def create_relationship(relationship, relation_receiver)
+    validate_relationship(relationship, relation_receiver)
     Neography::Relationship.create(relationship, node, relation_receiver.node)
   end
 

@@ -9,4 +9,8 @@ class Relation
   def self.unique?(relation)
     %w(MADRE PADRE).include? relation.to_s
   end
+
+  def self.decremental?(relation)
+    %w(MADRE PADRE).include? relation.to_s
+  end
 end
