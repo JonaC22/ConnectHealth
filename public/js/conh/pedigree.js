@@ -25,13 +25,21 @@ function calculatePREMM126() {
             result.append("ERROR: " + data.message);
         }
         else {
+            var calc =  data.model_calculator.calculations;
+            var messages = data.model_calculator.messages;
+            if(messages){
+                messages.forEach(function(msg){
+                    console.log(msg);
+                    result.append(msg);
+                });
+            }
             $("#statsWidgets").show();
             $('#text_chart_group1').hide();
             $('#chart_group2').hide();
             $('#chart_group3').hide();
             $('#chart_group4').hide();
-            $('#chart1').data('easyPieChart').update((data.results * 100));
-            $('#perc1').text((data.results * 100).toFixed(2) + "%");
+            $('#chart1').data('easyPieChart').update((calc.risk * 100));
+            $('#perc1').text((calc.risk * 100).toFixed(2) + "%");
         }
 
         toggleLoading(false);
