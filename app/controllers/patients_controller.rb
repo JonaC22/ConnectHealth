@@ -1,6 +1,6 @@
 class PatientsController < BaseController
-  before_action :logged_in_user, only: [:index, :create, :edit, :update, :destroy]
-  before_action :correct_user, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :create]
+  before_action :correct_user, only: [:show, :update, :destroy]
   def index
     if params[:name]
       name = params[:name].split(' ') if params[:name]
