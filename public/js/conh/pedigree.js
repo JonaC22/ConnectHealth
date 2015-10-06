@@ -27,10 +27,12 @@ function calculatePREMM126() {
         else {
             var calc =  data.model_calculator.calculations;
             var messages = data.model_calculator.messages;
-            messages.forEach(function(msg){
-                console.log(msg);
-                result.append(msg);
-            });
+            if(messages){
+                messages.forEach(function(msg){
+                    console.log(msg);
+                    result.append(msg);
+                });
+            }
             $("#statsWidgets").show();
             $('#text_chart_group1').hide();
             $('#chart_group2').hide();
