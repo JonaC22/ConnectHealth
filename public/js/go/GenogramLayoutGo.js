@@ -217,13 +217,13 @@ function setupDiagram(diagram, array, focusId) {
     var node = diagram.findNodeForKey(focusId);
     if (node !== null) {
         diagram.select(node);
-        node.linksConnected.each(function (l) {
-            if (!l.isLabeledLink) return;
-            l.opacity = 0;
-            var spouse = l.getOtherNode(node);
-            spouse.opacity = 0;
-            spouse.pickable = false;
-        });
+//        node.linksConnected.each(function (l) {
+//            if (!l.isLabeledLink) return;
+//            l.opacity = 0;
+//            var spouse = l.getOtherNode(node);
+//            spouse.opacity = 0;
+//            spouse.pickable = false;
+//        });
     }
 }
 function findMarriage(diagram, a, b) {  // A and B are node keys
@@ -308,7 +308,16 @@ function setupParents(diagram) {
             var mlabkey = mdata.labelKeys[0];
             var cdata = { from: mlabkey, to: key };
             myDiagram.model.addLinkData(cdata);
+        }else if(mother == undefined && father !== undefined){
+            console.log("father only" +father);
+            var cdata2 = { from: father, to: key };
+            myDiagram.model.addLinkData(cdata2);
+        }else if(father == undefined && mother !== undefined){
+            console.log("mother only" +mother);
+            var cdata3 = { from: mother, to: key };
+            myDiagram.model.addLinkData(cdata3);
         }
+
     }
 }
 // A custom layout that shows the two families related to a person's parents

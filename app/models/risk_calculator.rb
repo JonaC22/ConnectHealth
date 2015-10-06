@@ -1,35 +1,34 @@
-#require "mscorlib"
-#require "System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-#require "System.Text, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
-#require "System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+# require "mscorlib"
+# require "System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+# require "System.Text, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
+# require "System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
 
-
-#module NCI.DCEG.BCRA.Engine
+# module NCI.DCEG.BCRA.Engine
 class RiskCalculator
   ## of covariate patterns in GAIL model
   # matrix
-  #this is to store beta values
-  #private double[,] bet2 = new double[8, 3];
-  #private double[,] rmu2 = new double[14, 6];//[14,6];
-  #private double[,] rlan2 = new double[14, 6]; //[14,6];[84] #[14,6]; #[14,6];[84] #[12]
+  # this is to store beta values
+  # private double[,] bet2 = new double[8, 3];
+  # private double[,] rmu2 = new double[14, 6];//[14,6];
+  # private double[,] rlan2 = new double[14, 6]; //[14,6];[84] #[14,6]; #[14,6];[84] #[12]
   def initialize
     @log = Logger.new(STDOUT)
     @log.level = Logger::DEBUG
 
     @num_cov_patt_in_gail_model = 216
-    @bet2 = Array.new(15) {Array.new(14)}#Array.CreateInstance(System::Double, 8, 12)
-    @bet =  Array.new#Array.CreateInstance(System::Double, 8)
-    @rf =  Array.new#Array.CreateInstance(System::Double, 2)
-    @abs =  Array.new#Array.CreateInstance(System::Double, 216)
-    @rlan =  Array.new#Array.CreateInstance(System::Double, 14)
-    @rmu =  Array.new#Array.CreateInstance(System::Double, 14)
-    @sumb =  Array.new#Array.CreateInstance(System::Double, 216)
-    @sumbb = Array.new#Array.CreateInstance(System::Double, 216)
-    @tvar = Array.new#Array.CreateInstance(System::Double, 15)
-    @rmu2 = Array.new(15) {Array.new(14)} #Array.CreateInstance(System::Double, 14, 12)
-    @rlan2 =Array.new(15) {Array.new(14)} #Array.CreateInstance(System::Double, 14, 12)
-    @rf2 = Array.new(15) {Array.new(14)}#Array.CreateInstance(System::Double, 2, 13)
-    self.initialize_calc
+    @bet2 = Array.new(15) { Array.new(14) } # Array.CreateInstance(System::Double, 8, 12)
+    @bet =  [] # Array.CreateInstance(System::Double, 8)
+    @rf = [] # Array.CreateInstance(System::Double, 2)
+    @abs = [] # Array.CreateInstance(System::Double, 216)
+    @rlan = [] # Array.CreateInstance(System::Double, 14)
+    @rmu =  [] # Array.CreateInstance(System::Double, 14)
+    @sumb =  [] # Array.CreateInstance(System::Double, 216)
+    @sumbb = [] # Array.CreateInstance(System::Double, 216)
+    @tvar = [] # Array.CreateInstance(System::Double, 15)
+    @rmu2 = Array.new(15) { Array.new(14) } # Array.CreateInstance(System::Double, 14, 12)
+    @rlan2 = Array.new(15) { Array.new(14) } # Array.CreateInstance(System::Double, 14, 12)
+    @rf2 = Array.new(15) { Array.new(14) } # Array.CreateInstance(System::Double, 2, 13)
+    initialize_calc
   end
 
   def initialize_calc
@@ -68,7 +67,7 @@ class RiskCalculator
     @rmu2[10][0] = 2383.9 * 0.00001 # [70:75) race=white,other
     @rmu2[11][0] = 3883.2 * 0.00001 # [75:80) race=white,other
     @rmu2[12][0] = 6682.8 * 0.00001 # [80:85) race=white,other
-    @rmu2[13][0] = 14490.8 * 0.00001 # [85:90) race=white,other
+    @rmu2[13][0] = 14_490.8 * 0.00001 # [85:90) race=white,other
     # 11/29/2007 SRamaiah - updated age specific competing hazards (h2)
     # with new values from NCHS 1996-00 data for African American Women
     #
@@ -137,7 +136,7 @@ class RiskCalculator
     @rmu2[10][3] = 2259.35 * 0.00001 # [70,75) race=white,other
     @rmu2[11][3] = 3611.46 * 0.00001 # [74,80) race=white,other
     @rmu2[12][3] = 6136.26 * 0.00001 # [80,84) race=white,other
-    @rmu2[13][3] = 14206.63 * 0.00001 # [84,90) race=white,other
+    @rmu2[13][3] = 14_206.63 * 0.00001 # [84,90) race=white,other
     # 11/29/2007 SRamaiah - updated age specific competing hazards (h2)
     # with new values from NCHS 1996-00 data for African American Women
     #
@@ -327,7 +326,7 @@ class RiskCalculator
     @rlan2[11][5] = 275.70 * 0.00001 # [75:80) race=hispanic
     @rlan2[12][5] = 252.30 * 0.00001 # [80:85) race=hispanic
     @rlan2[13][5] = 203.90 * 0.00001 # [85:90) race=hispanic
-    #11/29/2007 replaced with two dimensional array
+    # 11/29/2007 replaced with two dimensional array
     #
     # bet[0] = -.74948246; // intercept                         1/1
     # bet[1] = .010808072; // age >=50 indicator
@@ -365,12 +364,12 @@ class RiskCalculator
     @bet2[5][2] = 0.9583027845 # # 1st degree relatives with breast ca
     @bet2[6][2] = -0.2880424830 # # breast biopsy * age >=50 indicator
     @bet2[7][2] = -0.1908113865 # age 1st live birth * # 1st degree rel
-    #American-Asian Beta
+    # American-Asian Beta
     i = 6
     while i <= 11
       @bet2[0][i] = 0.00000000000000 #  intercept
       @bet2[1][i] = 0.00000000000000 #  age >= 50 indicator
-      @bet2[2][i] = 0.07499257592975 #age menarchy
+      @bet2[2][i] = 0.07499257592975 # age menarchy
       @bet2[3][i] = 0.55263612260619 #   # of breast biopsy
       @bet2[4][i] = 0.27638268294593 #  age 1st live birth
       @bet2[5][i] = 0.79185633720481 #   # 1st degree relatives with breast ca
@@ -405,7 +404,7 @@ class RiskCalculator
     @rf2[1][4] = 1.0 # age >=50, race=African American avg woman
     @rf2[0][5] = 1.0 # age < 50, race=hispanic avg woman    5/12
     @rf2[1][5] = 1.0 # age >=50, race=hispanic avg woman
-    #American-Asian conversion factor
+    # American-Asian conversion factor
     i = 6
     while i <= 11
       @rf2[0][i] = 0.47519806426735 # age < 50, avg woman
@@ -414,7 +413,7 @@ class RiskCalculator
     end # age >=50, avg woman
     @rf2[0][12] = 1.0 # age < 50, race=hispanic avg woman    5/12
     @rf2[1][12] = 1.0 # age >=50, race=hispanic avg woman
-    #*** SEER18 incidence 1998:02 - chinese  Jan052010;
+    # *** SEER18 incidence 1998:02 - chinese  Jan052010;
     @rlan2[0][6] = 0.000004059636
     @rlan2[1][6] = 0.000045944465
     @rlan2[2][6] = 0.000188279352
@@ -429,7 +428,7 @@ class RiskCalculator
     @rlan2[11][6] = 0.001919911972
     @rlan2[12][6] = 0.002233371071
     @rlan2[13][6] = 0.002247315779
-    #*** NCHS mortality 1998:02,    chinese  Jan052010;
+    # *** NCHS mortality 1998:02,    chinese  Jan052010;
     @rmu2[0][6] = 0.000210649076
     @rmu2[1][6] = 0.000192644865
     @rmu2[2][6] = 0.000244435215
@@ -444,7 +443,7 @@ class RiskCalculator
     @rmu2[11][6] = 0.020148678452
     @rmu2[12][6] = 0.037990796590
     @rmu2[13][6] = 0.098333900733
-    #*** SEER18 incidence 1998:02 - japanese  Jan052010;
+    # *** SEER18 incidence 1998:02 - japanese  Jan052010;
     @rlan2[0][7] = 0.000000000001
     @rlan2[1][7] = 0.000099483924
     @rlan2[2][7] = 0.000287041681
@@ -459,7 +458,7 @@ class RiskCalculator
     @rlan2[11][7] = 0.003589303081
     @rlan2[12][7] = 0.003538507159
     @rlan2[13][7] = 0.002051572909
-    #*** NCHS mortality 1998:02,    japanese  Jan052010;
+    # *** NCHS mortality 1998:02,    japanese  Jan052010;
     @rmu2[0][7] = 0.000173593803
     @rmu2[1][7] = 0.000295805882
     @rmu2[2][7] = 0.000228322534
@@ -474,7 +473,7 @@ class RiskCalculator
     @rmu2[11][7] = 0.020230197885
     @rmu2[12][7] = 0.037725498348
     @rmu2[13][7] = 0.106149118663
-    #*** SEER18 incidence 1998:02 - filipino  Jan052010;
+    # *** SEER18 incidence 1998:02 - filipino  Jan052010;
     @rlan2[0][8] = 0.000007500161
     @rlan2[1][8] = 0.000081073945
     @rlan2[2][8] = 0.000227492565
@@ -489,7 +488,7 @@ class RiskCalculator
     @rlan2[11][8] = 0.002286616920
     @rlan2[12][8] = 0.001814802825
     @rlan2[13][8] = 0.001750879130
-    #*** NCHS mortality 1998:02,    filipino  Jan052010;
+    # *** NCHS mortality 1998:02,    filipino  Jan052010;
     @rmu2[0][8] = 0.000229120979
     @rmu2[1][8] = 0.000262988494
     @rmu2[2][8] = 0.000314844090
@@ -504,7 +503,7 @@ class RiskCalculator
     @rmu2[11][8] = 0.021127058106
     @rmu2[12][8] = 0.037936954809
     @rmu2[13][8] = 0.085138518334
-    #*** SEER18 incidence 1998:02 - hawaiian  Jan052010;
+    # *** SEER18 incidence 1998:02 - hawaiian  Jan052010;
     @rlan2[0][9] = 0.000045080582
     @rlan2[1][9] = 0.000098570724
     @rlan2[2][9] = 0.000339970860
@@ -519,7 +518,7 @@ class RiskCalculator
     @rlan2[11][9] = 0.006513409962
     @rlan2[12][9] = 0.003889457523
     @rlan2[13][9] = 0.002949061662
-    #*** NCHS mortality 1998:02,    hawaiian  Jan052010;
+    # *** NCHS mortality 1998:02,    hawaiian  Jan052010;
     @rmu2[0][9] = 0.000563507269
     @rmu2[1][9] = 0.000369640217
     @rmu2[2][9] = 0.001019912579
@@ -534,7 +533,7 @@ class RiskCalculator
     @rmu2[11][9] = 0.050446998723
     @rmu2[12][9] = 0.072262026612
     @rmu2[13][9] = 0.145844504021
-    #*** SEER18 incidence 1998:02 - other pacific islander  Jan052010;
+    # *** SEER18 incidence 1998:02 - other pacific islander  Jan052010;
     @rlan2[0][10] = 0.000000000001
     @rlan2[1][10] = 0.000071525212
     @rlan2[2][10] = 0.000288799028
@@ -549,7 +548,7 @@ class RiskCalculator
     @rlan2[11][10] = 0.002036291235
     @rlan2[12][10] = 0.001482683983
     @rlan2[13][10] = 0.001012248203
-    #*** NCHS mortality 1998:02,    other pacific islander  Jan052010;
+    # *** NCHS mortality 1998:02,    other pacific islander  Jan052010;
     @rmu2[0][10] = 0.000465500812
     @rmu2[1][10] = 0.000600466920
     @rmu2[2][10] = 0.000851057138
@@ -564,7 +563,7 @@ class RiskCalculator
     @rmu2[11][10] = 0.038408980974
     @rmu2[12][10] = 0.052869579345
     @rmu2[13][10] = 0.074745721133
-    #*** SEER18 incidence 1998:02 - other asian  Jan052010;
+    # *** SEER18 incidence 1998:02 - other asian  Jan052010;
     @rlan2[0][11] = 0.000012355409
     @rlan2[1][11] = 0.000059526456
     @rlan2[2][11] = 0.000184320831
@@ -579,7 +578,7 @@ class RiskCalculator
     @rlan2[11][11] = 0.001067663700
     @rlan2[12][11] = 0.001376104012
     @rlan2[13][11] = 0.000661576644
-    #*** NCHS mortality 1998:02,    other asian Jan052010;
+    # *** NCHS mortality 1998:02,    other asian Jan052010;
     @rmu2[0][11] = 0.000212632332
     @rmu2[1][11] = 0.000242170741
     @rmu2[2][11] = 0.000301552711
@@ -597,15 +596,14 @@ class RiskCalculator
   end
 
   def calculate_absolute_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
-    return self.calculate_risk(1, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
+    calculate_risk(1, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
   end
 
   def calculate_average_risk(current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, first_deg_relatives, ever_had_biopsy, ihyp, rhyp, irace)
-    return self.calculate_risk(2, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
+    calculate_risk(2, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
   end
 
-  def calculate_risk(riskindex, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, ever_had_biopsy, first_deg_relatives, ihyp, rhyp, irace)
-
+  def calculate_risk(riskindex, current_age, projection_age, age_indicator, number_of_biopsy, menarche_age, first_live_birth_age, _ever_had_biopsy, first_deg_relatives, _ihyp, rhyp, irace)
     # AgeIndicator: age ge 50 ind
     # 0=[20, 50)
     # 1=[50, 85)
@@ -628,25 +626,25 @@ class RiskCalculator
     # 2=[2, 31]
 
     #  RiskIndex           [1 Abs, 2 Avg]
-    #, CurrentAge		    //[t1] edad actual ( tiene que ser mayor a 35)
-    #, ProjectionAge	    //[t2]
-    #, AgeIndicator	    //[i0]
-    #, NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 had_biopsy mas)
-    #, MenarcheAge		    //[i1] edad de primera menstruacion
-    #, FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
-    #, EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
-    #, HyperPlasia		    //[ihyp] 0 no, 1 yes, 99 unknown
-    #, FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
-    #, RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
-    #, Race			    //[race] 1-white 3-hispanic 6-unknown
+    # , CurrentAge		    //[t1] edad actual ( tiene que ser mayor a 35)
+    # , ProjectionAge	    //[t2]
+    # , AgeIndicator	    //[i0]
+    # , NumberOfBiopsy	    //[i2] cant de biopsias de mamas 1, 2(2 had_biopsy mas)
+    # , MenarcheAge		    //[i1] edad de primera menstruacion
+    # , FirstLiveBirthAge   //[i3] 0 , 15 (<20),22(20-24), 27(25-29),30(>=30)
+    # , EverHadBiopsy	    //[iever] 0 no, 1 yes, 99 unknown
+    # , HyperPlasia		    //[ihyp] 0 no, 1 yes, 99 unknown
+    # , FirstDegRelatives   //[i4] 0, 1 or 2(2 or more)
+    # , RHyperPlasia	    //[rhyp] 0 no, 1 yes, 99 unknown
+    # , Race			    //[race] 1-white 3-hispanic 6-unknown
     retval = 0.0
     # Local variables
     abss = 0.0
-    r8i_tox2 = Array.new(216) {Array.new(9)}
-    #double[] r8i_tox2 = new double[1944]; //[216,9];
+    r8i_tox2 = Array.new(216) { Array.new(9) }
+    # double[] r8i_tox2 = new double[1944]; //[216,9];
     n = 216 # ** age categories boundaries
     r = 0.0
-    #HACK
+    # HACK
     ni = 0
     ns = 0
     ti = (current_age)
@@ -656,65 +654,65 @@ class RiskCalculator
     while i < 8
       @bet[i] = @bet2[i][irace - 1]
       i += 1
-    end #index starts from 0 hence irace-1
+    end # index starts from 0 hence irace-1
     # 11/29/2007 SR: recode agemen for African American women
-    if irace == 2  # for African American women
+    if irace == 2 # for African American women
       if menarche_age == 2
         menarche_age = 1 # recode agemen=2 (age<12) to agmen=1 [12,13]
         first_live_birth_age = 0
       end
     end # set age 1st live birth to 0
-    #Console.WriteLine(string.Format("CurrentAge:{0} ProjectionAge:{1}", CurrentAge, ProjectionAge));
+    # Console.WriteLine(string.Format("CurrentAge:{0} ProjectionAge:{1}", CurrentAge, ProjectionAge));
     i = 1
     while i <= 15
       # i-1=14 ==> current age=85, max for curre
       if ti < @tvar[i - 1]
-        #TODO CHECK THE INDEX
+        # TODO: CHECK THE INDEX
         ni = i - 1 # ni holds the index for current
         break
       end
       i += 1
-    end #goto L70;
+    end # goto L70;
     i = 1
     while i <= 15
       if ts <= @tvar[i - 1]
-        #!!!TODO CHECK THE INDEX
+        # !!!TODO CHECK THE INDEX
         ns = i - 1 # ns holds the index for risk as
         break
       end
       i += 1
-    end #goto L80;
+    end # goto L80;
     incr = 0
-    if riskindex == 2 and irace < 7
-      #HACK CHECK THIS
+    if riskindex == 2 && irace < 7
+      # HACK: CHECK THIS
       incr = 3
     end
     # for race specific "avg women"
     # otherwise use cols 1,2,3 depen
     # on users race                5
     # use cols 4,5,6 from rmu, rla
-    #TODO Check this
+    # TODO: Check this
     # select race specific
-    cindx = 0 #column index
+    cindx = 0 # column index
     cindx = incr + irace - 1
-    #Console.WriteLine("------------------Contents of rmu");
+    # Console.WriteLine("------------------Contents of rmu");
     i = 0
     while i < 14
       @rmu[i] = @rmu2[i][cindx] # competeing baseline h
       @rlan[i] = @rlan2[i][cindx]
       i += 1
     end # br ca composite incid
-    #Console.WriteLine(string.Format("{0} {1} {2}", i, cindx, rmu[i].ToString("F")));
-    #Console.WriteLine("ns={0}", ns);
-    #PrintArray(rlan, "rlan");
-    #PrintArray(rmu, "rmu");
+    # Console.WriteLine(string.Format("{0} {1} {2}", i, cindx, rmu[i].ToString("F")));
+    # Console.WriteLine("ns={0}", ns);
+    # PrintArray(rlan, "rlan");
+    # PrintArray(rmu, "rmu");
     @rf[0] = @rf2[0][incr + irace - 1] # selecting correct fac
     @rf[1] = @rf2[1][incr + irace - 1] # based on race
-    if riskindex == 2 and irace >= 7
+    if riskindex == 2 && irace >= 7
       @rf[0] = @rf2[0][12] # selecting correct fac
       @rf[1] = @rf2[1][12]
     end # based on race
-    if riskindex >= 2  #&& irace < 7)
+    if riskindex >= 2 # && irace < 7)
       # set risk factors to
       menarche_age = 0 # baseline age menarchy
       number_of_biopsy = 0 # # of previous biop
@@ -812,7 +810,7 @@ class RiskCalculator
     end
     i = 0
     while i < 216
-      #HACK r8i_tox2[i + 1727] = 1.0;
+      # HACK: r8i_tox2[i + 1727] = 1.0;
       r8i_tox2[i][8] = 1.0
       i += 1
     end
@@ -855,12 +853,10 @@ class RiskCalculator
     end
     i = ilev # index ilev of range 1-
     # setting i to covariate p
-    #HACK CHECK LOG VALUE
+    # HACK: CHECK LOG VALUE
     @sumbb[i - 1] += Math.log(rhyp)
-    if i <= 108
-      @sumbb[i + 107] += Math.log(rhyp)
-    end
-    #Console.WriteLine("sumbb  0th Elmnt {0} 107th Elmnt{1}", sumbb[0], sumbb[107]);
+    @sumbb[i + 107] += Math.log(rhyp) if i <= 108
+    # Console.WriteLine("sumbb  0th Elmnt {0} 107th Elmnt{1}", sumbb[0], sumbb[107]);
     if ts <= @tvar[ni]
       # same 5 year age risk in
       # age & projection age wi
@@ -875,7 +871,7 @@ class RiskCalculator
       @abs[i - 1] = @abs[i - 1] * @rlan[ni - 1] * Math.exp(@sumbb[i - 1]) / (@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) # age in
       # risk f
       if ns - ni > 0
-        if (projection_age) > 50.0 and (current_age) < 50.0
+        if (projection_age) > 50.0 && (current_age) < 50.0
           # a
           # s
           # a
@@ -889,11 +885,11 @@ class RiskCalculator
           # Console.WriteLine();
           #
           r = 1.0 - Math.exp(-(@rlan[ns - 1] * Math.exp(@sumbb[i + 107]) + @rmu[ns - 1]) * (ts - @tvar[ns - 1]))
-          #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
+          # Console.WriteLine("value of r {0}: ", r.ToString("F5"));
           r = r * @rlan[ns - 1] * Math.exp(@sumbb[i + 107]) / (@rlan[ns - 1] * Math.exp(@sumbb[i + 107]) + @rmu[ns - 1])
-          #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
+          # Console.WriteLine("value of r {0}: ", r.ToString("F5"));
           r *= Math.exp(-(@rlan[ni - 1] * Math.exp(@sumbb[i - 1]) + @rmu[ni - 1]) * (@tvar[ni] - ti))
-          #Console.WriteLine("value of r {0}: ", r.ToString("F5"));
+          # Console.WriteLine("value of r {0}: ", r.ToString("F5"));
           if ns - ni > 1
             menarche_age = ns - 1
             j = ni + 1
@@ -926,7 +922,7 @@ class RiskCalculator
         end
       end
       if ns - ni > 1
-        if (projection_age) > 50.0 and (current_age) < 50.0
+        if (projection_age) > 50.0 && (current_age) < 50.0
           # calculate risk from
           # intervening age int
           menarche_age = ns - 1
@@ -974,13 +970,13 @@ class RiskCalculator
         end
       end
     end
-    #Console.WriteLine("abs 0th Elmnt {0} 215th Elmnt{1}", abs[0], abs[215]);
-    #Console.WriteLine("abss=", abss);
+    # Console.WriteLine("abs 0th Elmnt {0} 215th Elmnt{1}", abs[0], abs[215]);
+    # Console.WriteLine("abss=", abss);
     abss = @abs[i - 1] * 1000.0
-    #HACK CHECK THIS
+    # HACK: CHECK THIS
     if abss - (abss) >= 0.5
-    #abss = d_int(abss) + 1.0 ;
-    abss = (abss) + 1.0
+      # abss = d_int(abss) + 1.0 ;
+      abss = (abss) + 1.0
     else
       abss = (abss)
     end
@@ -1018,33 +1014,33 @@ class RiskCalculator
     # PrintArray2(rf2, "rf2");
     # PrintArray2(r8i_tox2, "r8i_tox2");
     #
-    #return
+    # return
     retval = @abs[i - 1]
-    return retval
+    retval
   end
 
-  def self.print_array(o, name)# had_biopsy is an array had_biopsy[]
-    @log.debug('------------------Contents of '+ name)
-    o.each{|d|
+  def self.print_array(o, name) # had_biopsy is an array had_biopsy[]
+    @log.debug('------------------Contents of ' + name)
+    o.each do|d|
       @log.debug(d)
       # Console.WriteLine(System::String.Format("{0}", d.ToString("F5")))
-    }
+    end
   end
 
-  def self.print_array2(o, name)# had_biopsy is a matrix had_biopsy[][]
+  def self.print_array2(o, name) # had_biopsy is a matrix had_biopsy[][]
     @log.debug('------------------Contents of ' + name)
-    o.each{|d|
-      d.each{|e|
+    o.each do|d|
+      d.each do|e|
         @log.debug(e)
         # Console.WriteLine(System::String.Format("{0}", e.ToString("F5")))
-      }
+      end
       # Console.WriteLine()
-    }
+    end
   end
 end
 
 class BcptRace
-  def initialize()
+  def initialize
     @White = 1
     @Black = 2
     @Hispanic = 3
@@ -1060,16 +1056,16 @@ end
 # Has static methods for converting/recoding values passed from ui or test harness
 # </summary>
 class BcptConvert
-  def initialize()
-    @_UNKNOWN = "UNKNOWN"
-    @_UDERSCORE = "__"
-    @_EMPTY = ""
-    @_YES = "YES"
-    @_NO = "NO"
-    @_NA = "NA"
-    @_0BIRTHS = "0 BIRTHS"
+  def initialize
+    @_UNKNOWN = 'UNKNOWN'
+    @_UDERSCORE = '__'
+    @_EMPTY = ''
+    @_YES = 'YES'
+    @_NO = 'NO'
+    @_NA = 'NA'
+    @_0BIRTHS = '0 BIRTHS'
   end
-  #appears in menarche
+  # appears in menarche
   # <summary>
   # Returns current age
   # </summary>
@@ -1077,14 +1073,14 @@ class BcptConvert
   # <returns></returns>
   def self.GetCurrentAge(o)
     case o.ToString().ToUpper()
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 90
-      when "< 35", "<35"
-        rval = 34
-      else
-        rval = Convert.ToInt32(o)
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 90
+    when '< 35', '<35'
+      rval = 34
+    else
+      rval = Convert.ToInt32(o)
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1094,12 +1090,12 @@ class BcptConvert
   # <returns></returns>
   def self.GetProjectionAge(o)
     case o
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 90
-      else
-        rval = Convert.ToInt32(o)
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 90
+    else
+      rval = Convert.ToInt32(o)
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1109,24 +1105,24 @@ class BcptConvert
   # <returns></returns>
   def self.GetMenarcheAge(o)
     case o
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA, @_0BIRTHS
-        rval = 99
-      when "7 TO 11"
-        rval = 10
-      when "12 TO 13"
-        rval = 13
-      when "> 13"
-        rval = 15
-      else
-        rval = o
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA, @_0BIRTHS
+      rval = 99
+    when '7 TO 11'
+      rval = 10
+    when '12 TO 13'
+      rval = 13
+    when '> 13'
+      rval = 15
+    else
+      rval = o
     end
-    #HACK CHECK AND UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
-    #if (rval < 7 || rval > 39 && rval != 99)
-    #{
+    # HACK: CHECK AND UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
+    # if (rval < 7 || rval > 39 && rval != 99)
+    # {
     #    string ERR_MENARCHE_1 = "!!! ERROR CONDITION !!! Menarche age coded as:   {0}. Valid menarche ages are 7 thru 39.";
     #    throw new Exception(string.Format(ERR_MENARCHE_1, rval));
-    #}
-    return rval
+    # }
+    rval
   end
 
   # <summary>
@@ -1136,28 +1132,28 @@ class BcptConvert
   # <returns></returns>
   def self.GetFirstLiveBirthAge(o)
     case o.Trim().ToUpper()
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 99
-      when "NO BIRTHS"
-        rval = 0
-      when "< 20"
-        rval = 15
-      when "20 TO 24"
-        rval = 22
-      when "25 TO 30"
-        rval = 27
-      when "> 30"
-        rval = 31
-      else
-        rval = Convert.ToInt32(o)
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 99
+    when 'NO BIRTHS'
+      rval = 0
+    when '< 20'
+      rval = 15
+    when '20 TO 24'
+      rval = 22
+    when '25 TO 30'
+      rval = 27
+    when '> 30'
+      rval = 31
+    else
+      rval = Convert.ToInt32(o)
     end
-    #HACK UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
-    #if (rval <= 10)
-    #{
+    # HACK: UNCOMMENT THIS BEFORE BUILDING TO QA/PROD
+    # if (rval <= 10)
+    # {
     #    string ERR_FLB_1 = "!!! ERROR CONDITION !!! Age of 1st live birth coded as: {0} Outside of valid range of 10 to 55.";
     #    throw new Exception(string.Format(ERR_FLB_1, rval));
-    #}
-    return rval
+    # }
+    rval
   end
 
   # <summary>
@@ -1167,18 +1163,18 @@ class BcptConvert
   # <returns></returns>
   def self.GetFirstDegRelatives(o)
     case o.Trim().ToUpper()
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 99
-      when "0"
-        rval = 0
-      when "1"
-        rval = 1
-      when "> 1"
-        rval = 2
-      else
-        rval = Convert.ToInt32(o)
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 99
+    when '0'
+      rval = 0
+    when '1'
+      rval = 1
+    when '> 1'
+      rval = 2
+    else
+      rval = Convert.ToInt32(o)
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1189,17 +1185,17 @@ class BcptConvert
   def self.GetEverHadBiopsy(had_biopsy)
     rval = 99
     case had_biopsy
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 99
-      when @_NO, "0"
-        rval = 0
-      when @_YES, "1"
-        rval = 1
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 99
+    when @_NO, '0'
+      rval = 0
+    when @_YES, '1'
+      rval = 1
     end
-    #default:
+    # default:
     #    rval = Convert.ToInt32(had_biopsy);
     #    break;
-    return rval
+    rval
   end
 
   # <summary>
@@ -1209,16 +1205,16 @@ class BcptConvert
   # <returns></returns>
   def self.GetNumberOfBiopsy(o)
     case o
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 99
-      when "1"
-        rval = 1
-      when "> 1"
-        rval = 2
-      else
-        rval = o
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 99
+    when '1'
+      rval = 1
+    when '> 1'
+      rval = 2
+    else
+      rval = o
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1228,16 +1224,16 @@ class BcptConvert
   # <returns></returns>
   def self.GetHyperPlasia(o)
     case o
-      when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
-        rval = 99
-      when @_NO
-        rval = 0
-      when @_YES
-        rval = 1
-      else
-        rval = o
+    when @_UNKNOWN, @_UDERSCORE, @_EMPTY, @_NA
+      rval = 99
+    when @_NO
+      rval = 0
+    when @_YES
+      rval = 1
+    else
+      rval = o
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1247,28 +1243,28 @@ class BcptConvert
   # <returns></returns>
   def self.GetRace(o)
     case o
-      when "WHITE", @_UNKNOWN, "1", "4" #! recode other race to white 5/12/00
-        rval = BcptRace.White
-      when "BLACK", "2"
-        rval = BcptRace.Black
-      when "HISPANIC", "3"
-        rval = BcptRace.Hispanic
-      when "7"
-        rval = BcptRace.AAChinese
-      when "8"
-        rval = BcptRace.AAJapanese
-      when "9"
-        rval = BcptRace.AAFilipino
-      when "10"
-        rval = BcptRace.AAHawaiian
-      when "11"
-        rval = BcptRace.AAOtherPacificIslander
-      when "12"
-        rval = BcptRace.AAOtherAsianAmerican
-      else
-        rval = BcptRace.White
+    when 'WHITE', @_UNKNOWN, '1', '4' # ! recode other race to white 5/12/00
+      rval = BcptRace.White
+    when 'BLACK', '2'
+      rval = BcptRace.Black
+    when 'HISPANIC', '3'
+      rval = BcptRace.Hispanic
+    when '7'
+      rval = BcptRace.AAChinese
+    when '8'
+      rval = BcptRace.AAJapanese
+    when '9'
+      rval = BcptRace.AAFilipino
+    when '10'
+      rval = BcptRace.AAHawaiian
+    when '11'
+      rval = BcptRace.AAOtherPacificIslander
+    when '12'
+      rval = BcptRace.AAOtherAsianAmerican
+    else
+      rval = BcptRace.White
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1278,12 +1274,12 @@ class BcptConvert
   # <returns></returns>
   def self.CurrentAgeIndicator(currentAge)
     rval = 0
-    if currentAge < 50 then
+    if currentAge < 50
       rval = 0
-    elsif currentAge >= 50 then
+    elsif currentAge >= 50
       rval = 1
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1293,14 +1289,14 @@ class BcptConvert
   # <returns></returns>
   def self.MenarcheAge(menarcheAge)
     rval = 0
-    if menarcheAge >= 7 and menarcheAge < 12 then
+    if menarcheAge >= 7 && menarcheAge < 12
       rval = 2
-    elsif menarcheAge >= 12 and menarcheAge < 14 then
+    elsif menarcheAge >= 12 && menarcheAge < 14
       rval = 1
-    elsif menarcheAge >= 14 and menarcheAge <= 39 or menarcheAge == 99 then
+    elsif menarcheAge >= 14 && menarcheAge <= 39 || menarcheAge == 99
       rval = 0
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1310,21 +1306,21 @@ class BcptConvert
   # <returns></returns>
   def self.FirstLiveBirthAge(firstLiveBirthAge)
     rval = 0
-    if firstLiveBirthAge == 0 then
+    if firstLiveBirthAge == 0
       # no live birth
       rval = 2
-    elsif firstLiveBirthAge > 0 then
-      if firstLiveBirthAge < 20 or firstLiveBirthAge == 99 then # includes unknown
+    elsif firstLiveBirthAge > 0
+      if firstLiveBirthAge < 20 || firstLiveBirthAge == 99 # includes unknown
         rval = 0
-      elsif firstLiveBirthAge >= 20 and firstLiveBirthAge < 25 then
+      elsif firstLiveBirthAge >= 20 && firstLiveBirthAge < 25
         rval = 1
-      elsif firstLiveBirthAge >= 25 and firstLiveBirthAge < 30 then
+      elsif firstLiveBirthAge >= 25 && firstLiveBirthAge < 30
         rval = 2
-      elsif firstLiveBirthAge >= 30 and firstLiveBirthAge <= 55 then
+      elsif firstLiveBirthAge >= 30 && firstLiveBirthAge <= 55
         rval = 3
       end
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1334,14 +1330,14 @@ class BcptConvert
   # <returns></returns>
   def self.FirstDegRelatives(firstDegRelatives)
     rval = 0
-    if firstDegRelatives == 0 or firstDegRelatives == 99 then
+    if firstDegRelatives == 0 || firstDegRelatives == 99
       rval = 0
-    elsif firstDegRelatives == 1 then
+    elsif firstDegRelatives == 1
       rval = 1
-    elsif firstDegRelatives >= 2 and firstDegRelatives <= 31 then
+    elsif firstDegRelatives >= 2 && firstDegRelatives <= 31
       rval = 2
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1351,16 +1347,16 @@ class BcptConvert
   # <returns></returns>
   def self.FirstDegRelatives(firstDegRelatives, race)
     rval = 0
-    if firstDegRelatives == 0 or firstDegRelatives == 99 then
+    if firstDegRelatives == 0 || firstDegRelatives == 99
       rval = 0
-    elsif firstDegRelatives == 1 then
+    elsif firstDegRelatives == 1
       rval = 1
-    elsif firstDegRelatives >= 2 and firstDegRelatives <= 31 and race < 7 then
+    elsif firstDegRelatives >= 2 && firstDegRelatives <= 31 && race < 7
       rval = 2
-    elsif firstDegRelatives >= 2 and race >= 7 then
+    elsif firstDegRelatives >= 2 && race >= 7
       rval = 1
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1371,13 +1367,13 @@ class BcptConvert
   def self.EverHadBiopsy(everHadBiopsy)
     rval = 0
     case everHadBiopsy
-      when 99
-        #case 0:
-        rval = 0
-      else
-        rval = everHadBiopsy
+    when 99
+      # case 0:
+      rval = 0
+    else
+      rval = everHadBiopsy
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1388,16 +1384,16 @@ class BcptConvert
   # <returns></returns>
   def self.number_of_biopsy(number_of_prev_biopsy, ever_had_biopsy)
     rval = 0
-    if ever_had_biopsy == 99 then
+    if ever_had_biopsy == 99
       rval = 99
-    elsif number_of_prev_biopsy == 0 or (number_of_prev_biopsy == 99 and ever_had_biopsy == 99) then
+    elsif number_of_prev_biopsy == 0 || (number_of_prev_biopsy == 99 && ever_had_biopsy == 99)
       rval = 0
-    elsif number_of_prev_biopsy == 1 or (number_of_prev_biopsy == 99 and ever_had_biopsy == 1) then
+    elsif number_of_prev_biopsy == 1 || (number_of_prev_biopsy == 99 && ever_had_biopsy == 1)
       rval = 1
-    elsif number_of_prev_biopsy > 1 then#and number_of_prev_biopsy <= 30 then
+    elsif number_of_prev_biopsy > 1 # and number_of_prev_biopsy <= 30 then
       rval = 2
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1412,10 +1408,10 @@ class BcptConvert
     else
       # case hyperplasia
       #   else
-          rval = hyperplasia
+      rval = hyperplasia
       # end
     end
-    return rval
+    rval
   end
 
   # <summary>
@@ -1425,13 +1421,13 @@ class BcptConvert
   # <returns></returns>
   def self.r_hyperplasia(hyperplasia)
     case hyperplasia
-      when 1 # hyperplasia=yes
-        rval = 1.82
-      when 0 # hyperplasia=no
-        rval = 0.93
-      else # hyperplasia=never had biopsy
-        rval = 1.0
+    when 1 # hyperplasia=yes
+      rval = 1.82
+    when 0 # hyperplasia=no
+      rval = 0.93
+    else # hyperplasia=never had biopsy
+      rval = 1.0
     end
-    return rval
+    rval
   end
 end

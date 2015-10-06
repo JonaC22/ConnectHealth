@@ -115,16 +115,16 @@
             <header class="header bg-black navbar navbar-inverse">
                 <div class="collapse navbar-collapse pull-in">
 
-                    <form class="navbar-form navbar-left m-t-sm" role="search">
-                        <div class="form-group">
-                            <div class="input-group input-s">
-                                <input id="searchPersonInput" type="number" class="form-control input-sm no-border bg-dark" placeholder="Search id">
-                  <span class="input-group-btn">
-                    <button type="button" class="btn btn-sm btn-success btn-icon" onclick="searchPerson()"><i class="fa fa-search"></i></button>
-                  </span>
-                            </div>
-                        </div>
-                    </form>
+                    <!--<form class="navbar-form navbar-left m-t-sm" role="search">-->
+                        <!--<div class="form-group">-->
+                            <!--<div class="input-group input-s">-->
+                                <!--<input id="searchPersonInput" type="number" class="form-control input-sm no-border bg-dark" placeholder="Search id">-->
+                  <!--<span class="input-group-btn">-->
+                    <!--<button type="button" class="btn btn-sm btn-success btn-icon" onclick="searchPerson()"><i class="fa fa-search"></i></button>-->
+                  <!--</span>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</form>-->
                     <ul class="nav navbar-nav navbar-right">
                         <li class="hidden-xs">
                             <section class="dropdown-menu animated fadeInUp input-s-lg">
@@ -157,7 +157,7 @@
                             </section>
                         </li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <a id="userDisplayName" href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">
                     <img src="images/avatar.jpg">
                   </span>
@@ -180,7 +180,7 @@
                                     <a href="docs.html">Help</a>
                                 </li>
                                 <li>
-                                    <a href="signin.html">Logout</a>
+                                    <a id="logout"> Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -291,6 +291,23 @@
                                 <div id="myDiagram" style="border: solid 1px blue; width:100%; height:400px; "></div>
                             </div>
                             <div class="col-lg-4">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseZero" >
+                                            Acciones
+                                    </div>
+                                    <div id="collapseZero" class="panel-collapse collapse in">
+                                        <div class="panel-body text-sm">
+                                            <div class="panel-body">
+                                                <a href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%"><i class="fa fa-user"></i> Agregar Hijo/a</a><br><br>
+                                                <a href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%"><i class="fa fa-male"></i> Agregar Padre</a><br><br>
+                                                <a href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%"><i class="fa fa-female"></i> Agregar Madre</a><br><br>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
                                 <div class="panel">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
                                         <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de Cáncer de Mama">
@@ -326,42 +343,6 @@
                                     <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <div class="form-group">
-                                                    <label>v1</label>
-                                                    <input type="number" id="v1" class="form-control" placeholder="v1">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v2</label>
-                                                    <input type="number" id="v2" class="form-control" placeholder="v2">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v3</label>
-                                                    <input type="number" id="v3" class="form-control" placeholder="v3">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v4</label>
-                                                    <input type="number" id="v4" class="form-control" placeholder="v4">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v5</label>
-                                                    <input type="number" id="v5" class="form-control" placeholder="v5">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v6</label>
-                                                    <input type="number" id="v6" class="form-control" placeholder="v6">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v7</label>
-                                                    <input type="number" id="v7" class="form-control" placeholder="v7">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v8</label>
-                                                    <input type="number" id="v8" class="form-control" placeholder="v8">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label>v9</label>
-                                                    <input type="number" id="v9" class="form-control" placeholder="v9">
-                                                </div>
                                                 <form id="premm126Form" role="form">
                                                     <button type="button" id="premm126Accept" value="Calcular" onclick="calculatePREMM126()" class="btn btn-sm btn-default">Calcular</button>
                                                 </form>
@@ -382,7 +363,63 @@
     </section>
     <!-- /.vbox -->
 </section>
+
+<div class="modal fade" id="modal-create-family-member">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b">Paciente</h3>
+
+                        <p>Ingresa un nuevo paciente</p>
+
+                        <form id="patientForm" onsubmit="createRelative()">
+                            <div class="form-group">
+                                <label>Nombre</label>
+                                <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Apellido</label>
+                                <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>DNI</label>
+                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Fecha de Nacimiento</label>
+                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>Sexo</label>
+
+                                <div class="checkbox m-t-lg">
+                                    <label><input name="gender" type="radio" value="M"> Masculino</label>
+                                    <label><input name="gender" type="radio" value="F"> Femenino</label>
+                                </div>
+
+                            </div>
+                            <input id="typeRelationForm" type="hidden" name="typeRelation" value="CHILD">
+                            <input  type="hidden" name="type" value="relative">
+                            <input id="pedigreeId" type="hidden" name="pedigree_id" value="0">
+                            <div class="checkbox m-t-lg">
+                                <button type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Crear</strong>
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
 <!-- Sparkline Chart -->

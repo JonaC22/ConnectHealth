@@ -1,0 +1,2 @@
+class IncalculableModelException < BaseException
+end

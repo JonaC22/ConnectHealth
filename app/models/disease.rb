@@ -1,37 +1,50 @@
-class Disease
+# == Schema Information
+#
+# Table name: diseases
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 
-  attr_accessor :nombre,:edad_diagnostico
+class Disease < ActiveRecord::Base
+  has_many :patient_diseases
+  has_many :patients, through: :patient_diseases
 
-  def initialize(edad, nombre)
-    puts 'Nueva enfermedad: '+nombre
-    @edad_diagnostico=edad
-    @nombre=nombre
+  before_save :lower_case_name
+
+  validates :name, presence: true, uniqueness: { case_sentitive: false }
+
+  def lower_case_name
+    self.name = name.downcase if name_changed?
   end
 
-  def get_node
-    unless @node.nil?
-      return @node
-    end
-    neo = Neography::Rest.new
-    begin
-      @node = Neography::Node.find('enfermedad_index', 'nombre', @nombre)
-      return @node
-    rescue Neography::NeographyError => err
-      puts err.message
-      @node = neo.create_node('nombre' => @nombre)
-      neo.set_label(@node, 'ENFERMEDAD')
-      neo.add_node_to_index('enfermedad_index', 'nombre', @nombre,@node)
-      return @node
-    end
+  def node
+    @node = Neography::Node.find('enfermedad_index', 'nombre', nombre)
+  rescue Neography::NeographyError => err
+    puts err.message
+    @node = neo.create_node('nombre' => name)
+    neo.set_label(@node, 'ENFERMEDAD')
+    neo.add_node_to_index('enfermedad_index', 'nombre', name, @node)
+    return @node
+  end
+
+  def neo
+    @neo ||= Neography::Rest.new
   end
 
   def self.generate(enfermedades)
-    neo = Neography::Rest.new
-    enfermedades.each { |enf|
-      node = neo.create_node('nombre' => enf)
-      neo.set_label(node, 'ENFERMEDAD')
-      neo.add_node_to_index('enfermedad_index', 'nombre', enf,node)
-    }
+    enfermedades.each do |disease_name|
+      next if Disease.find_by_name(disease_name)
+      disease = Disease.create! name: disease_name
+      disease.create_node
+    end
   end
 
+  def create_node
+    @node = neo.create_node('nombre' => name)
+    neo.set_label(@node, 'ENFERMEDAD')
+    neo.add_node_to_index('enfermedad_index', 'nombre', name, @node)
+  end
 end
