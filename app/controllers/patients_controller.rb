@@ -1,12 +1,13 @@
 class PatientsController < BaseController
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :create]
+  before_action :correct_user, only: [:show, :update, :destroy]
   def index
     if params[:name]
       name = params[:name].split(' ') if params[:name]
       params[:patient_name] = name[0]
       params[:patient_lastname] = name[1]
     end
-    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true)
+    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true).joins(:patients_users).where(patients_users: { user_id: current_user.id })
   end
 
   def show
@@ -16,6 +17,7 @@ class PatientsController < BaseController
 
   def create
     @patient = Patient.create! patient_create_params
+    current_user.patients << @patient
     handle_diseases(@patient, params)
     render json: @patient
   end
@@ -62,5 +64,11 @@ class PatientsController < BaseController
     params[:diseases] && params[:diseases].each do |dis|
       patient.add_disease dis.require(:disease).downcase, dis[:age].to_i
     end
+  end
+
+  def correct_user
+    @patient = current_user.patients.find_by(id: params[:id])
+    p @patient
+    fail ForbiddenUserException, 'not the correct user' unless @patient
   end
 end

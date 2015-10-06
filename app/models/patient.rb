@@ -26,6 +26,7 @@ class Patient < ActiveRecord::Base
   belongs_to :pedigree
   has_many :patient_diseases
   has_many :diseases, through: :patient_diseases
+  has_and_belongs_to_many :users
   enum status: {
     unborn: 0,
     alive: 1,
@@ -147,7 +148,7 @@ class Patient < ActiveRecord::Base
     relatives
   end
 
-  #Se obtiene nodos de padres, hijos y hermanos
+  # Se obtiene nodos de padres, hijos y hermanos
   def first_degree_relatives
     query = " // PADRES
               match (n)-[:PADRE|:MADRE]->(padre)
@@ -175,7 +176,7 @@ class Patient < ActiveRecord::Base
     relatives
   end
 
-  #Se obtiene nodos de abuelos, tios, y nietos
+  # Se obtiene nodos de abuelos, tios, y nietos
   def second_degree_relatives
     query = " // ABUELO
               match (n)-[:PADRE|:MADRE*2]->(abuelo)
@@ -236,17 +237,17 @@ class Patient < ActiveRecord::Base
     end
   end
 
-  def has_disease? name
+  def disease?(name)
     diseases.any? do |disease|
       disease.name == name
     end
   end
 
   # name is optional
-  def diseases_diagnoses name
+  def diseases_diagnoses(name)
     diagnoses = node.rels(:PADECE).outgoing
-    diagnoses = diagnoses.map{ |diagnosis| diagnosis }
-    diagnoses = diagnoses.select{|diagnosis| diagnosis.end_node.nombre == name} unless name.nil?
+    diagnoses = diagnoses.map { |diagnosis| diagnosis }
+    diagnoses = diagnoses.select { |diagnosis| diagnosis.end_node.nombre == name } unless name.nil?
     diagnoses
   end
 
