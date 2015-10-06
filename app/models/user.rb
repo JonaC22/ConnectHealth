@@ -19,7 +19,8 @@ class User < ActiveRecord::Base
   has_many :queries
   has_many :statistical_reports
   has_many :user_roles
-  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(.\[a-z\d\-]+)*\.[a-z]+\z/i
+  has_and_belongs_to_many :patients
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true, uniqueness: { case_sentitive: false }, format: { with: VALID_EMAIL_REGEX }
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true

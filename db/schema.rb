@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150910191808) do
+ActiveRecord::Schema.define(version: 20151003152909) do
 
   create_table "annotations", force: true do |t|
     t.integer  "pedigree_id"
@@ -104,9 +104,11 @@ ActiveRecord::Schema.define(version: 20150910191808) do
     t.date     "birth_date"
     t.integer  "neo_id"
     t.integer  "status"
+    t.integer  "patient_type"
   end
 
   add_index "patients", ["document_number"], name: "index_patients_on_document_number", unique: true, using: :btree
+  add_index "patients", ["neo_id"], name: "index_patients_on_neo_id", using: :btree
   add_index "patients", ["pedigree_id"], name: "index_patients_on_pedigree_id", using: :btree
 
   create_table "pedigrees", force: true do |t|
@@ -166,11 +168,17 @@ ActiveRecord::Schema.define(version: 20150910191808) do
   add_index "user_roles", ["user_id"], name: "index_user_roles_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "username"
     t.string   "password_digest"
     t.boolean  "active",          default: true
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "remember_digest"
+    t.boolean  "admin",           default: false
+    t.string   "email"
+    t.string   "photo_url"
+    t.string   "display_name"
   end
+
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
 end

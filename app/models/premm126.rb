@@ -12,13 +12,12 @@
 #                         brain (glioblastoma multiforme), sebaceous glands
 #
 class PREMM126
-
   attr_accessor :const_lp, :age_bounds, :ls_related_cancers, :p_diseases, :fdr_diseases, :sdr_diseases
 
   @ls_related_cancers = [
-      'cancer de estomago', 'cancer de ovario', 'cancer de tracto urinario',
-      'cancer de intestino delgado', 'cancer de pancreas', 'cancer de vía bilial',
-      'cancer de cerebro', 'cancer de glandulas sebaceas']
+    'cancer de estomago', 'cancer de ovario', 'cancer de tracto urinario',
+    'cancer de intestino delgado', 'cancer de pancreas', 'cancer de vía bilial',
+    'cancer de cerebro', 'cancer de glandulas sebaceas']
 
   @const_lp = {
     mlh1: [-5.8, 0.66, 1.65, 2.87, 1.37, 0.87, 1.21, 0.96, 0.14, -0.66, -0.02],
@@ -118,52 +117,52 @@ class PREMM126
     @neo ||= Neography::Rest.new
   end
 
-  def self.load_node patient_id
+  def self.load_node(patient_id)
     Neography::Node.load(patient_id, neo)
   end
 
   # Devuelve una lista de pares (enfermedad, edad_diagnostico)
-  def self.diseases n
+  def self.diseases(n)
     diagnoses = n.rels(:PADECE).outgoing
     diag_ages = diagnoses.map(&:edad_diagnostico)
-    diag_diseases = diagnoses.map{|d| d.end_node.nombre}
+    diag_diseases = diagnoses.map { |d| d.end_node.nombre }
     diag_diseases.zip diag_ages
   end
 
-  #TODO refactorear para que los relatives sean instancias de Patient
+  # TODO: refactorear para que los relatives sean instancias de Patient
   def self.count_disease_presence(array_diseases)
     fdr_total = count_presence(@fdr_diseases, array_diseases)
     sdr_total = count_presence(@sdr_diseases, array_diseases)
-    {fdr_count: fdr_total, sdr_count: sdr_total}
+    { fdr_count: fdr_total, sdr_count: sdr_total }
   end
 
   def self.count_presence(array, array_diseases)
-    array.count{|dis| (dis.map{|e|e.first} & array_diseases).length > 0}
+    array.count { |dis| (dis.map(&:first) & array_diseases).length > 0 }
   end
 
-  def self.relatives_disease_presence results
+  def self.relatives_disease_presence(results)
     case results[:fdr_count]
-      when 0 then
-        a = 0
-        b = 0
-      when 1 then
-        a = 1
-        b = 0
-      else
-        a = 0
-        b = 1
+    when 0 then
+      a = 0
+      b = 0
+    when 1 then
+      a = 1
+      b = 0
+    else
+      a = 0
+      b = 1
     end
 
     case results[:sdr_count]
-      when 0 then
-        c = 0
-        d = 0
-      when 1 then
-        c = 1
-        d = 0
-      else
-        c = 0
-        d = 1
+    when 0 then
+      c = 0
+      d = 0
+    when 1 then
+      c = 1
+      d = 0
+    else
+      c = 0
+      d = 1
     end
 
     b = 0 if a == 1
@@ -177,11 +176,11 @@ class PREMM126
   # Finds the minor age of disease's diagnosis for an array of patient's diseases
   def self.min_age_diagnosis(array_diseases, disease)
     dis = case disease
-      when :crc then 'cancer colon rectal'
-      when :ec then 'cancer de endometrio'
-      else ''
+          when :crc then 'cancer colon rectal'
+          when :ec then 'cancer de endometrio'
+          else ''
     end
-    array_diseases.flatten(1).select{|d| d.first == dis}.map{|d| d[1]}.min
+    array_diseases.flatten(1).select { |d| d.first == dis }.map { |d| d[1] }.min
   end
 
   # V8 and V9
@@ -189,7 +188,7 @@ class PREMM126
     p_minage = min_age_diagnosis(@p_diseases, disease)
     fdr_minage = min_age_diagnosis(@fdr_diseases, disease)
     sdr_minage = min_age_diagnosis(@sdr_diseases, disease)
-    hash = {p: p_minage, fdr: fdr_minage, sdr: sdr_minage}
+    hash = { p: p_minage, fdr: fdr_minage, sdr: sdr_minage }
     hash = validate_bounds(hash, values, gen, disease)
     hash.map { |h| h - 45 }.reduce(:+)
   end
@@ -232,7 +231,7 @@ class PREMM126
 
   # V3 only valid for women
   def self.proband_ec_presence(patient)
-    if filter_diseases(@p_diseases,'cancer de endometrio').length > 0 && patient.gender == 'F'
+    if filter_diseases(@p_diseases, 'cancer de endometrio').length > 0 && patient.gender == 'F'
       1
     else
       0
@@ -241,10 +240,10 @@ class PREMM126
 
   # V1 and V2 output format [V1, V2]
   def self.proband_crc_presence
-    case filter_diseases(@p_diseases,'cancer colon rectal').length
-      when 0 then [0,0]
-      when 1 then [1,0]
-      else [0,1]
+    case filter_diseases(@p_diseases, 'cancer colon rectal').length
+    when 0 then [0, 0]
+    when 1 then [1, 0]
+    else [0, 1]
     end
   end
 
@@ -253,12 +252,12 @@ class PREMM126
     patient.gender == 'F' ? 0 : 1
   end
 
-  def self.filter_diseases array, name
-    array.flatten(1).select{|dis| dis.first == name}
+  def self.filter_diseases(array, name)
+    array.flatten(1).select { |dis| dis.first == name }
   end
 
-  def self.name_diseases array
-    array.flatten(1).map{|d| d.first}
+  def self.name_diseases(array)
+    array.flatten(1).map(&:first)
   end
 
   # Returns intermediate values for gene risk probabilities
@@ -295,10 +294,10 @@ class PREMM126
     }
   end
 
-  def self.patient_relatives patient
+  def self.patient_relatives(patient)
     @p_diseases = [].push(diseases load_node(patient.neo_id))
-    @fdr_diseases = patient.first_degree_relatives.map{|r| diseases(load_node(r))}
-    @sdr_diseases = patient.second_degree_relatives.map{|r| diseases(load_node(r))}
+    @fdr_diseases = patient.first_degree_relatives.map { |r| diseases(load_node(r)) }
+    @sdr_diseases = patient.second_degree_relatives.map { |r| diseases(load_node(r)) }
 
     puts @p_diseases.inspect
     puts @fdr_diseases.inspect
