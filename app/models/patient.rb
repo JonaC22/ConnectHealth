@@ -42,12 +42,15 @@ class Patient < ActiveRecord::Base
   scope :patient_gender, -> (gender) { where(gender: gender) }
   scope :type, -> (type) { where(patient_type: type) }
   VALID_NAME_REGEX = /\A[a-zA-Z]+\z/i
+  VALID_DNI_REGEX = /\A[0-9]+\z/
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
-  # validates :document_number, uniqueness: true
+  validate :validate_birth_date
+  validates :document_number, uniqueness: true, format: { with: VALID_DNI_REGEX }
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
   before_create :set_defaults
+  after_create :save_node_to_index
 
   def create!(params)
     super
@@ -55,7 +58,7 @@ class Patient < ActiveRecord::Base
 
   def set_defaults
     self.active = true
-    self.status ||= 'alive'
+    self.status ||= age > 150 ? 'dead' : 'alive'
     return unless document_number
     self.document_type ||= 'dni'
     self.pedigree = Pedigree.create! unless pedigree
@@ -63,9 +66,12 @@ class Patient < ActiveRecord::Base
 
   def create_node
     node ||= neo.create_node('edad' => age, 'fecha_nac' => birth_date, 'nombre' => name, 'apellido' => lastname, 'sexo' => gender)
-    # neo.set_label(@node, 'PERSONA')
+    neo.set_label(node, 'PERSONA')
     self.neo_id = node['metadata']['id']
-    neo.add_node_to_index('ind_paciente', 'id', @id, node)
+  end
+
+  def save_node_to_index
+    neo.add_node_to_index('patient_index', 'id', id, node)
   end
 
   def age
@@ -288,5 +294,9 @@ class Patient < ActiveRecord::Base
 
   def proband_crc_presence
     # code here
+  end
+
+  def validate_birth_date
+    errors.add :birth_date, 'The birth date has not happened yet!' unless birth_date && birth_date < Time.now
   end
 end
