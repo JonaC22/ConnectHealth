@@ -7,7 +7,11 @@ class PatientsController < BaseController
       params[:patient_name] = name[0]
       params[:patient_lastname] = name[1]
     end
-    render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true).joins(:patients_users).where(patients_users: { user_id: current_user.id })
+    if current_user.admin?
+      render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true)
+    else
+      render json: Patient.filter(params.slice(:patient_name, :patient_lastname, :patient_gender, :type)).where(active: true).joins(:patients_users).where(patients_users: { user_id: current_user.id })
+    end
   end
 
   def show
@@ -68,6 +72,7 @@ class PatientsController < BaseController
   end
 
   def correct_user
+    return if current_user.admin?
     @patient = current_user.patients.find_by(id: params[:id])
     fail ForbiddenUserException, 'not the correct user' unless @patient
   end
