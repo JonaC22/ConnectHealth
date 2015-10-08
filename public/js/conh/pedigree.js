@@ -259,10 +259,15 @@ function showCreateModal(type) {
     $("#typeRelationForm").val(type);
     switch (type) {
         case "CHILD":
+            $("#padreMadreSeleccionar").show();
             break;
         case "MOTHER":
+            $("#padreMadreSeleccionar").hide();
+            $('input:radio[name=gender]')[1].checked = true;
             break;
         case "FATHER":
+            $("#padreMadreSeleccionar").hide();
+            $('input:radio[name=gender]')[0].checked = true;
             break;
     }
     $("#modal-create-family-member").modal("show")
