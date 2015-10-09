@@ -131,7 +131,7 @@ function getPeopleNodesFromFamily(family) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
         for (var i = 0; i < val.patient_diseases.length; i++) {
-            var enf = val.patient_diseases[i].name;
+            var enf = val.patient_diseases[i].disease.name;
 
             //TODO modificar por un checklist y agregar referencias (color - enfermedad)
             switch (enf) {
