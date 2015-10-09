@@ -84,10 +84,15 @@ class Patient < ActiveRecord::Base
     @node ||= Neography::Node.load(neo_id, neo)
   end
 
-  def add_disease(disease_name, disease_diagnostic)
-    disease = Disease.find_by_name!(disease_name)
+  def add_disease(disease_id, disease_diagnostic)
+    disease = Disease.find_by!(id: disease_id)
     return if PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
-    relationship = neo.create_relationship('PADECE', node, disease.node)
+    puts disease.inspect
+    _to = disease.get_node
+    _from = node
+    puts _to.inspect
+    puts _from.inspect
+    relationship = neo.create_relationship('PADECE', _from, _to)
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
   end

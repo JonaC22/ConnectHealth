@@ -30,7 +30,7 @@ class PatientsController < BaseController
   def update
     @patient = Patient.find_by! patient_find_params
     @patient.update!(patient_update_params)
-    handle_diseases(@patient, params)
+    handle_disease(@patient, params)
     render json: @patient
   end
 
@@ -65,9 +65,9 @@ class PatientsController < BaseController
     params.permit(:name, :lastname, :status, :document_number, :gender)
   end
 
-  def handle_diseases(patient, params)
-    params[:diseases] && params[:diseases].each do |dis|
-      patient.add_disease dis.require(:name).downcase, dis[:age].to_i
+  def handle_disease(patient, params)
+    if params[:disease_id] && params[:disease_age]
+      patient.add_disease params[:disease_id].to_i, params[:disease_age].to_i
     end
   end
 
@@ -75,9 +75,5 @@ class PatientsController < BaseController
     return if current_user.admin?
     @patient = current_user.patients.find_by(id: params[:id])
     fail ForbiddenUserException, 'not the correct user' unless @patient
-  end
-
-  def add_disease
-
   end
 end

@@ -1,3 +1,20 @@
+$.put = function(url, data, callback, type){
+
+    if ( $.isFunction(data) ){
+        type = type || callback,
+            callback = data,
+            data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'PUT',
+        success: callback,
+        data: data,
+        contentType: type
+    });
+}
+
 function showGailForm() {
     $("#calcularGailButton").hide();
     $("#gailForm").show();
@@ -321,13 +338,11 @@ function selectDisease(cont) {
 }
 
 function createDisease() {
-    $('<input>').attr({
-        type: 'hidden',
-        id: 'current_patient',
-        name: 'current_patient',
-        value: currentPatient.id
-    }).appendTo("#addDiseaseForm");
-    $.post("/api/patients/diseases", $("#addDiseaseForm").serialize())
+
+    var form = $("#addDiseaseForm");
+    console.log(form.serialize());
+
+    $.put("/api/patients/"+currentPatient.id, form.serialize())
         .done(function(data) {
            console.log(data);
         });

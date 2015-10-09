@@ -20,8 +20,28 @@ class Disease < ActiveRecord::Base
     self.name = name.downcase if name_changed?
   end
 
+  def get_node
+    query = " match (n:ENFERMEDAD)
+              where n.nombre = '#{name}'
+              return n "
+
+    neo = Neography::Rest.new
+    ret = neo.execute_query(query)
+
+    dis_id = nil
+
+    ret['data'].each do |data_array|
+      data_array.each do |node|
+        dis_id = node['metadata']['id']
+      end
+    end
+    
+    Neography::Node.load dis_id
+  end
+
+  #TODO ARREGLAR, NO FUNCIONA BIEN
   def node
-    @node = Neography::Node.find('enfermedad_index', 'nombre', nombre)
+    @node = Neography::Node.find('enfermedad_index', 'nombre', name)
   rescue Neography::NeographyError => err
     puts err.message
     @node = neo.create_node('nombre' => name)
