@@ -4,11 +4,12 @@
   <meta charset="utf-8" />
   <title>ConnectHealth</title>
   <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
   <link rel="stylesheet" href="css/animate.css" type="text/css" />
   <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
   <link rel="stylesheet" href="css/font.css" type="text/css" cache="false" />
+    <link rel="stylesheet" href="js/fuelux/fuelux.css" type="text/css" />
   <link rel="stylesheet" href="css/plugin.css" type="text/css" />
   <link rel="stylesheet" href="css/app.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -187,6 +188,112 @@
         </header>
         <section class="scrollable" id="pjax-container">
           <section  class="hbox">
+
+              <div class="tab-content" id="datagridEnfermedades" style="margin: 15px;">
+                  <section class="panel">
+                      <header class="panel-heading">
+                          Enfermedades
+                          <a href="#modal-form" data-toggle="modal" class="btn label bg-success pull-right"><i
+                                  class="fa fa-plus text-muted"></i> Nueva Enfermedad</a>
+                      </header>
+                      <div class="table-responsive">
+                          <table id="GridEnfermedades" class="table table-striped datagrid m-b-sm">
+                              <thead>
+                              <tr>
+                                  <th>
+                                      <div class="row">
+                                          <!--<div class="col-sm-8 m-t-xs m-b-xs">-->
+                                              <!--<div class="select filter" data-resize="auto">-->
+                                                  <!--<button data-toggle="dropdown"-->
+                                                          <!--class="btn btn-sm btn-white dropdown-toggle">-->
+                                                      <!--<span class="dropdown-label"></span>-->
+                                                      <!--<span class="caret"></span>-->
+                                                  <!--</button>-->
+                                                  <!--<ul class="dropdown-menu">-->
+                                                      <!--<li data-value="all" data-selected="true"><a href="#">Sin filtro-->
+                                                          <!--de sexo</a></li>-->
+                                                      <!--<li data-value="onlyFemale"><a href="#">Sólo pacientes-->
+                                                          <!--femeninos</a></li>-->
+                                                      <!--<li data-value="onlyMale"><a href="#">Sólo pacientes-->
+                                                          <!--masculinos</a></li>-->
+                                                  <!--</ul>-->
+                                              <!--</div>-->
+                                          <!--</div>-->
+                                          <div class="col-sm-4 m-t-xs m-b-xs">
+                                              <div class="input-group search datagrid-search">
+                                                  <input type="text" class="input-sm form-control"
+                                                         placeholder="Buscar">
+
+                                                  <div class="input-group-btn">
+                                                      <button class="btn btn-white btn-sm"><i
+                                                              class="fa fa-search"></i></button>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </th>
+                              </tr>
+                              </thead>
+
+                              <tfoot>
+                              <tr>
+                                  <th class="row">
+                                      <div class="datagrid-footer-left col-sm-6 text-center-xs m-l-n"
+                                           style="display:none;">
+                                          <div class="grid-controls m-t-sm">
+                              <span>
+                                <span class="grid-start"></span> -
+                                <span class="grid-end"></span> de
+                                <span class="grid-count"></span>
+                              </span>
+
+                                              <div class="select grid-pagesize dropup" data-resize="auto">
+                                                  <button data-toggle="dropdown"
+                                                          class="btn btn-sm btn-white dropdown-toggle">
+                                                      <span class="dropdown-label"></span>
+                                                      <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                      <li data-value="5"><a href="#">5</a></li>
+                                                      <li data-value="10"><a href="#">10</a></li>
+                                                      <li data-value="20" data-selected="true"><a href="#">20</a></li>
+                                                      <li data-value="50"><a href="#">50</a></li>
+                                                      <li data-value="100"><a href="#">100</a></li>
+                                                  </ul>
+                                              </div>
+                                              <span>Per Page</span>
+                                          </div>
+                                      </div>
+                                      <div class="datagrid-footer-right col-sm-6 text-right text-center-xs"
+                                           style="display:none;">
+                                          <div class="grid-pager m-r-n">
+                                              <button type="button" class="btn btn-sm btn-white grid-prevpage"><i
+                                                      class="fa fa-chevron-left"></i></button>
+                                              <span>Page</span>
+
+                                              <div class="inline">
+                                                  <div class="input-group dropdown combobox">
+                                                      <input class="input-sm form-control" type="text">
+
+                                                      <div class="input-group-btn dropup">
+                                                          <button class="btn btn-sm btn-white" data-toggle="dropdown">
+                                                              <i class="caret"></i></button>
+                                                          <ul class="dropdown-menu pull-right"></ul>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                              <span>of <span class="grid-pages"></span></span>
+                                              <button type="button" class="btn btn-sm btn-white grid-nextpage"><i
+                                                      class="fa fa-chevron-right"></i></button>
+                                          </div>
+                                      </div>
+                                  </th>
+                              </tr>
+                              </tfoot>
+                          </table>
+                      </div>
+                  </section>
+              </div>
           </section>
         </section>
       </section>
@@ -195,7 +302,7 @@
     <!-- /.vbox -->
   </section>
 	<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.js"></script>
+  <script src="js/js.cookie.js"></script>
   <!-- Bootstrap -->
   <script src="js/bootstrap.js"></script>
   <!-- Sparkline Chart -->
@@ -204,11 +311,15 @@
   <script src="js/app.js"></script>
   <script src="js/app.plugin.js"></script>
   <script src="js/app.data.js"></script>
+  <script type="text/javascript" src="js/conh/enfermedades.js"></script>
   <script src="js/libs/jquery.pjax.js" cache="false"></script>
   <!-- Sparkline Chart -->
   <script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
   <!-- Easy Pie Chart -->
   <script src="js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+  <!-- fuelux -->
+  <script src="js/fuelux/fuelux.js"></script>
+  <script src="js/libs/underscore-min.js"></script>
   <!-- Morris -->
   <script src="js/charts/morris/raphael-min.js" cache="false"></script>
   <script src="js/charts/morris/morris.min.js" cache="false"></script>
