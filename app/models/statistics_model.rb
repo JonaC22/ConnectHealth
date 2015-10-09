@@ -3,7 +3,27 @@ class StatisticsModel < BaseModel
 
   def set_query(disease, query_type)
     @query = "match (n)-[r:PADECE]->(e:ENFERMEDAD{nombre:'#{disease}'})"
-
+=begin
+    case options
+      when 'fdr'
+        @query += ' optional match (hermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(hermano)
+                  where (n)-[:PADRE|:MADRE]->()-[:PADECE]->(e) OR
+                  (hermano)-[:PADECE]->(e) OR
+                  (n)<-[:PADRE|:MADRE]-()-[:PADECE]->(e)'
+      when 'sdr'
+        @query += ' optional match (n)-[:PADRE|:MADRE]->(padre), (hermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(hermano),
+                  (tio)-[:MADRE]->()<-[:MADRE]-(padre)-[:PADRE]->()<-[:PADRE]-(tio),
+                  (n)-[:PADRE|:MADRE]->()<-[:PADRE|:MADRE]-(mhermano)
+                  where (n)-[:PADRE|:MADRE*2]->()-[:PADECE]->(e) OR
+                  (n)<-[:PADRE|:MADRE*2]-()-[:PADECE]->(e) OR
+                  (hermano)<-[:PADRE|:MADRE]-()-[:PADECE]->(e) OR
+                  (tio)-[:PADECE]->(e) OR
+                  ( (mhermano)-[:PADECE]->(e) AND NOT
+                     (mhermano)-[:MADRE]->()<-[:MADRE]-(n)-[:PADRE]->()<-[:PADRE]-(mhermano))'
+      else
+        @query += ''
+    end
+=end
     case query_type
     when 'count'
       @query += 'return count(r.edad_diagnostico) as Cantidad, r.edad_diagnostico as Edad'
