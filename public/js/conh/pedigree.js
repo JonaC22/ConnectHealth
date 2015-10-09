@@ -260,17 +260,28 @@ function showCreateModal(type) {
     switch (type) {
         case "CHILD":
             $("#padreMadreSeleccionar").show();
+            $("#modal-create-family-member").modal("show")
             break;
         case "MOTHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[1].checked = true;
+            $("#modal-create-family-member").modal("show")
             break;
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
+            $("#modal-create-family-member").modal("show")
+            break;
+        case "DISEASE":
+            var cont = function() {
+                $("#modal-add-disease").modal("show");
+            };
+            selectDisease(cont);
+        default:
+            console.log('showCreateModal: incorrect case');
             break;
     }
-    $("#modal-create-family-member").modal("show")
+
 }
 
 function openDiagramModal(){
@@ -289,6 +300,29 @@ function openDiagramModal(){
             }
         });
     $("#modal-select-member").modal("show")
+}
+
+function selectDisease(cont) {
+    toggleLoading(true);
+    $.getJSON('/api/diseases', function(data){
+        console.log(data);
+
+        var $select = $('#select-enfermedad');
+        $select.find('option').remove();
+        $.each(data.diseases, function(key, value)
+        {
+            console.log(value);
+            $select.append('<option value=' + value.id + '>' + value.name + '</option>');
+        });
+        toggleLoading(false);
+        cont();
+    });
+}
+
+function createDisease() {
+    $("#joke").text('IMPLEMENTAME!!');
+    $("#joke").css('color', 'red');
+    console.log($("#addDiseaseForm").serialize());
 }
 
 function createRelative() {

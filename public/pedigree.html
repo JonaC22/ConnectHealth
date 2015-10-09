@@ -301,7 +301,7 @@
                                                 <a href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%"><i class="fa fa-user"></i> Agregar Hijo/a</a><br><br>
                                                 <a href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%"><i class="fa fa-male"></i> Agregar Padre</a><br><br>
                                                 <a href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%"><i class="fa fa-female"></i> Agregar Madre</a><br><br>
-
+                                                <a href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 100%"><i class="fa fa-book"></i> Agregar Enfermedad</a><br><br>
                                             </div>
                                         </div>
                                     </div>
@@ -422,6 +422,43 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-add-disease">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 id="joke" class="m-t-none m-b">Enfermedad</h3>
+
+                        <p>Seleccionar enfermedad</p>
+
+                        <form id="addDiseaseForm" onsubmit="createDisease()">
+                            <div class="form-group">
+                                <select id="select-enfermedad" name="select-enfermedad" class="form-control">
+                                </select>
+                                <div class="form-group">
+                                    <label>Edad de diagnostico</label>
+                                    <input name="diagnosis_age" type="number" class="form-control" placeholder="Edad de diagnostico">
+                                </div>
+                            </div>
+                            <div class="checkbox m-t-lg">
+                                <button type="button" onclick="createDisease()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Crear</strong>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
 <div class="modal fade" id="modal-select-member">
     <div class="modal-dialog">
         <div class="modal-content">

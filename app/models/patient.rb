@@ -264,38 +264,6 @@ class Patient < ActiveRecord::Base
     diagnoses
   end
 
-  def youngest_age_ec_diagnosis
-    # code here
-  end
-
-  def youngest_age_crc_diagnosis
-    # code here
-  end
-
-  def relatives_ls_presence
-    # code here
-  end
-
-  def relatives_ec_presence
-    # code here
-  end
-
-  def relatives_crc_presence
-    # code here
-  end
-
-  def proband_ls_presense
-    # code here
-  end
-
-  def proband_ec_presence
-    # code here
-  end
-
-  def proband_crc_presence
-    # code here
-  end
-
   def validate_birth_date
     errors.add :birth_date, 'The birth date has not happened yet!' unless birth_date && birth_date < Time.now
   end

@@ -76,4 +76,8 @@ class PatientsController < BaseController
     @patient = current_user.patients.find_by(id: params[:id])
     fail ForbiddenUserException, 'not the correct user' unless @patient
   end
+
+  def add_disease
+
+  end
 end
