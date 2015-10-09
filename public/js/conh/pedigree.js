@@ -277,6 +277,7 @@ function showCreateModal(type) {
                 $("#modal-add-disease").modal("show");
             };
             selectDisease(cont);
+            break;
         default:
             console.log('showCreateModal: incorrect case');
             break;
@@ -307,7 +308,7 @@ function selectDisease(cont) {
     $.getJSON('/api/diseases', function(data){
         console.log(data);
 
-        var $select = $('#select-enfermedad');
+        var $select = $('#disease_id');
         $select.find('option').remove();
         $.each(data.diseases, function(key, value)
         {
@@ -320,9 +321,16 @@ function selectDisease(cont) {
 }
 
 function createDisease() {
-    $("#joke").text('IMPLEMENTAME!!');
-    $("#joke").css('color', 'red');
-    console.log($("#addDiseaseForm").serialize());
+    $('<input>').attr({
+        type: 'hidden',
+        id: 'current_patient',
+        name: 'current_patient',
+        value: currentPatient.id
+    }).appendTo("#addDiseaseForm");
+    $.post("/api/patients/diseases", $("#addDiseaseForm").serialize())
+        .done(function(data) {
+           console.log(data);
+        });
 }
 
 function createRelative() {
