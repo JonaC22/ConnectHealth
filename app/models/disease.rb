@@ -35,7 +35,7 @@ class Disease < ActiveRecord::Base
         dis_id = node['metadata']['id']
       end
     end
-    
+
     Neography::Node.load dis_id
   end
 

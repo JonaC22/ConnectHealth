@@ -133,12 +133,19 @@ function getPeopleNodesFromFamily(family) {
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].name;
 
+            //TODO modificar por un checklist y agregar referencias (color - enfermedad)
             switch (enf) {
-                case "Cancer de Ovario":
-                    val.attributes_go.push("B");
+                case "cancer de ovario":
+                    val.attributes_go.push("C");
                     break;
-                case "Cancer de Mama":
+                case "cancer de mama":
+                    val.attributes_go.push("L");
+                    break;
+                case "cancer colon rectal":
                     val.attributes_go.push("H");
+                    break;
+                case "cancer de endometrio":
+                    val.attributes_go.push("F");
                     break;
                 default:
                     val.attributes_go.push("E");
