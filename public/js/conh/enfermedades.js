@@ -1,3 +1,13 @@
+function createDisease(){
+    console.log( $("#diseaseForm" ).serialize());
+    $.post("/api/diseases", $( "#diseaseForm" ).serialize())
+        .done(function(data){
+            console.log(data);
+            $("#modal-form").modal("hide")
+            search();
+        });
+}
+
 var PubMedDataSource = function (options) {
     this._formatter = options.formatter;
     this._columns = options.columns;
