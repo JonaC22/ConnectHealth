@@ -98,7 +98,7 @@ class Patient < ActiveRecord::Base
   end
 
   def validate_relationship(relationship, relation_receiver)
-    fail ImposibleRelationException, "The #{relationship} cannot be older" if Relation.decremental?(relationship) && age && relation_receiver.age && age > relation_receiver.age
+    fail ImposibleRelationException, "The #{relationship} cannot be younger for patient:#{name} and patient:#{relation_receiver.name}" if Relation.decremental?(relationship) && age && relation_receiver.age && age > relation_receiver.age
     fail DuplicatedRelationException, "Duplicated relation: #{relationship} for patient:#{name} and patient:#{relation_receiver.name}" if Relation.unique?(relationship) && node.rel?(:outgoing, relationship)
   end
 
