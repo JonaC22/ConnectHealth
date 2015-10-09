@@ -98,9 +98,12 @@ $.urlParam = function (name) {
         return results[1] || 0;
     }
 };
-init();
-var currentPatient;
-var family;
+myDiagram = init("myDiagram");
+diagramModal = init("diagramModal");
+
+currentPatient=null;
+newParent=null;
+family=null;
 toggleLoading(true);
 $("#current_patient").hide();
 function getPeopleNodesFromFamily(family) {
@@ -194,57 +197,98 @@ function reloadDiagram() {
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
 
-function addChild(newChild) {
+function addChild(parent,newChild) {
     family.patients.push(newChild);
     var newRelation = {
         "from": newChild.neo_id,
-        "to": currentPatient.neo_id,
-        "name": currentPatient.gender == "M" ? "PADRE" : "MADRE"
+        "to": parent.neo_id,
+        "name": parent.gender == "M" ? "PADRE" : "MADRE"
     };
+
+    if(newParent!== undefined && newParent.gender == "M"){
+        addFather(newChild,newParent);
+    }
+    if(newParent!== undefined && newParent.gender == "F"){
+        addMother(newChild,newParent);
+    }
 
     family.relations.push(newRelation);
     console.log(family);
     reloadDiagram();
 }
 
-function addMother(madre) {
+function addMother(child,madre) {
+    console.log("Agregando Madre");
     family.patients.push(madre);
     var newRelation = {
-        "from": currentPatient.neo_id,
+        "from": child.neo_id,
         "to": madre.neo_id,
         "name": "MADRE"
     };
 
     family.relations.push(newRelation);
     console.log(family);
+
+//    if(newParent!== undefined && newParent.gender == "M"){
+//        addFather(newParent);
+//    }
     reloadDiagram();
 }
 
-function addFather(padre) {
+function addFather(child,padre) {
+    console.log("Agregando Padre");
     family.patients.push(padre);
     var newRelation = {
-        "from": currentPatient.neo_id,
+        "from": child.neo_id,
         "to": padre.neo_id,
         "name": "PADRE"
     };
 
     family.relations.push(newRelation);
     console.log(family);
+
+//    if(newParent!== undefined && newParent.gender == "F"){
+//        addMother(newParent);
+//    }
     reloadDiagram();
 }
 
 function showCreateModal(type) {
     $("#patientForm")[0].reset();
+    newParent = undefined;
     $("#typeRelationForm").val(type);
     switch (type) {
         case "CHILD":
+            $("#padreMadreSeleccionar").show();
             break;
         case "MOTHER":
+            $("#padreMadreSeleccionar").hide();
+            $('input:radio[name=gender]')[1].checked = true;
             break;
         case "FATHER":
+            $("#padreMadreSeleccionar").hide();
+            $('input:radio[name=gender]')[0].checked = true;
             break;
     }
     $("#modal-create-family-member").modal("show")
+}
+
+function openDiagramModal(){
+    var people = getPeopleNodesFromFamily(family);
+    setupDiagram(diagramModal, people, null);
+//    diagramModal.removeDiagramListener("ObjectSingleClicked");
+    diagramModal.addDiagramListener("ObjectSingleClicked",
+        function (e) {
+            var part = e.subject.part;
+            var patient = get_patient_object(family.patients, part.data.key);
+            if (!(part instanceof go.Link)) {
+                console.log("newParent",patient);
+                newParent = patient;
+                $("#otherParentLabel").text(newParent.name + " " + newParent.lastname);
+                $("#modal-select-member").modal("hide")
+            }
+        });
+    $("#modal-select-member").modal("show")
 }
 
 function createRelative() {
@@ -254,13 +298,13 @@ function createRelative() {
             console.log(data);
             switch ($("#typeRelationForm").val()) {
                 case "CHILD":
-                    addChild(data.patient);
+                    addChild(currentPatient,data.patient);
                     break;
                 case "MOTHER":
-                    addMother(data.patient);
+                    addMother(currentPatient,data.patient);
                     break;
                 case "FATHER":
-                    addFather(data.patient);
+                    addFather(currentPatient,data.patient);
                     break;
             }
             $.ajax({
@@ -286,7 +330,7 @@ function set_current_patient(patient) {
 function get_patient_object(people, id) {
     var patient;
     $.each(people, function (key, val) {
-        console.log("patient", val);
+//        console.log("patient", val);
         if (val.neo_id == id) patient = val;
     });
 
