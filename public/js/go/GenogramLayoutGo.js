@@ -1,7 +1,7 @@
-function init() {
+function init(diagramName) {
     var $ = go.GraphObject.make;
-    myDiagram =
-        $(go.Diagram, "myDiagram",
+    var diagram =
+        $(go.Diagram, diagramName,
             {
                 initialAutoScale: go.Diagram.Uniform,
                 initialContentAlignment: go.Spot.Center,
@@ -131,7 +131,7 @@ function init() {
 
     // two different node templates, one for each sex,
     // named by the category value in the node data object
-    myDiagram.nodeTemplateMap.add("M",  // male
+    diagram.nodeTemplateMap.add("M",  // male
         $(go.Node, "Vertical",
             { locationSpot: go.Spot.Center, locationObjectName: "ICON" },
             $(go.Panel,
@@ -155,7 +155,7 @@ function init() {
                 { textAlign: "center", maxSize: new go.Size(80, NaN) },
                 new go.Binding("text", "n"))
         ));
-    myDiagram.nodeTemplateMap.add("F",  // female
+    diagram.nodeTemplateMap.add("F",  // female
         $(go.Node, "Vertical",
             { locationSpot: go.Spot.Center, locationObjectName: "ICON" },
             $(go.Panel,
@@ -180,9 +180,9 @@ function init() {
                 new go.Binding("text", "n"))
         ));
     // the representation of each label node -- nothing shows on a Marriage Link
-    myDiagram.nodeTemplateMap.add("LinkLabel",
+    diagram.nodeTemplateMap.add("LinkLabel",
         $(go.Node, { selectable: false, width: 1, height: 1, fromEndSegmentLength: 20 }));
-    myDiagram.linkTemplate =  // for parent-child relationships
+    diagram.linkTemplate =  // for parent-child relationships
         $(go.Link,
             {
                 routing: go.Link.Orthogonal, curviness: 10,
@@ -191,16 +191,16 @@ function init() {
             },
             $(go.Shape, { strokeWidth: 2 })
         );
-    myDiagram.linkTemplateMap.add("Marriage",  // for marriage relationships
+    diagram.linkTemplateMap.add("Marriage",  // for marriage relationships
         $(go.Link, { selectable: false },
             $(go.Shape, { strokeWidth: 2, stroke: "darkgreen" })
         ));
-
-
     // n: name, s: sex, m: mother, f: father, ux: wife, vir: husband, a: attributes/markers
 //        { key: 0, n: "Aaron", s: "M", m:-10, f:-11, ux: 1, a: ["C", "F", "K"] },
 //        { key: 8, n: "Chloe", s: "F", m: 1, f: 0, vir: 9, a: ["E"] },
+    return diagram;
 }
+
 // create and initialize the Diagram.model given an array of node data representing people
 function setupDiagram(diagram, array, focusId) {
     diagram.model =
@@ -217,13 +217,13 @@ function setupDiagram(diagram, array, focusId) {
     var node = diagram.findNodeForKey(focusId);
     if (node !== null) {
         diagram.select(node);
-        node.linksConnected.each(function (l) {
-            if (!l.isLabeledLink) return;
-            l.opacity = 0;
-            var spouse = l.getOtherNode(node);
-            spouse.opacity = 0;
-            spouse.pickable = false;
-        });
+//        node.linksConnected.each(function (l) {
+//            if (!l.isLabeledLink) return;
+//            l.opacity = 0;
+//            var spouse = l.getOtherNode(node);
+//            spouse.opacity = 0;
+//            spouse.pickable = false;
+//        });
     }
 }
 function findMarriage(diagram, a, b) {  // A and B are node keys
@@ -307,8 +307,17 @@ function setupParents(diagram) {
             var mdata = link.data;
             var mlabkey = mdata.labelKeys[0];
             var cdata = { from: mlabkey, to: key };
-            myDiagram.model.addLinkData(cdata);
+            diagram.model.addLinkData(cdata);
+        } else if (mother == undefined && father !== undefined) {
+            console.log("father only" + father);
+            var cdata2 = { from: father, to: key };
+            diagram.model.addLinkData(cdata2);
+        } else if (father == undefined && mother !== undefined) {
+            console.log("mother only" + mother);
+            var cdata3 = { from: mother, to: key };
+            diagram.model.addLinkData(cdata3);
         }
+
     }
 }
 // A custom layout that shows the two families related to a person's parents

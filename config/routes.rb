@@ -6,30 +6,27 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
 
-  root 'welcome#index'
-
   scope '/api' do
-    scope '/pedigree' do
-        get '/' => 'pedigree#index'
-        post '/' => 'pedigree#create'
-        get '/query' => 'pedigree#query'
-        get '/medicos' => 'pedigree#get_medicos_mysql'
-        get '/pacientes' => 'pedigree#get_pacientes_mysql'
+    resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
+    resources :patients, only: [:index, :show, :create, :update, :destroy]
+    resources :diseases, only: [:index, :show, :create, :destroy]
+    resources :make_pedigrees, only: [:index]
+    resources :model_calculator, only: [:index, :show]
+    resources :users
+    scope '/pedigrees' do
+      get '/query' => 'pedigree#query'
     end
     scope '/statistics' do
       get '/' => 'statistics#index'
       post '/query' => 'statistics#get_results'
       get '/reports' => 'statistics#get_reports'
     end
-    get '/createGraphDB' => 'generate_graph_db#generate'
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
-    get '/createGraphDBTest' => 'generate_graph_db#generate'
+    get 'login' => 'sessions#new'
+    post 'login' => 'sessions#create'
+    delete 'logout' => 'sessions#destroy'
   end
-#Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
-  get '/hi', to: 'base#index'
-  post '/', to: 'welcome#delete_paciente'
-  get '/pacientes', to: 'welcome#pacientes'
-  post '/pacientes', to: 'welcome#insert_paciente'
+  # Esto es para el comienzo de la api *path es "cualquier otro que no este expresado arriba"
   get '*path', to: 'base#routing_error'
   delete '*path', to: 'base#routing_error'
   post '*path', to: 'base#routing_error'

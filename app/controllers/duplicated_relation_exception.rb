@@ -1,0 +1,2 @@
+class DuplicatedRelationException < BaseException
+end

@@ -185,7 +185,7 @@ $(document).ready(function() {
 					type: 'GET'
 				}).done(function (response) {
 
-					data = response.people;
+					data = response.patients;
 					// SEARCHING
 					if (options.search) {
 						data = _.filter(data, function (item) {
@@ -262,7 +262,7 @@ $(document).ready(function() {
 						sortable: true
 					},
 					{
-						property: 'surname',
+						property: 'lastname',
 						label: 'Apellido',
 						sortable: true
 					},
@@ -297,11 +297,10 @@ $(document).ready(function() {
 			    formatter: function (items) {
 			      $.each(items, function (index, item) {
 			        item.edit = '<a href="#edit?id='+item.id+'"><i class="fa fa-pencil"></i></a>';
-			        item.pedigree = '<a href="pedigree.html?id='+item.id+'"><i class="fa fa-eye"></i></a>';
-			      });
+                    item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-eye"></i></a>';
+                  });
 			    },
-                url: 'js/data/patients.json'
-//                    '/api/pedigree?id=751'//
+                url: '/api/patients?type=patient' //'js/data/patients.json'
 		  })
 	    });
 	});

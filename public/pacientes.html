@@ -115,16 +115,16 @@
             <div class="collapse navbar-collapse pull-in">
                 <ul class="nav navbar-nav m-l-n">
                 </ul>
-                <form class="navbar-form navbar-left m-t-sm" role="search">
-                    <div class="form-group">
-                        <div class="input-group input-s">
-                            <input type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">
-                  <span class="input-group-btn">
-                    <button type="submit" class="btn btn-sm btn-success btn-icon"><i class="fa fa-search"></i></button>
-                  </span>
-                        </div>
-                    </div>
-                </form>
+                <!--<form class="navbar-form navbar-left m-t-sm" role="search">-->
+                    <!--<div class="form-group">-->
+                        <!--<div class="input-group input-s">-->
+                            <!--<input type="text" class="form-control input-sm no-border bg-dark" placeholder="Search">-->
+                  <!--<span class="input-group-btn">-->
+                    <!--<button type="submit" class="btn btn-sm btn-success btn-icon"><i class="fa fa-search"></i></button>-->
+                  <!--</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</form>-->
                 <ul class="nav navbar-nav navbar-right">
                     <li class="hidden-xs">
                         <section class="dropdown-menu animated fadeInUp input-s-lg">
@@ -157,7 +157,7 @@
                         </section>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a id="userDisplayName" href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">
                     <img src="images/avatar.jpg">
                   </span>
@@ -180,7 +180,7 @@
                                 <a href="docs.html">Help</a>
                             </li>
                             <li>
-                                <a href="signin.html">Logout</a>
+                                <a id="logout"> Logout</a>
                             </li>
                         </ul>
                     </li>
@@ -314,31 +314,37 @@
 
                         <p>Ingresa un nuevo paciente</p>
 
-                        <form role="form">
+                        <form id="patientForm" onsubmit="createPatient(this)">
                             <div class="form-group">
                                 <label>Nombre</label>
-                                <input type="text" class="form-control" placeholder="Nombre del paciente">
+                                <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Apellido</label>
-                                <input type="text" class="form-control" placeholder="Apellido del paciente">
+                                <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
+                            </div>
+                            <div class="form-group">
+                                <label>DNI</label>
+                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Sexo</label>
 
                                 <div class="checkbox m-t-lg">
-                                    <label><input name="genderForm" type="radio" value="M"> Masculino</label>
-                                    <label><input name="genderForm" type="radio" value="F"> Femenino</label>
+                                    <label><input name="gender" type="radio" value="M"> Masculino</label>
+                                    <label><input name="gender" type="radio" value="F"> Femenino</label>
                                 </div>
 
                             </div>
+                            <input  type="hidden" name="type" value="patient">
                             <div class="checkbox m-t-lg">
-                                <button type="submit" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
-                                    <strong>Crear</strong></button>
+                                <button type="button" onclick="createPatient()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Crear</strong>
+                                </button>
 
                             </div>
                         </form>
@@ -350,7 +356,19 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<script type="text/javascript">
+    function createPatient(){
+        console.log( $("#patientForm" ).serialize());
+        $.post("/api/patients", $( "#patientForm" ).serialize())
+                .done(function(data){
+                    console.log(data);
+                    $("#modal-form").modal("hide")
+                });
+    }
+
+</script>
 <script src="js/jquery.min.js"></script>
+<script src="js/js.cookie.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
 <!-- Sparkline Chart -->
