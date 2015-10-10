@@ -46,7 +46,8 @@ class Patient < ActiveRecord::Base
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
   validate :validate_birth_date
-  validates :document_number, uniqueness: true, format: { with: VALID_DNI_REGEX }
+  validates :document_number, format: { with: VALID_DNI_REGEX }
+  validate :validate_document_number_presence
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
   before_create :set_defaults
@@ -271,5 +272,9 @@ class Patient < ActiveRecord::Base
 
   def validate_birth_date
     errors.add :birth_date, 'The birth date has not happened yet!' unless birth_date && birth_date < Time.now
+  end
+
+  def validate_document_number_presence
+    errors.add :document_number, 'A patient must have a document number' unless relative? || document_number
   end
 end
