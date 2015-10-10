@@ -46,7 +46,7 @@ class Patient < ActiveRecord::Base
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
   validate :validate_birth_date
-  validates :document_number, format: { with: VALID_DNI_REGEX }
+  validates :document_number, format: { with: VALID_DNI_REGEX }, allow_blank: true
   validate :validate_document_number_presence
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
@@ -132,6 +132,8 @@ class Patient < ActiveRecord::Base
   def delete_all_relationships
     node.rels(:outgoing, 'PADRE').each(&:del)
     node.rels(:outgoing, 'MADRE').each(&:del)
+    node.rels(:incoming, 'PADRE').each(&:del)
+    node.rels(:incoming, 'MADRE').each(&:del)
   end
 
   def first_deg_relatives
