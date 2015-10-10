@@ -69,9 +69,7 @@ class PatientsController < BaseController
   end
 
   def handle_disease(patient, params)
-    if params[:disease_id] && params[:disease_age]
-      patient.add_disease params[:disease_id].to_i, params[:disease_age].to_i
-    end
+    patient.add_disease params[:disease_id].to_i, params[:disease_age].to_i if params[:disease_id] && params[:disease_age]
   end
 
   def correct_user

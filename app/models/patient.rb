@@ -89,13 +89,13 @@ class Patient < ActiveRecord::Base
     disease = Disease.find_by!(id: disease_id)
     return if PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
     puts disease.inspect
-    _to = disease.get_node
-    _from = node
-    puts _to.inspect
-    puts _from.inspect
-    relationship = neo.create_relationship('PADECE', _from, _to)
-    neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
+    to_node = disease.node
+    from_node = node
+    puts to_node.inspect
+    puts from_node.inspect
+    relationship = neo.create_relationship('PADECE', from_node, to_node)
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
+    neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
   end
 
   def validate_relationship(relationship, relation_receiver)
