@@ -387,6 +387,21 @@ function createRelative() {
 
 function set_current_patient(patient) {
     currentPatient = patient;
+
+    if(patient.father==undefined)
+        $("#agregarPadreButton").show();
+    else
+        $("#agregarPadreButton").hide();
+    if(patient.mother==undefined)
+        $("#agregarMadreButton").show();
+    else
+        $("#agregarMadreButton").hide();
+    if(patient.id==family.current.id)
+        $("#deletePersonButton").hide();
+    else
+        $("#deletePersonButton").show();
+
+
     $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
     $("#current_patient").show();
 }
