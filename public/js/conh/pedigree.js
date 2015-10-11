@@ -400,3 +400,46 @@ function get_patient_object(people, id) {
 
     return patient;
 }
+
+function deletePerson(){
+    if(currentPatient.id == family.current.id){
+        alert("No se puede borrar al nodo Paciente");
+        return;
+    }
+    toggleLoading(true);
+    $.ajax({
+        url: "/api/patients/" + currentPatient.id,
+        type: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"})
+        .done(function (data) {
+            console.log("Person Deleted");
+            console.log(data);
+            toggleLoading(false);
+            var index = family.patients.indexOf(currentPatient);
+            if (index > -1) {
+                family.patients.splice(index, 1);
+            }
+
+            family.patients.forEach(function(pat){
+                    if(pat.wife==currentPatient.neo_id) pat.wife = undefined;
+                    if(pat.husband==currentPatient.neo_id) pat.husband = undefined;
+                    if(pat.father==currentPatient.neo_id) pat.father = undefined;
+                    if(pat.mother==currentPatient.neo_id) pat.mother = undefined;
+                }
+            );
+            var borrar = [];
+            family.relations.forEach(function(rel){
+                if(rel.to == currentPatient.neo_id || rel.from == currentPatient.neo_id){
+                    borrar.push(rel)
+                }
+            });
+            console.log("borrar",borrar);
+            borrar.forEach(function(rel){
+                family.relations.splice( family.relations.indexOf(rel), 1 );
+            });
+            console.log(family);
+            set_current_patient(family.current);
+            reloadDiagram();
+        });
+}
