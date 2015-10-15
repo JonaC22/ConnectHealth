@@ -288,7 +288,21 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-8">
-                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:500px; "></div>
+                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:91vh; "></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <section class="panel clearfix">
+                                    <div class="panel-body">
+                                        <a href="#" class="thumb pull-left m-r">
+                                            <img src="images/avatar_default.jpg" class="img-circle">
+                                        </a>
+                                        <div class="clear">
+                                            <a href="#" id="currentPatientName" class="text-info" style="font-size: 28px;"> </a>
+                                            <a id="currentPatientStatus" href="#" class="btn btn-xs btn-success m-t-xs pull-right"></a>
+                                            <small id="currentPatientAge" class="block text-muted"></small>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
                             <div class="col-lg-4">
                                 <div class="panel panel-default">
@@ -298,11 +312,11 @@
                                     <div id="collapseZero" class="panel-collapse collapse in">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <a id="agregarHijoButton" href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%"><i class="fa fa-user"></i> Agregar Hijo/a</a><br><br>
-                                                <a id="agregarPadreButton" href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%"><i class="fa fa-male"></i> Agregar Padre</a><br><br>
-                                                <a id="agregarMadreButton" href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%"><i class="fa fa-female"></i> Agregar Madre</a><br><br>
-                                                <a id="agregarEnfermedadButton" href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 100%"><i class="fa fa-book"></i> Agregar Enfermedad</a><br><br>
-                                                <a id="deletePersonButton" href="#" onclick='deletePerson()' class="btn btn-default" style="width: 100%"><i class="fa fa-book"></i> Eliminar</a><br><br>
+                                                <a id="agregarHijoButton" href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Hijo/a</a>
+                                                <a id="agregarPadreButton" href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar Padre</a>
+                                                <a id="agregarMadreButton" href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Madre</a>
+                                                <a id="agregarEnfermedadButton" href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 100%; margin-bottom: 15px"><i class="fa fa-book"></i> Agregar Enfermedad</a>
+                                                <a id="deletePersonButton" href="#" onclick='deletePerson()' class="btn btn-default" style="width: 100%;"><i class="fa fa-book"></i> Eliminar</a>
                                             </div>
                                         </div>
                                     </div>

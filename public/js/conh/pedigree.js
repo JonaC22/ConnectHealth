@@ -439,8 +439,12 @@ function set_current_patient(patient) {
         $("#deletePersonButton").show();
 
 
-    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
-    $("#current_patient").show();
+    var genderIcon=patient.gender=="M" ? '<i class="fa fa-male"></i> ' : '<i class="fa fa-female" style="color: pink;"></i> ';
+    $("#currentPatientName").html(genderIcon+patient.name + " " + patient.lastname);
+    $("#currentPatientAge").text(patient.age + " Años");
+    $("#currentPatientStatus").text(patient.status);
+//    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
+//    $("#current_patient").show();
 }
 
 function get_patient_object(people, id) {
