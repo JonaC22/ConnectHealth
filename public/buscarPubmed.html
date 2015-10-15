@@ -370,6 +370,11 @@
 
                   // Return data to Datagrid
                   callback({ data: itemPubs, start: startIndex, end: end, count: count, pages: pages, page: page });
+              }).fail(function (jqXHR, textStatus, errorThrown) {
+                  console.log(textStatus);
+                  console.log(errorThrown);
+                  toggleLoading(false);
+                  alert("Error: " + jqXHR.status + " " + errorThrown);
               });
           }
       };
@@ -454,6 +459,11 @@
                   });
               });
               toggleLoading(false);
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+              console.log(textStatus);
+              console.log(errorThrown);
+              toggleLoading(false);
+              alert("Error: " + jqXHR.status + " " + errorThrown);
           });
 
       }
@@ -474,6 +484,11 @@
 
                   $('#modalBody').html(response.replace(/\r?\n/g, '<br />'));
               }
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+              console.log(textStatus);
+              console.log(errorThrown);
+              toggleLoading(false);
+              alert("Error: " + jqXHR.status + " " + errorThrown);
           });
       }
 

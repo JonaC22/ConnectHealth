@@ -5,6 +5,12 @@ function createDisease(){
             console.log(data);
             $("#modal-form").modal("hide")
             search();
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
         });
 }
 
@@ -88,6 +94,11 @@ function search() {
             });
         });
         toggleLoading(false);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+        console.log(errorThrown);
+        toggleLoading(false);
+        alert("Error: " + jqXHR.status + " " + errorThrown);
     });
 
 }
