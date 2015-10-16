@@ -299,16 +299,19 @@ function showCreateModal(type) {
     switch (type) {
         case "CHILD":
             $("#padreMadreSeleccionar").show();
+            $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
         case "MOTHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[1].checked = true;
+            $("input[type=radio]").attr('disabled', true);
             $("#modal-create-family-member").modal("show")
             break;
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
+            $("input[type=radio]").attr('disabled', true);
             $("#modal-create-family-member").modal("show")
             break;
         case "DISEASE":
@@ -327,18 +330,24 @@ function showCreateModal(type) {
 function openDiagramModal() {
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(diagramModal, people, null);
-//    diagramModal.removeDiagramListener("ObjectSingleClicked");
-    diagramModal.addDiagramListener("ObjectSingleClicked",
-        function (e) {
-            var part = e.subject.part;
-            var patient = get_patient_object(family.patients, part.data.key);
-            if (!(part instanceof go.Link)) {
-                console.log("newParent", patient);
+
+    var listener = function (e) {
+        var part = e.subject.part;
+        var patient = get_patient_object(family.patients, part.data.key);
+        if (!(part instanceof go.Link)) {
+            console.log("newParent", patient);
+            if(patient.gender == currentPatient.gender){
+                alert("Seleccione a otra persona del sexo contrario.")
+                return;
+            }else {
                 newParent = patient;
                 $("#otherParentLabel").text(newParent.name + " " + newParent.lastname);
                 $("#modal-select-member").modal("hide")
+                diagramModal.removeDiagramListener("ObjectSingleClicked",listener);
             }
-        });
+        }
+    };
+       diagramModal.addDiagramListener("ObjectSingleClicked",listener);
     $("#modal-select-member").modal("show")
 }
 
