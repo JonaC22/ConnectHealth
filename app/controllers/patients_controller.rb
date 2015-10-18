@@ -23,7 +23,7 @@ class PatientsController < BaseController
     params[:pedigree_id] = params.require(:pedigree_id).to_i if params[:patient_type] == 'relative'
     @patient = Patient.create! patient_create_params
     current_user.patients << @patient
-    handle_diseases(@patient, params)
+    handle_disease(@patient, params)
     render json: @patient
   end
 
@@ -36,7 +36,11 @@ class PatientsController < BaseController
 
   def destroy
     @patient = Patient.find_by! patient_find_params
-    @patient.update! active: false
+    params = {}
+    params[:active] = false
+    params[:pedigree] = nil if @patient.relative?
+    @patient.delete_all_relationships
+    @patient.update! params
     render json: @patient
   end
 
@@ -62,13 +66,11 @@ class PatientsController < BaseController
   end
 
   def patient_update_params
-    params.permit(:name, :lastname, :status, :document_number, :gender)
+    params.permit(:name, :lastname, :status, :document_number, :gender, :birth_date)
   end
 
   def handle_disease(patient, params)
-    if params[:disease_id] && params[:disease_age]
-      patient.add_disease params[:disease_id].to_i, params[:disease_age].to_i
-    end
+    patient.add_disease params[:disease_id].to_i, params[:disease_age].to_i if params[:disease_id] && params[:disease_age]
   end
 
   def correct_user

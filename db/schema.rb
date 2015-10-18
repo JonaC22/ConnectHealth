@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151003152909) do
+ActiveRecord::Schema.define(version: 20151010173726) do
 
   create_table "annotations", force: true do |t|
     t.integer  "pedigree_id"
@@ -28,7 +28,10 @@ ActiveRecord::Schema.define(version: 20151003152909) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "neo_id"
   end
+
+  add_index "diseases", ["neo_id"], name: "index_diseases_on_neo_id", using: :btree
 
   create_table "functions", force: true do |t|
     t.string   "description"
@@ -107,9 +110,18 @@ ActiveRecord::Schema.define(version: 20151003152909) do
     t.integer  "patient_type"
   end
 
-  add_index "patients", ["document_number"], name: "index_patients_on_document_number", unique: true, using: :btree
   add_index "patients", ["neo_id"], name: "index_patients_on_neo_id", using: :btree
   add_index "patients", ["pedigree_id"], name: "index_patients_on_pedigree_id", using: :btree
+
+  create_table "patients_users", id: false, force: true do |t|
+    t.integer  "user_id"
+    t.integer  "patient_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "patients_users", ["patient_id"], name: "index_patients_users_on_patient_id", using: :btree
+  add_index "patients_users", ["user_id"], name: "index_patients_users_on_user_id", using: :btree
 
   create_table "pedigrees", force: true do |t|
     t.datetime "created_at", null: false

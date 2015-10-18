@@ -6,6 +6,7 @@
 #  name       :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  neo_id     :integer
 #
 
 class Disease < ActiveRecord::Base
@@ -15,6 +16,14 @@ class Disease < ActiveRecord::Base
   before_save :lower_case_name
 
   validates :name, presence: true, uniqueness: { case_sentitive: false }
+  before_create :create_node
+
+  def create_node
+    node = neo.create_node('nombre' => name)
+    neo.set_label(node, 'ENFERMEDAD')
+    neo.add_node_to_index('enfermedad_index', 'nombre', name, node)
+    self.neo_id = node['metadata']['id']
+  end
 
   def lower_case_name
     self.name = name.downcase if name_changed?
@@ -39,15 +48,8 @@ class Disease < ActiveRecord::Base
     Neography::Node.load dis_id
   end
 
-  #TODO ARREGLAR, NO FUNCIONA BIEN
   def node
-    @node = Neography::Node.find('enfermedad_index', 'nombre', name)
-  rescue Neography::NeographyError => err
-    puts err.message
-    @node = neo.create_node('nombre' => name)
-    neo.set_label(@node, 'ENFERMEDAD')
-    neo.add_node_to_index('enfermedad_index', 'nombre', name, @node)
-    return @node
+    @node ||= Neography::Node.load(neo_id, neo)
   end
 
   def neo

@@ -9,7 +9,7 @@ class ErrorsController < BaseController
     return incalculable_model error if error.is_a? IncalculableModelException
     return imposible_relation error if error.is_a? ImposibleRelationException
     return duplicated_relation error if error.is_a? DuplicatedRelationException
-    return forbidden_user error if error.is_a? ForbiddenUserException
+    return unauthorized_user error if error.is_a? ForbiddenUserException
     exception error
   end
 
@@ -31,8 +31,8 @@ class ErrorsController < BaseController
     render json: { error: { message: 'relationship already exists', details: 'relationship already exists' } }
   end
 
-  def forbidden_user(error)
-    render json: { error: error.message }, status: 403
+  def unauthorized_user(error)
+    render json: { error: error.message }, status: 401
   end
 
   def incalculable_model(error)

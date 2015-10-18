@@ -46,7 +46,8 @@ class Patient < ActiveRecord::Base
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
   validate :validate_birth_date
-  validates :document_number, uniqueness: true, format: { with: VALID_DNI_REGEX }
+  validates :document_number, format: { with: VALID_DNI_REGEX }, allow_blank: true
+  validate :validate_document_number_presence
   # validates_length_of :document_number, minimum: 7, maximum: 8
   before_create :create_node
   before_create :set_defaults
@@ -88,17 +89,17 @@ class Patient < ActiveRecord::Base
     disease = Disease.find_by!(id: disease_id)
     return if PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
     puts disease.inspect
-    _to = disease.get_node
-    _from = node
-    puts _to.inspect
-    puts _from.inspect
-    relationship = neo.create_relationship('PADECE', _from, _to)
-    neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
+    to_node = disease.node
+    from_node = node
+    puts to_node.inspect
+    puts from_node.inspect
+    relationship = neo.create_relationship('PADECE', from_node, to_node)
     PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
+    neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
   end
 
   def validate_relationship(relationship, relation_receiver)
-    fail ImposibleRelationException, "The #{relationship} cannot be older" if Relation.decremental?(relationship) && age && relation_receiver.age && age > relation_receiver.age
+    fail ImposibleRelationException, "The #{relationship} cannot be younger for patient:#{name} and patient:#{relation_receiver.name}" if Relation.decremental?(relationship) && age && relation_receiver.age && age > relation_receiver.age
     fail DuplicatedRelationException, "Duplicated relation: #{relationship} for patient:#{name} and patient:#{relation_receiver.name}" if Relation.unique?(relationship) && node.rel?(:outgoing, relationship)
   end
 
@@ -131,6 +132,8 @@ class Patient < ActiveRecord::Base
   def delete_all_relationships
     node.rels(:outgoing, 'PADRE').each(&:del)
     node.rels(:outgoing, 'MADRE').each(&:del)
+    node.rels(:incoming, 'PADRE').each(&:del)
+    node.rels(:incoming, 'MADRE').each(&:del)
   end
 
   def first_deg_relatives
@@ -271,5 +274,9 @@ class Patient < ActiveRecord::Base
 
   def validate_birth_date
     errors.add :birth_date, 'The birth date has not happened yet!' unless birth_date && birth_date < Time.now
+  end
+
+  def validate_document_number_presence
+    errors.add :document_number, 'A patient must have a document number' unless relative? || document_number
   end
 end
