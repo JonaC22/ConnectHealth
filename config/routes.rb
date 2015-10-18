@@ -18,7 +18,7 @@ Rails.application.routes.draw do
     end
     scope '/statistics' do
       get '/' => 'statistics#index'
-      get '/query' => 'statistics#get_results'
+      post '/query' => 'statistics#get_results'
       get '/reports' => 'statistics#get_reports'
     end
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'

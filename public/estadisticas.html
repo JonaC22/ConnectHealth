@@ -193,9 +193,8 @@
                 <section class="hbox" ng-app="statistics" ng-controller="StatisticsController" style="margin: 20px;">
                     <div id="selectDisease">
                         <h3>Seleccionar enfermedad</h3>
-                        <select ng-model="disease">
-                            <option value="Cancer de Mama">Cáncer de mama</option>
-                            <option value="Cancer de Ovario">Cáncer de ovario</option>
+                        <select ng-model="disease" ng-options="d.name for d in diseases" ng-cloak>
+                            {{disease}}
                         </select>
                     </div>
                     <div id="selectType">
@@ -203,6 +202,23 @@
                         <select ng-model="type">
                             <option value="count">Contar casos</option>
                             <option value="avg">Promedio</option>
+                        </select>
+                    </div>
+                    <div id="selectDegree">
+                        <h3>Seleccionar grado de parentesco en la herencia de la enfermedad</h3>
+                        <select ng-model="degree">
+                            <option value="fdr">Primer grado</option>
+                            <option value="sdr">Segundo grado</option>
+                            <option value="tdr">Tercer grado</option>
+                            <option value="none">Sin herencia</option>
+                        </select>
+                    </div>
+                    <div id="selectOptions" ng-hide="degree == 'none'">
+                        <h3>Seleccionar opción para parientes intermedios</h3>
+                        <select ng-model="options">
+                            <option value="with">Con enfermedad</option>
+                            <option value="without">Sin enfermedad</option>
+                            <option value="both">Ambos casos</option>
                         </select>
                     </div>
 
