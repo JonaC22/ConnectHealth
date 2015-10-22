@@ -38,7 +38,8 @@ class PatientsController < BaseController
     @patient = Patient.find_by! patient_find_params
     params = {}
     params[:active] = false
-    params[:pedigree] = nil if patient.relative?
+    params[:pedigree] = nil if @patient.relative?
+    @patient.delete_all_relationships
     @patient.update! params
     render json: @patient
   end

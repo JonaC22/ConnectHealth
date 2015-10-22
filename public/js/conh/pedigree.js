@@ -1,6 +1,6 @@
-$.put = function(url, data, callback, type){
+$.put = function (url, data, callback, type) {
 
-    if ( $.isFunction(data) ){
+    if ($.isFunction(data)) {
         type = type || callback,
             callback = data,
             data = {}
@@ -42,10 +42,10 @@ function calculatePREMM126() {
             result.append("ERROR: " + data.message);
         }
         else {
-            var calc =  data.model_calculator.calculations;
+            var calc = data.model_calculator.calculations;
             var messages = data.model_calculator.messages;
-            if(messages){
-                messages.forEach(function(msg){
+            if (messages) {
+                messages.forEach(function (msg) {
                     console.log(msg);
                     result.append(msg);
                 });
@@ -60,7 +60,12 @@ function calculatePREMM126() {
         }
 
         toggleLoading(false);
-    });
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
+        });
 }
 function calculateGail() {
 
@@ -79,7 +84,7 @@ function calculateGail() {
             result.append("ERROR: " + data.message);
         }
         else {
-            var calc =  data.model_calculator.calculations;
+            var calc = data.model_calculator.calculations;
             $("#statsWidgets").show();
             $('#text_chart_group1').show();
             $('#chart_group2').show();
@@ -100,6 +105,11 @@ function calculateGail() {
         }
 
         toggleLoading(false);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+        console.log(errorThrown);
+        toggleLoading(false);
+        alert("Error: " + jqXHR.status + " " + errorThrown);
     });
 
 
@@ -118,9 +128,9 @@ $.urlParam = function (name) {
 myDiagram = init("myDiagram");
 diagramModal = init("diagramModal");
 
-currentPatient=null;
-newParent=null;
-family=null;
+currentPatient = null;
+newParent = null;
+family = null;
 toggleLoading(true);
 $("#current_patient").hide();
 function getPeopleNodesFromFamily(family) {
@@ -214,6 +224,11 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     toggleLoading(false);
     set_current_patient(currentPatient);
+}).fail(function (jqXHR, textStatus, errorThrown) {
+    console.log(textStatus);
+    console.log(errorThrown);
+    toggleLoading(false);
+    alert("Error: " + jqXHR.status + " " + errorThrown);
 });
 
 function reloadDiagram() {
@@ -221,7 +236,7 @@ function reloadDiagram() {
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
 
-function addChild(parent,newChild) {
+function addChild(parent, newChild) {
     family.patients.push(newChild);
     var newRelation = {
         "from": newChild.neo_id,
@@ -229,11 +244,11 @@ function addChild(parent,newChild) {
         "name": parent.gender == "M" ? "PADRE" : "MADRE"
     };
 
-    if(newParent!== undefined && newParent.gender == "M"){
-        addFather(newChild,newParent);
+    if (newParent !== undefined && newParent.gender == "M") {
+        addFather(newChild, newParent);
     }
-    if(newParent!== undefined && newParent.gender == "F"){
-        addMother(newChild,newParent);
+    if (newParent !== undefined && newParent.gender == "F") {
+        addMother(newChild, newParent);
     }
 
     family.relations.push(newRelation);
@@ -241,7 +256,7 @@ function addChild(parent,newChild) {
     reloadDiagram();
 }
 
-function addMother(child,madre) {
+function addMother(child, madre) {
     console.log("Agregando Madre");
     family.patients.push(madre);
     var newRelation = {
@@ -259,7 +274,7 @@ function addMother(child,madre) {
     reloadDiagram();
 }
 
-function addFather(child,padre) {
+function addFather(child, padre) {
     console.log("Agregando Padre");
     family.patients.push(padre);
     var newRelation = {
@@ -284,20 +299,23 @@ function showCreateModal(type) {
     switch (type) {
         case "CHILD":
             $("#padreMadreSeleccionar").show();
+            $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
         case "MOTHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[1].checked = true;
+            $("input[type=radio]").attr('disabled', true);
             $("#modal-create-family-member").modal("show")
             break;
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
+            $("input[type=radio]").attr('disabled', true);
             $("#modal-create-family-member").modal("show")
             break;
         case "DISEASE":
-            var cont = function() {
+            var cont = function () {
                 $("#modal-add-disease").modal("show");
             };
             selectDisease(cont);
@@ -309,38 +327,48 @@ function showCreateModal(type) {
 
 }
 
-function openDiagramModal(){
+function openDiagramModal() {
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(diagramModal, people, null);
-//    diagramModal.removeDiagramListener("ObjectSingleClicked");
-    diagramModal.addDiagramListener("ObjectSingleClicked",
-        function (e) {
-            var part = e.subject.part;
-            var patient = get_patient_object(family.patients, part.data.key);
-            if (!(part instanceof go.Link)) {
-                console.log("newParent",patient);
+
+    var listener = function (e) {
+        var part = e.subject.part;
+        var patient = get_patient_object(family.patients, part.data.key);
+        if (!(part instanceof go.Link)) {
+            console.log("newParent", patient);
+            if(patient.gender == currentPatient.gender){
+                alert("Seleccione a otra persona del sexo contrario.")
+                return;
+            }else {
                 newParent = patient;
                 $("#otherParentLabel").text(newParent.name + " " + newParent.lastname);
                 $("#modal-select-member").modal("hide")
+                diagramModal.removeDiagramListener("ObjectSingleClicked",listener);
             }
-        });
+        }
+    };
+       diagramModal.addDiagramListener("ObjectSingleClicked",listener);
     $("#modal-select-member").modal("show")
 }
 
 function selectDisease(cont) {
     toggleLoading(true);
-    $.getJSON('/api/diseases', function(data){
+    $.getJSON('/api/diseases', function (data) {
         console.log(data);
 
         var $select = $('#disease_id');
         $select.find('option').remove();
-        $.each(data.diseases, function(key, value)
-        {
+        $.each(data.diseases, function (key, value) {
             console.log(value);
             $select.append('<option value=' + value.id + '>' + value.name + '</option>');
         });
         toggleLoading(false);
         cont();
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+        console.log(errorThrown);
+        toggleLoading(false);
+        alert("Error: " + jqXHR.status + " " + errorThrown);
     });
 }
 
@@ -349,9 +377,15 @@ function createDisease() {
     var form = $("#addDiseaseForm");
     console.log(form.serialize());
 
-    $.put("/api/patients/"+currentPatient.id, form.serialize())
-        .done(function(data) {
-           console.log(data);
+    $.put("/api/patients/" + currentPatient.id, form.serialize())
+        .done(function (data) {
+            console.log(data);
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
         });
 }
 
@@ -362,13 +396,13 @@ function createRelative() {
             console.log(data);
             switch ($("#typeRelationForm").val()) {
                 case "CHILD":
-                    addChild(currentPatient,data.patient);
+                    addChild(currentPatient, data.patient);
                     break;
                 case "MOTHER":
-                    addMother(currentPatient,data.patient);
+                    addMother(currentPatient, data.patient);
                     break;
                 case "FATHER":
-                    addFather(currentPatient,data.patient);
+                    addFather(currentPatient, data.patient);
                     break;
             }
             $.ajax({
@@ -380,15 +414,46 @@ function createRelative() {
                 .done(function (data) {
                     console.log("Pedigree Updated");
                     console.log(data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                    toggleLoading(false);
+                    alert("Error: " + jqXHR.status + " " + errorThrown);
                 });
             $("#modal-create-family-member").modal("hide");
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
         });
 }
 
 function set_current_patient(patient) {
     currentPatient = patient;
-    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
-    $("#current_patient").show();
+
+    if (patient.father == undefined)
+        $("#agregarPadreButton").show();
+    else
+        $("#agregarPadreButton").hide();
+    if (patient.mother == undefined)
+        $("#agregarMadreButton").show();
+    else
+        $("#agregarMadreButton").hide();
+    if (patient.id == family.current.id)
+        $("#deletePersonButton").hide();
+    else
+        $("#deletePersonButton").show();
+
+
+    var genderIcon=patient.gender=="M" ? '<i class="fa fa-male"></i> ' : '<i class="fa fa-female" style="color: pink;"></i> ';
+    $("#currentPatientName").html(genderIcon+patient.name + " " + patient.lastname);
+    $("#currentPatientAge").text(patient.age + " Años");
+    $("#currentPatientStatus").text(patient.status);
+//    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
+//    $("#current_patient").show();
 }
 
 function get_patient_object(people, id) {
@@ -399,4 +464,53 @@ function get_patient_object(people, id) {
     });
 
     return patient;
+}
+
+function deletePerson() {
+    if (currentPatient.id == family.current.id) {
+        alert("No se puede borrar al nodo Paciente");
+        return;
+    }
+    toggleLoading(true);
+    $.ajax({
+        url: "/api/patients/" + currentPatient.id,
+        type: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"})
+        .done(function (data) {
+            console.log("Person Deleted");
+            console.log(data);
+            toggleLoading(false);
+            var index = family.patients.indexOf(currentPatient);
+            if (index > -1) {
+                family.patients.splice(index, 1);
+            }
+
+            family.patients.forEach(function (pat) {
+                    if (pat.wife == currentPatient.neo_id) pat.wife = undefined;
+                    if (pat.husband == currentPatient.neo_id) pat.husband = undefined;
+                    if (pat.father == currentPatient.neo_id) pat.father = undefined;
+                    if (pat.mother == currentPatient.neo_id) pat.mother = undefined;
+                }
+            );
+            var borrar = [];
+            family.relations.forEach(function (rel) {
+                if (rel.to == currentPatient.neo_id || rel.from == currentPatient.neo_id) {
+                    borrar.push(rel)
+                }
+            });
+            console.log("borrar", borrar);
+            borrar.forEach(function (rel) {
+                family.relations.splice(family.relations.indexOf(rel), 1);
+            });
+            console.log(family);
+            set_current_patient(family.current);
+            reloadDiagram();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+//            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
+        });
 }

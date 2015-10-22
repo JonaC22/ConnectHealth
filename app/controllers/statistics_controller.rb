@@ -10,7 +10,7 @@ class StatisticsController < BaseController
   # POST /api/statistics/query
   def get_results
     @model = StatisticsModel.new
-    @model.set_query params[:disease], params[:type]
+    @model.set_query params[:disease], params[:type], params[:degree], params[:options]
     results = @model.calc_query
     render json: results
   end
