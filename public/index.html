@@ -185,14 +185,37 @@
             </ul>
           </div>
         </header>
-        <section class="scrollable" id="pjax-container">
-          <header>
-            <div class="row b-b m-l-none m-r-none">
-              <div class="col-sm-4">
-                <h3 class="m-t m-b-none"><img src="/images/logo_text.png" style="max-height:48px"></h3>
-              </div>
-            </div>
-          </header>
+        <section  id="pjax-container">
+            <section class="vbox">
+                <header>
+                    <div class="row b-b m-l-none m-r-none">
+                        <div class="col-sm-4">
+                            <h3 class="m-t m-b-none"><img src="/images/logo_text.png" style="max-height:48px"></h3>
+                        </div>
+                    </div>
+                </header>
+                <section class="scrollable wrapper">
+                    <div class="col-lg-6 timeline">
+                        <article class="timeline-item active">
+                            <div class="timeline-caption" style="width: 90%;">
+                                <div class="panel bg-success lter no-borders">
+                                    <div class="panel-body">
+                                        <span class="timeline-icon"><i class="fa fa-bell-o time-icon bg-success"></i></span>
+                                        <span id="date"class="timeline-date"></span>
+                                        <h5>
+                                            <span>Agenda</span>
+
+                                        </h5>
+                                        <div class="m-t-sm timeline-action">
+                                            <span id="clock" class="h3 pull-left m-r-sm"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </section>
         </section>
       </section>
       <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
@@ -217,5 +240,6 @@
   <!-- Morris -->
   <script src="js/charts/morris/raphael-min.js" cache="false"></script>
   <script src="js/charts/morris/morris.min.js" cache="false"></script>
+<script type="text/javascript" src="js/conh/index.js"></script>
 </body>
 </html>
