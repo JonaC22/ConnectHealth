@@ -555,7 +555,7 @@ a:hover .caret-white {
     width: 100%;
   }
   .vbox > header ~ section {
-    top: 64px;
+    top: 50px;
   }
   .vbox > section.w-f {
     bottom: 50px;
