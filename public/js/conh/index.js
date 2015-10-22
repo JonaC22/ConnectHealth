@@ -34,7 +34,7 @@ function createAgenda(){
     var d2 = new Date ();
     d2.setMinutes ( d2.getMinutes() >=30 ? 30 : 0);
     console.log(d2);
-    for(d2;d2.getHours()<19; d2 = new Date(d2.getTime() + 30*60000)){
+    for(d2;d2.getHours()<21; d2 = new Date(d2.getTime() + 30*60000)){
         console.log(d2);
         var currentHours = d2.getHours();
         var currentMinutes = d2.getMinutes();
