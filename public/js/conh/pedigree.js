@@ -77,13 +77,14 @@ function calculateGail() {
     $.getJSON("api/model_calculator/gail?patient_id=" + currentPatient.id + "&menarcheAge=" + menarcheAge + "&numberBiopsy=" + numberBiopsy, function (data) {
 
         console.log(data);
-
         var result = $("#calc_results");
-        if (data.status == "ERROR") {
-            $("#statsWidgets").hide();
-            result.append("ERROR: " + data.message);
-        }
-        else {
+        //DEPRECADO
+        /*
+         if (data.status == "ERROR") {
+         $("#statsWidgets").hide();
+         result.append("ERROR: " + data.message);
+         }
+         */
             var calc = data.model_calculator.calculations;
             $("#statsWidgets").show();
             $('#text_chart_group1').show();
@@ -102,14 +103,23 @@ function calculateGail() {
             //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (calc.averageRiskAt90yo * 100).toFixed(2) + "%");
             $('#chart4').data('easyPieChart').update((calc.averageRiskAt90yo * 100));
             $('#perc4').text((calc.averageRiskAt90yo * 100).toFixed(2) + "%");
-        }
+
 
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.log(textStatus);
-        console.log(errorThrown);
-        toggleLoading(false);
-        alert("Error: " + jqXHR.status + " " + errorThrown);
+
+        if(textStatus){
+            $("#statsWidgets").hide();
+            toggleLoading(false);
+            var res = JSON.parse(jqXHR.responseText);
+            alert("ERROR: " + res.error);
+        }
+        else {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
+        }
     });
 
 
