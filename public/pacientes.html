@@ -317,15 +317,15 @@
                         <form id="patientForm" onsubmit="createPatient(this)">
                             <div class="form-group">
                                 <label>Nombre</label>
-                                <input name="name" type="text" class="form-control" placeholder="Nombre del paciente">
+                                <input name="name" type="text" pattern="[a-zA-Z]" class="form-control" placeholder="Nombre del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Apellido</label>
-                                <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
+                                <input name="lastname" type="text" pattern="[a-zA-Z]" class="form-control" placeholder="Apellido del paciente">
                             </div>
                             <div class="form-group">
                                 <label>DNI</label>
-                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
+                                <input name="document_number" type="number" maxlength="9" class="form-control" placeholder="DNI del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
