@@ -408,7 +408,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                                <input id="birth_date" name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
                             </div>
                             <div class="form-group">
                                 <label>Sexo</label>
@@ -431,12 +431,14 @@
                             <input id="typeRelationForm" type="hidden" name="typeRelation" value="CHILD">
                             <input  type="hidden" name="type" value="relative">
                             <input id="pedigreeId" type="hidden" name="pedigree_id" value="0">
+                            <!--
                             <div id="padreMadreSeleccionar" class=" m-t-lg">
                                 <button type="button" onclick="openDiagramModal()" class="btn btn-sm btn-success text-uc m-t-n-xs">
                                     <strong>Seleccionar otro Padre/Madre</strong>
                                 </button>
                                  <label id="otherParentLabel">Sin otro Padre/Madre</label>
                             </div>
+                            -->
                             <div class="checkbox m-t-lg">
                                 <button type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
                                     <strong>Crear</strong>

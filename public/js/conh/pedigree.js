@@ -309,7 +309,7 @@ function showCreateModal(type) {
             $("#modal-create-family-member").modal("show")
             break;
         case "CHILD":
-            $("#padreMadreSeleccionar").show();
+            //$("#padreMadreSeleccionar").show();
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
@@ -400,49 +400,76 @@ function createDisease() {
         });
 }
 
+function _calculateAge(birthday) { // birthday is a date
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
+function validate_age(birth_date, parent_age) {
+
+    var bdate = birth_date.split("-");
+    var f = new Date(bdate[0], bdate[1] - 1, bdate[2]);
+
+    console.log(f);
+    var child_age = _calculateAge(f);
+
+    console.log(child_age, parent_age);
+
+    return child_age < parent_age;
+}
+
 function createRelative() {
     console.log($("#patientForm").serialize());
-    $.post("/api/patients", $("#patientForm").serialize())
-        .done(function (data) {
-            console.log(data);
-            switch ($("#typeRelationForm").val()) {
-                case "NODE":
-                    addNode(data.patient);
-                    break;
-                case "CHILD":
-                    addChild(currentPatient, data.patient);
-                    break;
-                case "MOTHER":
-                    addMother(currentPatient, data.patient);
-                    break;
-                case "FATHER":
-                    addFather(currentPatient, data.patient);
-                    break;
-            }
-            $.ajax({
-                url: "/api/pedigrees/" + family.id,
-                type: 'PUT',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({"relations": family.relations}),
-                dataType: "json"})
-                .done(function (data) {
-                    console.log("Pedigree Updated");
-                    console.log(data);
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus);
-                    console.log(errorThrown);
-                    toggleLoading(false);
-                    alert("Error: " + jqXHR.status + " " + errorThrown);
-                });
-            $("#modal-create-family-member").modal("hide");
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
-        });
+
+    if(validate_age($("#birth_date").val(), currentPatient.age)){
+        $.post("/api/patients", $("#patientForm").serialize())
+            .done(function (data) {
+                console.log(data);
+                switch ($("#typeRelationForm").val()) {
+                    case "NODE":
+                        addNode(data.patient);
+                        break;
+                    case "CHILD":
+                        addChild(currentPatient, data.patient);
+                        break;
+                    case "MOTHER":
+                        addMother(currentPatient, data.patient);
+                        break;
+                    case "FATHER":
+                        addFather(currentPatient, data.patient);
+                        break;
+                }
+                $.ajax({
+                    url: "/api/pedigrees/" + family.id,
+                    type: 'PUT',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({"relations": family.relations}),
+                    dataType: "json"})
+                    .done(function (data) {
+                        console.log("Pedigree Updated");
+                        console.log(data);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        console.log(textStatus);
+                        console.log(errorThrown);
+                        toggleLoading(false);
+                        alert("Error: " + jqXHR.status + " " + errorThrown);
+                    });
+                $("#modal-create-family-member").modal("hide");
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                toggleLoading(false);
+                alert("Error: " + jqXHR.status + " " + errorThrown);
+            });
+    } else {
+        var err_msg = "Error: edad del hijo es mayor que la del padre";
+        console.log(err_msg);
+        alert(err_msg);
+    }
+
 }
 
 function set_current_patient(patient) {
