@@ -18,7 +18,7 @@ class DiseasesController < BaseController
   end
 
   def destroy
-    @disease = Disease.find! params[:id]
+    @disease = Disease.find params[:id]
     @disease.destroy!
     render json: @disease
   end
@@ -29,5 +29,9 @@ class DiseasesController < BaseController
     {
       name: params.require(:name)
     }
+  end
+
+  def required_permission
+    'disease'
   end
 end
