@@ -315,7 +315,7 @@ function showCreateModal(type) {
             $("#modal-create-family-member").modal("show")
             break;
         case "CHILD":
-            //$("#padreMadreSeleccionar").show();
+            $("#padreMadreSeleccionar").show();
             $("#radio_gender").show();
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
