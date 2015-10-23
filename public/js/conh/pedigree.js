@@ -299,19 +299,20 @@ function showCreateModal(type) {
     switch (type) {
         case "CHILD":
             //$("#padreMadreSeleccionar").show();
+            $("#radio_gender").show();
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
         case "MOTHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[1].checked = true;
-            $("input[type=radio]").attr('disabled', true);
+            $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
-            $("input[type=radio]").attr('disabled', true);
+            $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
         case "DISEASE":
