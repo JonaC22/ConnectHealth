@@ -52,4 +52,18 @@ module SessionsHelper
   def admin_user
     fail ForbiddenUserException, 'must be admin to perform this task' unless current_user.admin?
   end
+
+  def verify_permission(user, permission)
+    return if user.admin?
+    fail ForbiddenUserException, 'not enough permissions to excecute the task' unless user.roles.joins(:functions).find_by(functions: { description: permission })
+  end
+
+  def authenticate!
+    logged_in_user
+    verify_permission(current_user, required_permission)
+  end
+
+  def required_permission
+    'all'
+  end
 end

@@ -16,6 +16,7 @@
 
 class User < ActiveRecord::Base
   attr_accessor :remember_token
+  ADMIN_PERMISSION = 'all'
   has_many :queries
   has_many :statistical_reports
   has_many :user_roles
@@ -48,5 +49,9 @@ class User < ActiveRecord::Base
 
   def forget
     update_attribute(:remember_digest, nil)
+  end
+
+  def admin?
+    user.roles.joins(:functions).find_by(functions: { description: ADMIN_PERMISSION })
   end
 end

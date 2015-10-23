@@ -1,6 +1,7 @@
 class PatientsController < BaseController
   before_action :logged_in_user, only: [:index, :create]
   before_action :correct_user, only: [:show, :update, :destroy]
+  before_action :authenticate!, only: [:index, :show, :create, :update, :destroy]
   def index
     if params[:name]
       name = params[:name].split(' ') if params[:name]
@@ -78,5 +79,9 @@ class PatientsController < BaseController
     return if current_user.admin?
     @patient = current_user.patients.find_by(id: params[:id])
     fail ForbiddenUserException, 'not the correct user' unless @patient
+  end
+
+  def required_permission
+    'patient'
   end
 end

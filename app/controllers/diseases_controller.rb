@@ -30,4 +30,8 @@ class DiseasesController < BaseController
       name: params.require(:name)
     }
   end
+
+  def required_permission
+    'disease'
+  end
 end

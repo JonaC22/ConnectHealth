@@ -1,7 +1,9 @@
 class UsersController < BaseController
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
-  before_action :correct_user, only: [:edit, :update, :show]
+  before_action :logged_in_user, only: [:index, :update, :destroy]
+  before_action :correct_user, only: [:update, :show]
   before_action :admin_user, only: [:destroy, :index]
+  before_action :authenticate!, only: [:index, :destroy]
+
   def index
     @users = User.all
     render json: @users
@@ -16,11 +18,6 @@ class UsersController < BaseController
     @user = User.create!(user_params)
     log_in @user
     render json: { message: "Welcome #{@user.display_name}!" }
-  end
-
-  def edit
-    @user = User.find(params[:id])
-    render json: @user
   end
 
   def update
@@ -44,5 +41,9 @@ class UsersController < BaseController
   def correct_user
     @user = User.find(params[:id])
     fail ForbiddenUserException, 'not the correct user' unless current_user?(@user)
+  end
+
+  def required_permission
+    'user'
   end
 end
