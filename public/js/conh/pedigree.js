@@ -410,21 +410,51 @@ function selectDisease(cont) {
     });
 }
 
+function validate_disease() {
+
+    var _id = $('#disease_id').val();
+    var _age = $('#disease_age').val();
+    var err_msg;
+
+    if($.inArray(_id, ["2", "12", "22", "52"]) > -1 && currentPatient.gender == "M"){
+        err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo femenino";
+        $("#modal-add-disease").modal("hide");
+        console.log(err_msg);
+        alert(err_msg);
+        return false;
+    }
+
+    if(_age > currentPatient.age){
+        err_msg = "ERROR: edad de diagnostico es mayor a la edad del paciente";
+        $("#modal-add-disease").modal("hide");
+        console.log(err_msg);
+        alert(err_msg);
+        return false;
+    }
+
+    //return true;
+}
+
 function createDisease() {
 
     var form = $("#addDiseaseForm");
     console.log(form.serialize());
 
-    $.put("/api/patients/" + currentPatient.id, form.serialize())
-        .done(function (data) {
-            console.log(data);
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
-        });
+    if(validate_disease()){
+        $.put("/api/patients/" + currentPatient.id, form.serialize())
+            .done(function (data) {
+                console.log(data);
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown);
+                toggleLoading(false);
+                alert("Error: " + jqXHR.status + " " + errorThrown);
+            });
+    }
+
+    updatePedigree();
+    $("#modal-add-disease").modal("hide");
 }
 
 function _calculateAge(birthday) { // birthday is a date
