@@ -406,23 +406,29 @@ function _calculateAge(birthday) { // birthday is a date
     return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-function validate_age(birth_date, parent_age) {
+function validate_age(birth_date, rel_age, type_rel) {
 
     var bdate = birth_date.split("-");
     var f = new Date(bdate[0], bdate[1] - 1, bdate[2]);
-
     console.log(f);
-    var child_age = _calculateAge(f);
+    var age = _calculateAge(f);
+    console.log(age, rel_age);
 
-    console.log(child_age, parent_age);
-
-    return child_age < parent_age;
+    switch (type_rel) {
+        case "CHILD":
+            return age < rel_age;
+            break;
+        case "MOTHER":
+        case "FATHER":
+            return age > rel_age;
+            break;
+    }
 }
 
 function createRelative() {
     console.log($("#patientForm").serialize());
 
-    if(validate_age($("#birth_date").val(), currentPatient.age)){
+    if(validate_age($("#birth_date").val(), currentPatient.age, $("#typeRelationForm").val())){
         $.post("/api/patients", $("#patientForm").serialize())
             .done(function (data) {
                 console.log(data);

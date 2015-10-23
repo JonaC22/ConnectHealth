@@ -70,11 +70,6 @@ function search() {
                     // Column definitions for Datagrid
                     columns: [
                         {
-                            property: 'id',
-                            label: 'Id',
-                            sortable: true
-                        },
-                        {
                             property: 'name',
                             label: 'Nombre',
                             sortable: true
