@@ -39,6 +39,7 @@ class UsersController < BaseController
   end
 
   def correct_user
+    return if current_user.admin?
     @user = User.find(params[:id])
     fail ForbiddenUserException, 'not the correct user' unless current_user?(@user)
   end
