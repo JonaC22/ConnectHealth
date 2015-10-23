@@ -312,9 +312,13 @@
                                     <div id="collapseZero" class="panel-collapse collapse in">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <a id="agregarHijoButton" href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Hijo/a</a>
-                                                <a id="agregarPadreButton" href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar Padre</a>
-                                                <a id="agregarMadreButton" href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Madre</a>
+                                                <a id="agregarNodoButton" href="#" onclick='showCreateModal("NODE")' class="btn btn-info " style="width: 100%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Persona</a>
+                                                <a id="agregarHijoButton" href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Nodo Hijo/a</a>
+                                                <a id="agregarPadreButton" href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 50%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Nodo Padre</a>
+                                                <a id="agregarMadreButton" href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 49%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Nodo Madre</a>
+                                                <a id="agregarRelacionPadreButton" href="#" onclick='showCreateRelationModal("FATHER")' class="btn btn-warning" style="width: 50%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Relacion Padre</a>
+                                                <a id="agregarRelacionMadreButton" href="#" onclick='showCreateRelationModal("MOTHER")' class="btn btn-success" style="width: 49%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Relacion Madre</a>
+
                                                 <a id="agregarEnfermedadButton" href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 100%; margin-bottom: 15px"><i class="fa fa-book"></i> Agregar Enfermedad</a>
                                                 <a id="deletePersonButton" href="#" onclick='deletePerson()' class="btn btn-default" style="width: 100%;"><i class="fa fa-book"></i> Eliminar</a>
                                             </div>
@@ -404,9 +408,9 @@
                             </div>
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
-                                <input name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
+                                <input id="birth_date" name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
                             </div>
-                            <div class="form-group">
+                            <div id="radio_gender" class="form-group">
                                 <label>Sexo</label>
 
                                 <div class="checkbox m-t-lg">
@@ -427,12 +431,14 @@
                             <input id="typeRelationForm" type="hidden" name="typeRelation" value="CHILD">
                             <input  type="hidden" name="type" value="relative">
                             <input id="pedigreeId" type="hidden" name="pedigree_id" value="0">
+                            <!--
                             <div id="padreMadreSeleccionar" class=" m-t-lg">
                                 <button type="button" onclick="openDiagramModal()" class="btn btn-sm btn-success text-uc m-t-n-xs">
                                     <strong>Seleccionar otro Padre/Madre</strong>
                                 </button>
                                  <label id="otherParentLabel">Sin otro Padre/Madre</label>
                             </div>
+                            -->
                             <div class="checkbox m-t-lg">
                                 <button type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
                                     <strong>Crear</strong>
