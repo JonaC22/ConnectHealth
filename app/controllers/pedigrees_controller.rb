@@ -11,8 +11,9 @@ class PedigreesController < BaseController
   end
 
   def pedigree(params)
-    return unless params[:id]
-    pedigree = Pedigree.find_by_id! params[:id]
+    cookies[:id] = params[:id] if params[:id] != 'null'
+    return if cookies[:id] == 'null'
+    pedigree = Pedigree.find_by_id! cookies[:id]
     visualize pedigree, params[:current_patient]
   end
 
