@@ -59,7 +59,7 @@ class ModelCalculator
     fdr = patient.first_deg_relatives
 
     affected_relatives = fdr.count do |_key, value|
-      !value.nil? && value.include?('Cancer de Mama')
+      !value.nil? && value.include?('cancer de mama')
     end
 
     projection_age = current_age + 5
@@ -94,7 +94,7 @@ class ModelCalculator
   def validate_gail(patient)
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes no vivos' unless patient.alive?
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes de sexo masculino' if patient.gender == 'M'
-    fail IncalculableModelException, 'Algoritmo no aplicable a pacientes que ya padezcan la enfermedad de Cancer de mama' if patient.diseases.include? 'Cancer de Mama'
+    fail IncalculableModelException, 'Algoritmo no aplicable a pacientes que ya padezcan la enfermedad de cáncer de mama' if patient.disease? 'cancer de mama'
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes mayores a 90 años' if patient.age > 90
     fail IncalculableModelException, 'Algoritmo no aplicable a pacientes menores a 35 años' if patient.age < 35
   end

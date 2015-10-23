@@ -126,6 +126,7 @@ class PREMM126
     diagnoses = n.rels(:PADECE).outgoing
     diag_ages = diagnoses.map(&:edad_diagnostico)
     diag_diseases = diagnoses.map { |d| d.end_node.nombre }
+    puts (diag_diseases.zip diag_ages).inspect
     diag_diseases.zip diag_ages
   end
 
