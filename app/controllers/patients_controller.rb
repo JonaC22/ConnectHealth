@@ -55,7 +55,8 @@ class PatientsController < BaseController
       birth_date: params[:birth_date],
       gender: params[:gender],
       patient_type: params[:type] || 'patient',
-      pedigree_id: params[:pedigree_id]
+      pedigree_id: params[:pedigree_id],
+      status: params[:status]
     }
   end
 
