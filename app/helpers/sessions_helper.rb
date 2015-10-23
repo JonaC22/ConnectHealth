@@ -55,7 +55,7 @@ module SessionsHelper
 
   def verify_permission(user, permission)
     return if user.admin?
-    fail ForbiddenUserException, 'not enough permissions to excecute the task' unless user.roles.joins(:functions).find_by(functions: { description: permission })
+    fail ForbiddenUserException, 'not enough permissions to excecute the task' unless user.roles.joins(:functions).find_by(functions: { description: [permission, 'all'] })
   end
 
   def authenticate!

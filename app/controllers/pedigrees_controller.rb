@@ -1,4 +1,5 @@
 class PedigreesController < BaseController
+  before_action :authenticate!, only: [:index, :show, :create, :update, :destroy]
   # GET /api/pedigree
   def index
     results = Pedigree.all.select(:id)
@@ -129,5 +130,9 @@ class PedigreesController < BaseController
       count = json['relations'].count { |rel| rel['from'] == persona && rel['name'] == tag }
       fail ImposibleRelationException, "Relacion duplicada: #{tag}" if count > 1
     end
+  end
+
+  def required_permission
+    'pedigree'
   end
 end
