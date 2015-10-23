@@ -228,7 +228,13 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     console.log(textStatus);
     console.log(errorThrown);
     toggleLoading(false);
-    alert("Error: " + jqXHR.status + " " + errorThrown);
+    if(errorThrown == 'Not Found'){
+        alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
+        window.location = '/pacientes.html';
+    }
+    else {
+        alert("Error: " + jqXHR.status + " " + errorThrown);
+    }
 });
 
 function reloadDiagram() {
@@ -310,19 +316,20 @@ function showCreateModal(type) {
             break;
         case "CHILD":
             //$("#padreMadreSeleccionar").show();
+            $("#radio_gender").show();
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
         case "MOTHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[1].checked = true;
-            $("input[type=radio]").attr('disabled', true);
+            $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
-            $("input[type=radio]").attr('disabled', true);
+            $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
         case "DISEASE":
