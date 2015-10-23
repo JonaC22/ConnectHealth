@@ -228,7 +228,13 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     console.log(textStatus);
     console.log(errorThrown);
     toggleLoading(false);
-    alert("Error: " + jqXHR.status + " " + errorThrown);
+    if(errorThrown == 'Not Found'){
+        alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
+        window.location = '/pacientes.html';
+    }
+    else {
+        alert("Error: " + jqXHR.status + " " + errorThrown);
+    }
 });
 
 function reloadDiagram() {
