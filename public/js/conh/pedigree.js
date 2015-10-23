@@ -61,10 +61,19 @@ function calculatePREMM126() {
 
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
+            var res = JSON.parse(jqXHR.responseText);
+
+            if(res.error){
+                $("#statsWidgets").hide();
+                toggleLoading(false);
+                alert("ERROR: " + res.error);
+            }
+            else {
+                console.log(textStatus);
+                console.log(errorThrown);
+                toggleLoading(false);
+                alert("Error: " + jqXHR.status + " " + errorThrown);
+            }
         });
 }
 function calculateGail() {
@@ -108,10 +117,11 @@ function calculateGail() {
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
 
-        if(textStatus){
+        var res = JSON.parse(jqXHR.responseText);
+
+        if(res.error){
             $("#statsWidgets").hide();
             toggleLoading(false);
-            var res = JSON.parse(jqXHR.responseText);
             alert("ERROR: " + res.error);
         }
         else {
