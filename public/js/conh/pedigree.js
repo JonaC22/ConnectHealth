@@ -432,7 +432,7 @@ function validate_disease() {
         return false;
     }
 
-    //return true;
+    return true;
 }
 
 function createDisease() {
