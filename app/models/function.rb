@@ -9,5 +9,5 @@
 #
 
 class Function < ActiveRecord::Base
-  has_many :role_function
+  has_and_belongs_to_many :roles
 end

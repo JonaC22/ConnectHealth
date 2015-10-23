@@ -12,7 +12,13 @@ Rails.application.routes.draw do
     resources :diseases, only: [:index, :show, :create, :destroy]
     resources :make_pedigrees, only: [:index]
     resources :model_calculator, only: [:index, :show]
-    resources :users
+    resources :users do
+      resources :roles, only: [:index, :update, :destroy, :show]
+    end
+    resources :roles, only: [:index, :create, :update, :destroy, :show] do
+      resources :functions, only: [:update]
+    end
+    resources :functions, only: [:index, :show]
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
     end
