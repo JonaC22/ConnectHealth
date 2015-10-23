@@ -236,6 +236,12 @@ function reloadDiagram() {
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
 
+function addNode(newPerson){
+    family.patients.push(newPerson);
+    console.log(family);
+    reloadDiagram();
+}
+
 function addChild(parent, newChild) {
     family.patients.push(newChild);
     var newRelation = {
@@ -297,6 +303,11 @@ function showCreateModal(type) {
     newParent = undefined;
     $("#typeRelationForm").val(type);
     switch (type) {
+        case "NODE":
+            $("#padreMadreSeleccionar").hide();
+            $("input[type=radio]").attr('disabled', false);
+            $("#modal-create-family-member").modal("show")
+            break;
         case "CHILD":
             $("#padreMadreSeleccionar").show();
             $("input[type=radio]").attr('disabled', false);
@@ -395,6 +406,9 @@ function createRelative() {
         .done(function (data) {
             console.log(data);
             switch ($("#typeRelationForm").val()) {
+                case "NODE":
+                    addNode(data.patient);
+                    break;
                 case "CHILD":
                     addChild(currentPatient, data.patient);
                     break;
