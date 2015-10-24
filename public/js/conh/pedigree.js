@@ -61,20 +61,20 @@ function calculatePREMM126() {
 
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
-            var res = JSON.parse(jqXHR.responseText);
+        var res = JSON.parse(jqXHR.responseText);
 
-            if(res.error){
-                $("#statsWidgets").hide();
-                toggleLoading(false);
-                alert("ERROR: " + res.error);
-            }
-            else {
-                console.log(textStatus);
-                console.log(errorThrown);
-                toggleLoading(false);
-                alert("Error: " + jqXHR.status + " " + errorThrown);
-            }
-        });
+        if (res.error) {
+            $("#statsWidgets").hide();
+            toggleLoading(false);
+            alert("ERROR: " + res.error);
+        }
+        else {
+            console.log(textStatus);
+            console.log(errorThrown);
+            toggleLoading(false);
+            alert("Error: " + jqXHR.status + " " + errorThrown);
+        }
+    });
 }
 function calculateGail() {
 
@@ -94,24 +94,24 @@ function calculateGail() {
          result.append("ERROR: " + data.message);
          }
          */
-            var calc = data.model_calculator.calculations;
-            $("#statsWidgets").show();
-            $('#text_chart_group1').show();
-            $('#chart_group2').show();
-            $('#chart_group3').show();
-            $('#chart_group4').show();
-            //result.append("Riesgo absoluto de este paciente en 5 años: " + (data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
-            $('#chart1').data('easyPieChart').update((calc.absoluteRiskIn5Years * 100));
-            $('#perc1').text((calc.absoluteRiskIn5Years * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo promedio de una persona en 5 años: " + (calc.averageRiskIn5Years * 100).toFixed(2) + "%");
-            $('#chart2').data('easyPieChart').update((calc.averageRiskIn5Years * 100));
-            $('#perc2').text((calc.averageRiskIn5Years * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
-            $('#chart3').data('easyPieChart').update((calc.absoluteRiskAt90yo * 100));
-            $('#perc3').text((calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
-            //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (calc.averageRiskAt90yo * 100).toFixed(2) + "%");
-            $('#chart4').data('easyPieChart').update((calc.averageRiskAt90yo * 100));
-            $('#perc4').text((calc.averageRiskAt90yo * 100).toFixed(2) + "%");
+        var calc = data.model_calculator.calculations;
+        $("#statsWidgets").show();
+        $('#text_chart_group1').show();
+        $('#chart_group2').show();
+        $('#chart_group3').show();
+        $('#chart_group4').show();
+        //result.append("Riesgo absoluto de este paciente en 5 años: " + (data.absoluteRiskIn5Years * 100).toFixed(2) + "%");
+        $('#chart1').data('easyPieChart').update((calc.absoluteRiskIn5Years * 100));
+        $('#perc1').text((calc.absoluteRiskIn5Years * 100).toFixed(2) + "%");
+        //result.append("<br>Riesgo promedio de una persona en 5 años: " + (calc.averageRiskIn5Years * 100).toFixed(2) + "%");
+        $('#chart2').data('easyPieChart').update((calc.averageRiskIn5Years * 100));
+        $('#perc2').text((calc.averageRiskIn5Years * 100).toFixed(2) + "%");
+        //result.append("<br>Riesgo absoluto de este paciente hasta los 90 años: " + (calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+        $('#chart3').data('easyPieChart').update((calc.absoluteRiskAt90yo * 100));
+        $('#perc3').text((calc.absoluteRiskAt90yo * 100).toFixed(2) + "%");
+        //result.append("<br>Riesgo promedio de una persona hasta los 90 años: " + (calc.averageRiskAt90yo * 100).toFixed(2) + "%");
+        $('#chart4').data('easyPieChart').update((calc.averageRiskAt90yo * 100));
+        $('#perc4').text((calc.averageRiskAt90yo * 100).toFixed(2) + "%");
 
 
         toggleLoading(false);
@@ -119,7 +119,7 @@ function calculateGail() {
 
         var res = JSON.parse(jqXHR.responseText);
 
-        if(res.error){
+        if (res.error) {
             $("#statsWidgets").hide();
             toggleLoading(false);
             alert("ERROR: " + res.error);
@@ -248,7 +248,7 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
     console.log(textStatus);
     console.log(errorThrown);
     toggleLoading(false);
-    if(errorThrown == 'Not Found'){
+    if (errorThrown == 'Not Found') {
         alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
         window.location = '/pacientes.html';
     }
@@ -262,7 +262,7 @@ function reloadDiagram() {
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
 
-function addNode(newPerson){
+function addNode(newPerson) {
     family.patients.push(newPerson);
     console.log(family);
     reloadDiagram();
@@ -290,6 +290,11 @@ function addChild(parent, newChild) {
 
 function addMother(child, madre) {
     console.log("Agregando Madre");
+    if (child.age >= madre.age) {
+        alert("Error de Validación de edad");
+        return
+    }
+
     family.patients.push(madre);
     var newRelation = {
         "from": child.neo_id,
@@ -308,6 +313,10 @@ function addMother(child, madre) {
 
 function addFather(child, padre) {
     console.log("Agregando Padre");
+    if (child.age >= padre.age) {
+        alert("Error de Validación de edad");
+        return
+    }
     family.patients.push(padre);
     var newRelation = {
         "from": child.neo_id,
@@ -374,18 +383,18 @@ function openDiagramModal() {
         var patient = get_patient_object(family.patients, part.data.key);
         if (!(part instanceof go.Link)) {
             console.log("newParent", patient);
-            if(patient.gender == currentPatient.gender){
+            if (patient.gender == currentPatient.gender) {
                 alert("Seleccione a otra persona del sexo contrario.")
                 return;
-            }else {
+            } else {
                 newParent = patient;
                 $("#otherParentLabel").text(newParent.name + " " + newParent.lastname);
                 $("#modal-select-member").modal("hide")
-                diagramModal.removeDiagramListener("ObjectSingleClicked",listener);
+                diagramModal.removeDiagramListener("ObjectSingleClicked", listener);
             }
         }
     };
-       diagramModal.addDiagramListener("ObjectSingleClicked",listener);
+    diagramModal.addDiagramListener("ObjectSingleClicked", listener);
     $("#modal-select-member").modal("show")
 }
 
@@ -416,7 +425,7 @@ function validate_disease() {
     var _age = $('#disease_age').val();
     var err_msg;
 
-    if($.inArray(_id, ["2", "12", "22", "52"]) > -1 && currentPatient.gender == "M"){
+    if ($.inArray(_id, ["2", "12", "22", "52"]) > -1 && currentPatient.gender == "M") {
         err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo femenino";
         $("#modal-add-disease").modal("hide");
         console.log(err_msg);
@@ -424,7 +433,7 @@ function validate_disease() {
         return false;
     }
 
-    if(_age > currentPatient.age){
+    if (_age > currentPatient.age) {
         err_msg = "ERROR: edad de diagnostico es mayor a la edad del paciente";
         $("#modal-add-disease").modal("hide");
         console.log(err_msg);
@@ -440,7 +449,7 @@ function createDisease() {
     var form = $("#addDiseaseForm");
     console.log(form.serialize());
 
-    if(validate_disease()){
+    if (validate_disease()) {
         $.put("/api/patients/" + currentPatient.id, form.serialize())
             .done(function (data) {
                 console.log(data);
@@ -505,7 +514,7 @@ function updatePedigree() {
 function createRelative() {
     console.log($("#patientForm").serialize());
 
-    if(validate_age($("#birth_date").val(), currentPatient.age, $("#typeRelationForm").val())){
+    if (validate_age($("#birth_date").val(), currentPatient.age, $("#typeRelationForm").val())) {
         $.post("/api/patients", $("#patientForm").serialize())
             .done(function (data) {
                 console.log(data);
@@ -543,23 +552,33 @@ function createRelative() {
 function set_current_patient(patient) {
     currentPatient = patient;
 
-    if (patient.father == undefined)
+    if (patient.father == undefined) {
         $("#agregarPadreButton").show();
-    else
+        $("#agregarRelacionPadreButton").show();
+    }
+    else {
         $("#agregarPadreButton").hide();
-    if (patient.mother == undefined)
+        $("#agregarRelacionPadreButton").hide();
+    }
+    if (patient.mother == undefined) {
         $("#agregarMadreButton").show();
-    else
+        $("#agregarRelacionMadreButton").show();
+    } else {
         $("#agregarMadreButton").hide();
-    if (patient.id == family.current.id)
+        $("#agregarRelacionMadreButton").hide();
+    }
+    if (patient.id == family.current.id) {
         $("#deletePersonButton").hide();
-    else
+    }
+    else {
         $("#deletePersonButton").show();
+    }
 
 
-    var genderIcon=patient.gender=="M" ? '<i class="fa fa-male"></i> ' : '<i class="fa fa-female" style="color: pink;"></i> ';
-    $("#currentPatientName").html(genderIcon+patient.name + " " + patient.lastname);
-    $("#currentPatientAge").text(patient.age + " Años");
+    var genderIcon = patient.gender == "M" ? '<i class="fa fa-male"></i> ' : '<i class="fa fa-female" style="color: pink;"></i> ';
+    $("#currentPatientName").html(genderIcon + patient.name + " " + patient.lastname);
+    if (patient.status != "dead")
+        $("#currentPatientAge").text(patient.age + " Años");
     $("#currentPatientStatus").text(patient.status);
 //    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
 //    $("#current_patient").show();
@@ -637,18 +656,22 @@ function showCreateRelationModal(type) {
         }
     };
 
-    callback = function(patient){
+    callback = function (patient) {
         newParent = patient;
         $("#modal-select-member").modal("hide");
-        switch (type){
+        switch (type) {
             case "MOTHER":
                 if (newParent !== undefined && newParent.gender == "F") {//TODO: add age validation
                     addMother(currentPatient, newParent);
+                } else {
+                    alert("Error en la creación");
                 }
                 break;
             case "FATHER":
                 if (newParent !== undefined && newParent.gender == "M") {
                     addFather(currentPatient, newParent);
+                } else {
+                    alert("Error en la creación");
                 }
                 break;
         }
@@ -656,6 +679,6 @@ function showCreateRelationModal(type) {
         diagramModal.removeDiagramListener("ObjectSingleClicked", listener);
     };
 
-    diagramModal.addDiagramListener("ObjectSingleClicked",listener);
+    diagramModal.addDiagramListener("ObjectSingleClicked", listener);
     $("#modal-select-member").modal("show")
 }
