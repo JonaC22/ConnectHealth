@@ -15,6 +15,46 @@ $.put = function (url, data, callback, type) {
     });
 }
 
+function error_catch(jqXHR, textStatus, errorThrown, cont) {
+    var res = JSON.parse(jqXHR.responseText);
+
+    if (res) {
+        toggleLoading(false);
+        var error_thrown = false;
+        if (cont) error_thrown = cont(jqXHR, textStatus, errorThrown);
+        if(!error_thrown){
+            if(res.error.details){
+                var err_msg = "ERROR: " + res.error.details + ". ";
+                for(var campo in res.error.message) {
+                    err_msg += res.error.message[campo] + ". ";
+                }
+                alert(err_msg);
+                console.log(res);
+            } else {
+                if(res.error) {
+                    alert("ERROR: " + res.error);
+                    console.log(res.error);
+                }
+            }
+        }
+    }
+    else {
+        console.log(textStatus);
+        console.log(errorThrown);
+        toggleLoading(false);
+        alert("Error: " + jqXHR.status + " " + errorThrown);
+    }
+}
+
+function pedigree_not_selected(jqXHR, textStatus, errorThrown) {
+    if(errorThrown == 'Not Found'){
+        alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
+        window.location = '/pacientes.html';
+        return true;
+    }
+    return false;
+}
+
 function showGailForm() {
     $("#calcularGailButton").hide();
     $("#gailForm").show();
@@ -60,20 +100,8 @@ function calculatePREMM126() {
         }
 
         toggleLoading(false);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        var res = JSON.parse(jqXHR.responseText);
-
-        if (res.error) {
-            $("#statsWidgets").hide();
-            toggleLoading(false);
-            alert("ERROR: " + res.error);
-        }
-        else {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
-        }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        error_catch(jqXHR, textStatus, errorThrown, false);
     });
 }
 function calculateGail() {
@@ -115,23 +143,9 @@ function calculateGail() {
 
 
         toggleLoading(false);
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-
-        var res = JSON.parse(jqXHR.responseText);
-
-        if (res.error) {
-            $("#statsWidgets").hide();
-            toggleLoading(false);
-            alert("ERROR: " + res.error);
-        }
-        else {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
-        }
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        error_catch(jqXHR, textStatus, errorThrown, false);
     });
-
 
 }
 
@@ -244,17 +258,8 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 
     toggleLoading(false);
     set_current_patient(currentPatient);
-}).fail(function (jqXHR, textStatus, errorThrown) {
-    console.log(textStatus);
-    console.log(errorThrown);
-    toggleLoading(false);
-    if (errorThrown == 'Not Found') {
-        alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
-        window.location = '/pacientes.html';
-    }
-    else {
-        alert("Error: " + jqXHR.status + " " + errorThrown);
-    }
+}).fail(function(jqXHR, textStatus, errorThrown){
+        error_catch(jqXHR, textStatus, errorThrown, pedigree_not_selected);
 });
 
 function reloadDiagram() {
@@ -411,11 +416,8 @@ function selectDisease(cont) {
         });
         toggleLoading(false);
         cont();
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.log(textStatus);
-        console.log(errorThrown);
-        toggleLoading(false);
-        alert("Error: " + jqXHR.status + " " + errorThrown);
+    }).fail(function(jqXHR, textStatus, errorThrown){
+        error_catch(jqXHR, textStatus, errorThrown, false);
     });
 }
 
@@ -454,15 +456,13 @@ function createDisease() {
             .done(function (data) {
                 console.log(data);
             })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);
-                console.log(errorThrown);
-                toggleLoading(false);
-                alert("Error: " + jqXHR.status + " " + errorThrown);
+            .fail(function(jqXHR, textStatus, errorThrown){
+                error_catch(jqXHR, textStatus, errorThrown, false);
             });
     }
 
     updatePedigree();
+    reloadDiagram();
     $("#modal-add-disease").modal("hide");
 }
 
@@ -504,13 +504,11 @@ function updatePedigree() {
             console.log("Pedigree Updated");
             console.log(data);
         })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
+        .fail(function(jqXHR, textStatus, errorThrown){
+            error_catch(jqXHR, textStatus, errorThrown, false);
         });
 }
+
 function createRelative() {
     console.log($("#patientForm").serialize());
 
@@ -535,11 +533,8 @@ function createRelative() {
                 updatePedigree();
                 $("#modal-create-family-member").modal("hide");
             })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);
-                console.log(errorThrown);
-                toggleLoading(false);
-                alert("Error: " + jqXHR.status + " " + errorThrown);
+            .fail(function(jqXHR, textStatus, errorThrown){
+                error_catch(jqXHR, textStatus, errorThrown, false);
             });
     } else {
         var err_msg = "Error: edad del hijo es mayor que la del padre";
@@ -634,12 +629,8 @@ function deletePerson() {
             console.log(family);
             set_current_patient(family.current);
             reloadDiagram();
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-//            console.log(jqXHR);
-            console.log(textStatus);
-            console.log(errorThrown);
-            toggleLoading(false);
-            alert("Error: " + jqXHR.status + " " + errorThrown);
+        }).fail(function(jqXHR, textStatus, errorThrown){
+            error_catch(jqXHR, textStatus, errorThrown, false);
         });
 }
 

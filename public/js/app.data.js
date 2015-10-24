@@ -6,6 +6,37 @@ $(document).ready(function() {
 	    $this.html(t.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
 	});
 
+	function error_catch(jqXHR, textStatus, errorThrown, cont) {
+		var res = JSON.parse(jqXHR.responseText);
+
+		if (res) {
+			toggleLoading(false);
+			var error_thrown = false;
+			if (cont) error_thrown = cont(jqXHR, textStatus, errorThrown);
+			if(!error_thrown){
+				if(res.error.details){
+					var err_msg = "ERROR: " + res.error.details + ". ";
+					for(var campo in res.error.message) {
+						err_msg += res.error.message[campo] + ". ";
+					}
+					alert(err_msg);
+					console.log(res);
+				} else {
+					if(res.error) {
+						alert("ERROR: " + res.error);
+						console.log(res.error);
+					}
+				}
+			}
+		}
+		else {
+			console.log(textStatus);
+			console.log(errorThrown);
+			toggleLoading(false);
+			alert("Error: " + jqXHR.status + " " + errorThrown);
+		}
+	}
+
 	function getRandomInt(min, max) {
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
@@ -239,9 +270,9 @@ $(document).ready(function() {
 					if (self._formatter) self._formatter(data);
 
 					callback({ data: data, start: start, end: end, count: count, pages: pages, page: page });
-				}).fail(function(e){
-
-				});
+				}).fail(function(jqXHR, textStatus, errorThrown){
+                    error_catch(jqXHR, textStatus, errorThrown, false);
+                });
 			}, self._delay);
 		}
 	};
