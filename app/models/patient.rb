@@ -57,6 +57,7 @@ class Patient < ActiveRecord::Base
   before_create :create_node
   before_create :set_defaults
   after_create :save_node_to_index
+  before_destroy :delete_node
 
   def create!(params)
     super
@@ -283,5 +284,9 @@ class Patient < ActiveRecord::Base
 
   def validate_document_number_presence
     errors.add :document_number, 'A patient must have a document number' unless relative? || document_number
+  end
+
+  def delete_node
+    neo.delete_node!(node)
   end
 end

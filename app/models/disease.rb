@@ -21,6 +21,7 @@ class Disease < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { case_sentitive: false }
   before_create :create_node
+  before_destroy :delete_node
 
   def create_node
     node = neo.create_node('nombre' => name)
@@ -66,5 +67,9 @@ class Disease < ActiveRecord::Base
       disease = Disease.create! name: disease_name
       disease.create_node
     end
+  end
+
+  def delete_node
+    neo.delete_node!(node)
   end
 end
