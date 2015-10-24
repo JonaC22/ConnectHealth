@@ -158,6 +158,7 @@ function getPeopleNodesFromFamily(family) {
     });
 
     diseases = _.uniq(diseasesTemp);
+    console.log(diseases);
     loadCheckbox(diseases);
 
     $.each(family.relations, function (key, val) {
@@ -304,6 +305,7 @@ function showCreateModal(type) {
     $("#patientForm")[0].reset();
     $("#createButton").show();
     $("#editButton").hide();
+    $("#diagnosticos").hide();
     newParent = undefined;
     $("#typeRelationForm").val(type);
     switch (type) {
@@ -653,9 +655,40 @@ function showCreateRelationModal(type) {
 function loadCheckbox(diseases){
     $("#enfermedadesCheckbox").empty();
     $.each(diseases, function (key, val) {
-        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val)
-        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val)
+        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val);
     });
+}
+
+function showEditDiseases() {
+    $("#diagnosticos").empty();
+    $("#diagnosticos").append('<label>Diagnósticos</label>');
+    $.each(currentPatient.patient_diseases, function (key, value) {
+
+        $("#diagnosticos").append('<div class="alert alert-danger">' +
+            '            <button type="button" class="close" onclick="deleteDisease('+key+')"><i class="fa fa-times"></i></button>' +
+            '        <i class="fa fa-ban-circle"></i><strong>' + value.disease.name + ' a los ' + value.age + ' años</strong>' +
+            '        </div>');
+    });
+}
+
+function deleteDisease(key){
+    var disease = currentPatient.patient_diseases[key];
+    var params = {};
+    params.disease_id=disease.disease.id;
+    params.disease_name=disease.disease.name;
+    params.disease_age=disease.age;
+    params.disease_method = "remove";
+    console.log(params);
+    $.put("/api/patients/" + currentPatient.id, params)
+        .done(function (data) {
+            console.log(data);
+            currentPatient.patient_diseases = data.patient.patient_diseases;
+            reloadDiagram();
+            showEditDiseases();
+        })
+        .fail(function(jqXHR, textStatus, errorThrown){
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
 }
 
 function showEditPerson(){
@@ -663,12 +696,14 @@ function showEditPerson(){
     $("#patientForm")[0].reset();
     $("#createButton").hide();
     $("#editButton").show();
+    $("#diagnosticos").show();
     $("#modal-create-family-member").modal("show");
     $.each(currentPatient, function (key, value) {
         if (key != "gender") {
             $("#patientForm").find("input[name='" + key + "']").val(value);
         }
     });
+    showEditDiseases();
     if (currentPatient.gender == "M") {
         $('input:radio[name=gender]')[0].checked = true;
     } else {
