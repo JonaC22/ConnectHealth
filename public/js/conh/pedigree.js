@@ -1,50 +1,6 @@
-$.put = function (url, data, callback, type) {
 
-    if ($.isFunction(data)) {
-        type = type || callback,
-            callback = data,
-            data = {}
-    }
 
-    return $.ajax({
-        url: url,
-        type: 'PUT',
-        success: callback,
-        data: data,
-        contentType: type
-    });
-}
 
-function error_catch(jqXHR, textStatus, errorThrown, cont) {
-    var res = JSON.parse(jqXHR.responseText);
-
-    if (res) {
-        toggleLoading(false);
-        var error_thrown = false;
-        if (cont) error_thrown = cont(jqXHR, textStatus, errorThrown);
-        if(!error_thrown){
-            if(res.error.details){
-                var err_msg = "ERROR: " + res.error.details + ". ";
-                for(var campo in res.error.message) {
-                    err_msg += res.error.message[campo] + ". ";
-                }
-                alert(err_msg);
-                console.log(res);
-            } else {
-                if(res.error) {
-                    alert("ERROR: " + res.error);
-                    console.log(res.error);
-                }
-            }
-        }
-    }
-    else {
-        console.log(textStatus);
-        console.log(errorThrown);
-        toggleLoading(false);
-        alert("Error: " + jqXHR.status + " " + errorThrown);
-    }
-}
 
 function pedigree_not_selected(jqXHR, textStatus, errorThrown) {
     if(errorThrown == 'Not Found'){
@@ -574,6 +530,8 @@ function set_current_patient(patient) {
     $("#currentPatientName").html(genderIcon + patient.name + " " + patient.lastname);
     if (patient.status != "dead")
         $("#currentPatientAge").text(patient.age + " Años");
+    else
+        $("#currentPatientAge").text("");
     $("#currentPatientStatus").text(patient.status);
 //    $("#current_patient").text(patient.name + " " + patient.lastname + " edad: " + patient.age + " sexo: " + patient.gender + " id: " + patient.id);
 //    $("#current_patient").show();
