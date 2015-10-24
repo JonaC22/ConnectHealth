@@ -46,7 +46,7 @@ class Patient < ActiveRecord::Base
   scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
   scope :patient_gender, -> (gender) { where(gender: gender) }
   scope :type, -> (type) { where(patient_type: type) }
-  VALID_NAME_REGEX = /\A[a-zA-Z]+\z/i
+  VALID_NAME_REGEX = /\A[a-zA-ZnÑ]+\z/i
   VALID_DNI_REGEX = /\A[0-9]+\z/
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
