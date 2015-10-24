@@ -302,6 +302,8 @@ function addFather(child, padre) {
 
 function showCreateModal(type) {
     $("#patientForm")[0].reset();
+    $("#createButton").show();
+    $("#editButton").hide();
     newParent = undefined;
     $("#typeRelationForm").val(type);
     switch (type) {
@@ -412,18 +414,21 @@ function createDisease() {
 
     var form = $("#addDiseaseForm");
     console.log(form.serialize());
-
     if (validate_disease()) {
+        toggleLoading(true);
+        var patient =  currentPatient;
         $.put("/api/patients/" + currentPatient.id, form.serialize())
             .done(function (data) {
                 console.log(data);
+                patient.patient_diseases = data.patient.patient_diseases;
+                reloadDiagram();
+                toggleLoading(false);
             })
             .fail(function(jqXHR, textStatus, errorThrown){
                 error_catch(jqXHR, textStatus, errorThrown, false);
             });
     }
 
-    reloadDiagram();
     $("#modal-add-disease").modal("hide");
 }
 
@@ -558,6 +563,12 @@ function checkDelete(){
     }
 }
 
+function removeFromArray(array,item) {
+    var index = array.indexOf(item);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+}
 function deletePerson() {
     if (currentPatient.id == family.current.id) {
         alert("No se puede borrar al nodo Paciente");
@@ -573,11 +584,7 @@ function deletePerson() {
             console.log("Person Deleted");
             console.log(data);
             toggleLoading(false);
-            var index = family.patients.indexOf(currentPatient);
-            if (index > -1) {
-                family.patients.splice(index, 1);
-            }
-
+            removeFromArray(family.patients,currentPatient);
             family.patients.forEach(function (pat) {
                     if (pat.wife == currentPatient.neo_id) pat.wife = undefined;
                     if (pat.husband == currentPatient.neo_id) pat.husband = undefined;
@@ -646,6 +653,43 @@ function showCreateRelationModal(type) {
 function loadCheckbox(diseases){
     $("#enfermedadesCheckbox").empty();
     $.each(diseases, function (key, val) {
-        $("#enfermedadesCheckbox").append('<input type="checkbox" checked> '+val)
+        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val)
+        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val)
     });
+}
+
+function showEditPerson(){
+    toggleLoading(false);
+    $("#patientForm")[0].reset();
+    $("#createButton").hide();
+    $("#editButton").show();
+    $("#modal-create-family-member").modal("show");
+    $.each(currentPatient, function (key, value) {
+        if (key != "gender") {
+            $("#patientForm").find("input[name='" + key + "']").val(value);
+        }
+    });
+    if (currentPatient.gender == "M") {
+        $('input:radio[name=gender]')[0].checked = true;
+    } else {
+        $('input:radio[name=gender]')[1].checked = true;
+    }
+    var id = currentPatient;
+}
+
+function editPatient() {
+    console.log($("#patientForm").serialize());
+    $("#modal-create-family-member").modal("hide");
+    toggleLoading(true);
+    $.put("/api/patients/"+currentPatient.id, $("#patientForm").serialize())
+        .done(function (data) {
+            toggleLoading(false);
+            console.log(data);
+            removeFromArray(family.patients,currentPatient);
+            currentPatient = data.patient;
+            family.patients.push(currentPatient);
+            reloadDiagram();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
 }

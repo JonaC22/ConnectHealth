@@ -312,6 +312,9 @@ $.delete = function (url, data, callback, type) {
 };
 
 function error_catch(jqXHR, textStatus, errorThrown, cont) {
+    if(jqXHR.status==0){
+        return;
+    }
     try {
         var res = JSON.parse(jqXHR.responseText);
     }catch(exception){}

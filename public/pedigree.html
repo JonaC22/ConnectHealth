@@ -292,10 +292,11 @@
                                     <div class="panel-body">
                                         <label>Enfermedades</label>
                                         <div id="enfermedadesCheckbox">
+                                            <input type="checkbox" style="margin:14px" checked="">
                                         </div>
                                     </div>
                                 </section>
-                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:82vh; "></div>
+                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:79vh; "></div>
                             </div>
                             <div class="col-lg-4">
                                 <section class="panel clearfix">
@@ -388,7 +389,7 @@
                                                     <a href="#" onclick='checkDelete()' class="btn btn-default" style="width: 100%;margin-bottom: 15px"><i class="fa fa-book"></i> Eliminar</a>
                                                 </div>
                                                 <div id="editPersonButton" class="col-lg-6">
-                                                    <a href="#" onclick='' class="btn btn-default" style="width: 100%;margin-bottom: 15px"><i class="fa fa-pencil"></i> Editar</a>
+                                                    <a href="#" onclick='showEditPerson()' class="btn btn-default" style="width: 100%;margin-bottom: 15px"><i class="fa fa-pencil"></i> Editar</a>
                                                 </div>
                                                 <div id="deleteRelationButton" class="col-lg-6">
                                                     <a href="#" onclick='' class="btn btn-facebook" style="width: 100%;margin-bottom: 15px"><i class="fa fa-unlink"></i> Eliminar Relación</a>
@@ -468,8 +469,11 @@
                             </div>
                             -->
                             <div class="checkbox m-t-lg">
-                                <button type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                <button id="createButton" type="button" onclick="createRelative()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
                                     <strong>Crear</strong>
+                                </button>
+                                <button id="editButton" type="button" onclick="editPatient()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Actualizar</strong>
                                 </button>
                             </div>
                         </form>
