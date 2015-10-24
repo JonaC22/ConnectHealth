@@ -97,11 +97,17 @@ class Patient < ActiveRecord::Base
     puts disease.inspect
     to_node = disease.node
     from_node = node
-    puts to_node.inspect
-    puts from_node.inspect
     relationship = neo.create_relationship('PADECE', from_node, to_node)
-    PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
+    PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic, neo_id: relationship['metadata']['id']
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
+  end
+
+  def remove_disease(disease_id, disease_diagnostic)
+    disease = Disease.find_by!(id: disease_id)
+    pat_dis = PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
+    return unless pat_dis
+    neo.delete_relationship(pat_dis.neo_id)
+    diseases.delete(disease)
   end
 
   def validate_relationship(relationship, relation_receiver)
@@ -248,7 +254,6 @@ class Patient < ActiveRecord::Base
   def first_live_birth_age
     ret = []
     ret.push *node.incoming(:MADRE)
-
     birth_ages = []
     patient_age = age
     rel_ids = ret.map(&:neo_id)
