@@ -126,7 +126,9 @@ $("#current_patient").hide();
 function getPeopleNodesFromFamily(family) {
     var nodos = {};
     var people = [];
-
+    var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function(){
+        return $(this).val();
+    });
     var diseasesTemp = [];
     $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
@@ -135,7 +137,9 @@ function getPeopleNodesFromFamily(family) {
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
             diseasesTemp.push(enf);
-            //TODO modificar por un checklist y agregar referencias (color - enfermedad)
+            if(jQuery.inArray(enf, diseaseUnchecked) !== -1){
+                continue;
+            }
             switch (enf) {
                 case "cancer de ovario":
                     val.attributes_go.push("C");
@@ -653,9 +657,14 @@ function showCreateRelationModal(type) {
 }
 
 function loadCheckbox(diseases){
+    var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function(){
+        return $(this).val();
+    });
     $("#enfermedadesCheckbox").empty();
+    console.log(diseases)
     $.each(diseases, function (key, val) {
-        $("#enfermedadesCheckbox").append('<input type="checkbox" style="margin:14px" checked> '+val);
+        var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1) ? "" : "checked";
+        $("#enfermedadesCheckbox").append('<input onclick="reloadDiagram()" name="diseaseCheck" type="checkbox" style="margin:14px" value="'+val+'" '+checked+'> '+val);
     });
 }
 
