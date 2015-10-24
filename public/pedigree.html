@@ -288,7 +288,14 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-8">
-                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:91vh; "></div>
+                                <section class="panel clearfix">
+                                    <div class="panel-body">
+                                        <label>Enfermedades</label>
+                                        <div id="enfermedadesCheckbox">
+                                        </div>
+                                    </div>
+                                </section>
+                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:82vh; "></div>
                             </div>
                             <div class="col-lg-4">
                                 <section class="panel clearfix">
@@ -356,14 +363,36 @@
                                     <div id="collapseZero" class="panel-collapse collapse in">
                                         <div class="panel-body text-sm">
                                             <div class="panel-body">
-                                                <a id="agregarNodoButton" href="#" onclick='showCreateModal("NODE")' class="btn btn-info " style="width: 70%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Persona</a>
-                                                <a id="agregarHijoButton" href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 70%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Nodo Hijo/a</a>
-                                                <a id="agregarPadreButton" href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 70%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Nodo Padre</a>
-                                                <a id="agregarMadreButton" href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 70%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Nodo Madre</a>
-                                                <a id="agregarRelacionPadreButton" href="#" onclick='showCreateRelationModal("FATHER")' class="btn btn-warning" style="width: 70%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Relacion Padre</a>
-                                                <a id="agregarRelacionMadreButton" href="#" onclick='showCreateRelationModal("MOTHER")' class="btn btn-success" style="width: 70%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Relacion Madre</a>
-                                                <a id="agregarEnfermedadButton" href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 70%; margin-bottom: 15px"><i class="fa fa-book"></i> Agregar Enfermedad</a>
-                                                <a id="deletePersonButton" href="#" onclick='deletePerson()' class="btn btn-default" style="width: 70%;"><i class="fa fa-book"></i> Eliminar</a>
+                                                <div id="agregarNodoButton" class="col-lg-6">
+                                                    <a  href="#" onclick='showCreateModal("NODE")' class="btn btn-info " style="width: 100%; margin-bottom: 15px"><i class="fa fa-plus"></i> Agregar Persona</a>
+                                                </div>
+                                                <div id="agregarHijoButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateModal("CHILD")' class="btn btn-info" style="width: 100%; margin-bottom: 15px"><i class="fa fa-user"></i> Agregar Nodo Hijo/a</a>
+                                                </div>
+                                                <div id="agregarPadreButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateModal("FATHER")' class="btn btn-warning" style="width: 100%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Nodo Padre</a>
+                                                </div>
+                                                <div id="agregarMadreButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateModal("MOTHER")' class="btn btn-success" style="width: 100%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Nodo Madre</a>
+                                                </div>
+                                                <div id="agregarRelacionPadreButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateRelationModal("FATHER")' class="btn btn-warning" style="width: 100%; margin-bottom: 15px"><i class="fa fa-male"></i> Agregar  Relacion Padre</a>
+                                                </div>
+                                                <div id="agregarRelacionMadreButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateRelationModal("MOTHER")' class="btn btn-success" style="width: 100%; margin-bottom: 15px"><i class="fa fa-female"></i> Agregar Relacion Madre</a>
+                                                </div>
+                                                <div id="agregarEnfermedadButton" class="col-lg-6">
+                                                    <a href="#" onclick='showCreateModal("DISEASE")' class="btn btn-danger" style="width: 100%; margin-bottom: 15px"><i class="fa fa-stethoscope"></i> Agregar Enfermedad</a>
+                                                </div>
+                                                <div id="deletePersonButton" class="col-lg-6">
+                                                    <a href="#" onclick='checkDelete()' class="btn btn-default" style="width: 100%;margin-bottom: 15px"><i class="fa fa-book"></i> Eliminar</a>
+                                                </div>
+                                                <div id="editPersonButton" class="col-lg-6">
+                                                    <a href="#" onclick='' class="btn btn-default" style="width: 100%;margin-bottom: 15px"><i class="fa fa-pencil"></i> Editar</a>
+                                                </div>
+                                                <div id="deleteRelationButton" class="col-lg-6">
+                                                    <a href="#" onclick='' class="btn btn-facebook" style="width: 100%;margin-bottom: 15px"><i class="fa fa-unlink"></i> Eliminar Relación</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -401,10 +430,10 @@
                                 <label>Apellido</label>
                                 <input name="lastname" type="text" class="form-control" placeholder="Apellido del paciente">
                             </div>
-                            <div class="form-group">
-                                <label>DNI</label>
-                                <input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">
-                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<label>DNI</label>-->
+                                <!--<input name="document_number" type="number" class="form-control" placeholder="DNI del paciente">-->
+                            <!--</div>-->
                             <div class="form-group">
                                 <label>Fecha de Nacimiento</label>
                                 <input id="birth_date" name="birth_date" type="date" class="form-control" placeholder="Fecha de nacimiento del paciente">
@@ -507,7 +536,9 @@
     <!-- /.modal-dialog -->
 </div>
 <script src="js/jquery.min.js"></script>
+<script src="js/slimscroll/jquery.slimscroll.min.js" cache="false"></script>
 <script src="js/js.cookie.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
 <!-- Sparkline Chart -->

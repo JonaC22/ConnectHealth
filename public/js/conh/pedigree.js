@@ -117,7 +117,7 @@ $.urlParam = function (name) {
 };
 myDiagram = init("myDiagram");
 diagramModal = init("diagramModal");
-
+diseases = [];
 currentPatient = null;
 newParent = null;
 family = null;
@@ -127,12 +127,14 @@ function getPeopleNodesFromFamily(family) {
     var nodos = {};
     var people = [];
 
+    var diseasesTemp = [];
     $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
+
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
-
+            diseasesTemp.push(enf);
             //TODO modificar por un checklist y agregar referencias (color - enfermedad)
             switch (enf) {
                 case "cancer de ovario":
@@ -152,7 +154,11 @@ function getPeopleNodesFromFamily(family) {
                     break;
             }
         }
+
     });
+
+    diseases = _.uniq(diseasesTemp);
+    loadCheckbox(diseases);
 
     $.each(family.relations, function (key, val) {
         if (val.name == "MADRE") {
@@ -417,7 +423,6 @@ function createDisease() {
             });
     }
 
-    updatePedigree();
     reloadDiagram();
     $("#modal-add-disease").modal("hide");
 }
@@ -547,6 +552,12 @@ function get_patient_object(people, id) {
     return patient;
 }
 
+function checkDelete(){
+    if(confirm("¿Está seguro que quiere borrar la persona?")){
+        deletePerson()
+    }
+}
+
 function deletePerson() {
     if (currentPatient.id == family.current.id) {
         alert("No se puede borrar al nodo Paciente");
@@ -630,4 +641,11 @@ function showCreateRelationModal(type) {
 
     diagramModal.addDiagramListener("ObjectSingleClicked", listener);
     $("#modal-select-member").modal("show")
+}
+
+function loadCheckbox(diseases){
+    $("#enfermedadesCheckbox").empty();
+    $.each(diseases, function (key, val) {
+        $("#enfermedadesCheckbox").append('<input type="checkbox" checked> '+val)
+    });
 }

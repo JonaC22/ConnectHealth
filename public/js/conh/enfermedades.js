@@ -3,8 +3,9 @@ function createDisease(){
     $.post("/api/diseases", $( "#diseaseForm" ).serialize())
         .done(function(data){
             console.log(data);
+            $('#GridEnfermedades').datagrid('reload');
             $("#modal-form").modal("hide")
-            search();
+//            search();
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             console.log(textStatus);
@@ -76,14 +77,6 @@ function search() {
                         },
                     ],
 
-                    // Create IMG tag for each returned image
-                    formatter: function (items) {
-                        $.each(items, function (index, item) {
-                            item.ext_link = '<a target="_blank" href="http://www.ncbi.nlm.nih.gov/pubmed/' + item.uid + '"><center><i class="fa fa-user-md"></i></center></a>';
-                            item.extract = '<a href="#verExtracto" onclick="verExtracto(\'' + item.uid + '\',\'' + item.title + '\')"><center><i class="fa fa-eye"></i></center></a>';
-                            item.fullTextArticleLink = '';
-                        });
-                    },
                     resultsId: ids
                 })
             });

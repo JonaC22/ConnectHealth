@@ -303,7 +303,7 @@ $(document).ready(function() {
 			      $.each(items, function (index, item) {
 			        item.edit = '<a onclick="showEditPatient('+item.id+')"><i class="fa fa-pencil"></i></a>';
 			        item.delete = '<a onclick="showDeletePatient('+item.id+')"><i class="fa fa-trash-o"></i></a>';
-                    item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-eye"></i></a>';
+                    item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-sitemap"></i></a>';
                   });
 			    },
                 url: '/api/patients?type=patient' //'js/data/patients.json'
