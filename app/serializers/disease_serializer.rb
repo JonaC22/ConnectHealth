@@ -8,6 +8,10 @@
 #  updated_at :datetime         not null
 #  neo_id     :integer
 #
+# Indexes
+#
+#  index_diseases_on_neo_id  (neo_id)
+#
 
 class DiseaseSerializer < ActiveModel::Serializer
   attributes :id, :name

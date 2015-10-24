@@ -17,6 +17,11 @@
 #  status          :integer
 #  patient_type    :integer
 #
+# Indexes
+#
+#  index_patients_on_neo_id       (neo_id)
+#  index_patients_on_pedigree_id  (pedigree_id)
+#
 
 class Patient < ActiveRecord::Base
   include Positionable

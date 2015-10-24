@@ -8,15 +8,18 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  remember_digest :string(255)
-#  admin           :boolean          default(FALSE)
 #  email           :string(255)
 #  photo_url       :string(255)
 #  display_name    :string(255)
 #
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
+#
 
 class User < ActiveRecord::Base
   attr_accessor :remember_token
-  ADMIN_PERMISSION = 'all'
+  ADMIN_PERMISSION = 'All'
   has_many :queries
   has_many :statistical_reports
   has_and_belongs_to_many :roles
@@ -52,6 +55,6 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    roles.joins(:functions).find_by(functions: { description: ADMIN_PERMISSION })
+    roles.joins(:functions).find_by(functions: { name: ADMIN_PERMISSION })
   end
 end

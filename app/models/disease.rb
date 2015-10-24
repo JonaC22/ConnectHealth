@@ -8,6 +8,10 @@
 #  updated_at :datetime         not null
 #  neo_id     :integer
 #
+# Indexes
+#
+#  index_diseases_on_neo_id  (neo_id)
+#
 
 class Disease < ActiveRecord::Base
   has_many :patient_diseases

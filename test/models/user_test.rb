@@ -8,10 +8,13 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  remember_digest :string(255)
-#  admin           :boolean          default(FALSE)
 #  email           :string(255)
 #  photo_url       :string(255)
 #  display_name    :string(255)
+#
+# Indexes
+#
+#  index_users_on_email  (email) UNIQUE
 #
 
 require 'test_helper'

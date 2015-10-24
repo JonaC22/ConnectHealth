@@ -10,6 +10,10 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+# Indexes
+#
+#  index_annotations_on_pedigree_id  (pedigree_id)
+#
 
 require 'test_helper'
 

@@ -55,12 +55,13 @@ class RolesController < BaseController
 
   def role_create_params
     {
-      description: params.require(:description)
+      name: params.require(:name),
+      description: params[:description]
     }
   end
 
   def role_update_params
-    params.permit(:description)
+    params.permit(:name, :description)
   end
 
   def correct_user
