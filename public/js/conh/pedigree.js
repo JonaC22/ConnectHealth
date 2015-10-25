@@ -130,6 +130,10 @@ function getPeopleNodesFromFamily(family) {
     $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
+        val.wife=undefined;
+        val.husband=undefined;
+        val.mother=undefined;
+        val.father=undefined;
 
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
@@ -480,7 +484,8 @@ function updatePedigree() {
 
 function createRelative() {
     console.log($("#patientForm").serialize());
-
+    toggleLoading(true);
+    $("#modal-create-family-member").modal("hide");
     if (validate_age($("#birth_date").val(), currentPatient.age, $("#typeRelationForm").val())) {
         $.post("/api/patients", $("#patientForm").serialize())
             .done(function (data) {
@@ -500,10 +505,11 @@ function createRelative() {
                         break;
                 }
                 updatePedigree();
-                $("#modal-create-family-member").modal("hide");
+                toggleLoading(false);
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
                 error_catch(jqXHR, textStatus, errorThrown, false);
+                $("#modal-create-family-member").modal("show");
             });
     } else {
         var err_msg = "Error: edad del hijo es mayor que la del padre";
@@ -735,28 +741,62 @@ function editPatient() {
         });
 }
 
-function showDeleteRelations() {
-    var people = getPeopleCloseNodesFromFamily(family);
-    setupDiagram(diagramModal, people, null);
-    var callback;
-    var listener = function (e) {
-        var part = e.subject.part;
-        console.log(part)
-//        var relation = get_patient_object(family.patients, part.data.key);
-        if ((part instanceof go.Link)) {
-            console.log("relation", part);
-            callback(part);
+function loadDeleteRelations() {
+    $("#relations").empty();
+    $.each(family.relations, function (key, val) {
+        if (val.to == currentPatient.neo_id) {//relacion hijos
+            var hijo = get_patient_object(family.patients, val.from);
+            var parentezco = currentPatient.gender == "M" ? "Padre" : "Madre";
+            $("#relations").append('<div class="alert alert-danger">' +
+                '            <button type="button" class="close" onclick="deleteRelation(' + key + ')"><i class="fa fa-times"></i></button>' +
+                '        <i class="fa fa-ban-circle"></i><strong>' + parentezco + ' de ' + hijo.name + " " + hijo.lastname + '</strong>' +
+                '        </div>');
+        } else if (val.from == currentPatient.neo_id) {//relacion madre o padre
+            var padre = get_patient_object(family.patients, val.to);
+            var parentezco = currentPatient.gender == "M" ? "Hijo" : "Hija";
+            $("#relations").append('<div class="alert alert-danger">' +
+                '            <button type="button" class="close" onclick="deleteRelation(' + key + ')"><i class="fa fa-times"></i></button>' +
+                '        <i class="fa fa-ban-circle"></i><strong>' + parentezco + ' de ' + padre.name + " " + padre.lastname + '</strong>' +
+                '        </div>');
         }
-    };
+    });
+    if ($('#relations').is(':empty')) {
+        $("#modal-remove-relations").modal("hide");
+    }
+}
 
-    callback = function (patient) {
-        $("#modal-select-member").modal("hide");
-//        updatePedigree();
-        diagramModal.removeDiagramListener("ObjectSingleClicked", listener);
-    };
+function deleteRelation(id){
+    family.relations.splice(id,1);
+    updatePedigree();
+    loadDeleteRelations();
+    reloadDiagram();
 
-    diagramModal.addDiagramListener("ObjectSingleClicked", listener);
-    $("#modal-select-member").modal("show")
+}
+
+function showDeleteRelations() {
+//    var people = getPeopleCloseNodesFromFamily(family);
+//    setupDiagram(diagramModal, people, null);
+//    var callback;
+//    var listener = function (e) {
+//        var part = e.subject.part;
+//        console.log(part)
+////        var relation = get_patient_object(family.patients, part.data.key);
+//        if ((part instanceof go.Link)) {
+//            console.log("relation", part);
+//            callback(part);
+//        }
+//    };
+//
+//    callback = function (patient) {
+//        $("#modal-select-member").modal("hide");
+////        updatePedigree();
+//        diagramModal.removeDiagramListener("ObjectSingleClicked", listener);
+//    };
+//
+//    diagramModal.addDiagramListener("ObjectSingleClicked", listener);
+//    $("#modal-select-member").modal("show")
+    $("#modal-remove-relations").modal("show");
+    loadDeleteRelations();
 }
 
 function getPeopleCloseNodesFromFamily(family) {
