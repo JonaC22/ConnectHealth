@@ -7,6 +7,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  neo_id     :integer
+#  gender     :integer
 #
 # Indexes
 #
@@ -22,6 +23,7 @@ class Disease < ActiveRecord::Base
   validates :name, presence: true, uniqueness: { case_sentitive: false }
   before_create :create_node
   before_destroy :delete_node
+  enum gender: { F: 0, M: 1, B: 2 }
 
   def create_node
     node = neo.create_node('nombre' => name)

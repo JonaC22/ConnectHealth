@@ -8,6 +8,7 @@
 #  age        :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  neo_id     :integer
 #
 # Indexes
 #
@@ -18,4 +19,14 @@
 class PatientDisease < ActiveRecord::Base
   belongs_to :patient
   belongs_to :disease
+
+  before_destroy :delete_relationship
+
+  def delete_relationship
+    neo.delete_relationship(neo_id)
+  end
+
+  def neo
+    @neo ||= Neography::Rest.new
+  end
 end

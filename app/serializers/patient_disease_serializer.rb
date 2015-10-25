@@ -8,6 +8,7 @@
 #  age        :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  neo_id     :integer
 #
 # Indexes
 #

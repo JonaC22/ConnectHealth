@@ -7,6 +7,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  neo_id     :integer
+#  gender     :integer
 #
 # Indexes
 #
@@ -14,5 +15,5 @@
 #
 
 class DiseaseSerializer < ActiveModel::Serializer
-  attributes :id, :name
+  attributes :id, :name, :gender
 end

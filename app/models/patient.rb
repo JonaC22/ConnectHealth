@@ -105,9 +105,7 @@ class Patient < ActiveRecord::Base
   def remove_disease(disease_id, disease_diagnostic)
     disease = Disease.find_by!(id: disease_id)
     pat_dis = PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
-    return unless pat_dis
-    neo.delete_relationship(pat_dis.neo_id)
-    diseases.delete(disease)
+    pat_dis.destroy! if pat_dis
   end
 
   def validate_relationship(relationship, relation_receiver)
