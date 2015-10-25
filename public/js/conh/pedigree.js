@@ -660,14 +660,18 @@ function showCreateRelationModal(type) {
 }
 
 function loadCheckbox(diseases) {
+    var count = 1;
+
     var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function () {
         return $(this).val();
     });
     $("#enfermedadesCheckbox").empty();
     console.log(diseases)
     $.each(diseases, function (key, val) {
-        var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1) ? "" : "checked";
-        $("#enfermedadesCheckbox").append('<input onclick="reloadDiagram()" name="diseaseCheck" type="checkbox" style="margin:14px" value="' + val + '" ' + checked + '> ' + val);
+        var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1 || count > 4) ? "" : "checked";
+        if(checked == "checked") count++;
+        console.log(count);
+        $("#enfermedadesCheckbox").append('<input onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px" value="' + val + '" ' + checked + '> ' + val);
     });
 }
 
@@ -867,4 +871,14 @@ function getPeopleCloseNodesFromFamily(family) {
     console.log(people);
     return people;
 
+}
+
+function disease_checked_change(input){
+
+    if($("#enfermedadesCheckbox input:checkbox:checked").length > 4){
+        input.checked = false;
+        alert("Solo pueden mostrarse 4 enfermedades simultaneamente.");
+    }
+    else
+        reloadDiagram();
 }
