@@ -1,5 +1,5 @@
 class StatisticsModel < BaseModel
-  attr_accessor :query, :result
+  attr_accessor :query
 
   def set_query(disease, query_type, degree, options)
     @query = "match (e:ENFERMEDAD{nombre:'#{disease}'})-[r:PADECE]-(n)"
@@ -15,7 +15,7 @@ class StatisticsModel < BaseModel
             @query += ' WHERE NOT (i)-->(e)'
           when 'tdr'
             @query += '-[:PADRE|MADRE]->(i)-[:PADRE|MADRE]->(i2)-[:PADRE|MADRE]->(p)-->(e)'
-            @query += ' WHERE NOT ( (i)-->(e) AND (i2)-->(e) )'
+            @query += ' WHERE NOT ( (i)-->(e) OR (i2)-->(e) )'
           else
             @query += ''
         end
@@ -55,9 +55,9 @@ class StatisticsModel < BaseModel
   end
 
   def calc_query
-    @result = @neo.execute_query @query
-    save_report @result
-    @result
+    result = @neo.execute_query @query
+    save_report result
+    result
   end
 
   # GET /api/statistics/reports
@@ -76,8 +76,7 @@ class StatisticsModel < BaseModel
   end
 
   def save_report(_result)
-    mysql_connection
-    # guardar un reporte en mysql para historico (guardar resultado y fecha de generacion)
-    close_mysql
+    hash = { :statement => @query, :result => _result }
+    StatisticalReport.create! hash
   end
 end
