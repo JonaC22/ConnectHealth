@@ -27,7 +27,8 @@ class DiseasesController < BaseController
 
   def disease_create_params
     {
-      name: params.require(:name)
+      name: params.require(:name),
+      gender: params.require(:gender)
     }
   end
 
