@@ -16,7 +16,5 @@
 #
 
 class Annotation < ActiveRecord::Base
-  include Positionable
   belongs_to :pedigree
-  attr_accessor :text
 end
