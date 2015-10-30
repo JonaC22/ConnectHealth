@@ -17,6 +17,12 @@ class DiseasesController < BaseController
     render json: @disease
   end
 
+  def update
+    @disease = Disease.find params[id]
+    @disease.update! disease_update_params
+    render json: @disease
+  end
+
   def destroy
     @disease = Disease.find params[:id]
     @disease.destroy!
@@ -30,6 +36,10 @@ class DiseasesController < BaseController
       name: params.require(:name),
       gender: params.require(:gender)
     }
+  end
+
+  def disease_update_params
+    params.permit(:name, :gender)
   end
 
   def required_permission
