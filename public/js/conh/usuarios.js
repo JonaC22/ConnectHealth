@@ -1,24 +1,10 @@
-function createDisease(){
-    console.log( $("#diseaseForm" ).serialize());
-    $.post("/api/diseases", $( "#diseaseForm" ).serialize())
-        .done(function(data){
-            console.log(data);
-            $('#GridEnfermedades').datagrid('reload');
-            $("#modal-form").modal("hide")
-//            search();
-        })
-        .fail(function (jqXHR, textStatus, errorThrown) {
-            error_catch(jqXHR, textStatus, errorThrown, false);
-        });
-}
-
-var EnfermedadesDataSource = function (options) {
+var UsuariosDataSource = function (options) {
     this._formatter = options.formatter;
     this._columns = options.columns;
     this._resultsId = options.resultsId
 };
 
-EnfermedadesDataSource.prototype = {
+UsuariosDataSource.prototype = {
 
     /**
      * Returns stored column metadata
@@ -53,23 +39,51 @@ EnfermedadesDataSource.prototype = {
     }
 };
 
-//TODO limpiar tabla antes de volver a repopular
-function search() {
+function createUser(){
+    console.log( $("#userForm" ).serialize());
+    $.post("/api/users", $( "#userForm" ).serialize())
+        .done(function(data){
+            console.log(data);
+            $('#GridUsuarios').datagrid('reload');
+            $("#modal-form").modal("hide")
+//            search();
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
+}
+
+function loadUsers() {
     toggleLoading(true);
 
-    $.getJSON('/api/diseases', {}, function (data) {
+    $.getJSON('/api/users', {}, function (data) {
         console.log(data);
-        var ids = data.diseases;
+        var ids = data.users;
         console.log(ids);
 
-        $('#GridEnfermedades').each(function () {
+        $('#GridUsuarios').each(function () {
             $(this).datagrid({
-                dataSource: new EnfermedadesDataSource({
+                dataSource: new UsuariosDataSource({
                     // Column definitions for Datagrid
                     columns: [
                         {
-                            property: 'name',
-                            label: 'Nombre',
+                            property: 'id',
+                            label: 'Id',
+                            sortable: true
+                        },
+                        {
+                            property: 'display_name',
+                            label: 'Usuario',
+                            sortable: true
+                        },
+                        {
+                            property: 'email',
+                            label: 'Email',
+                            sortable: true
+                        },
+                        {
+                            property: 'role',
+                            label: 'Rol',
                             sortable: true
                         },
                     ],
@@ -88,4 +102,4 @@ function search() {
 
 }
 
-search();
+loadUsers();
