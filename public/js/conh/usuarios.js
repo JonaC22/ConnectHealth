@@ -41,12 +41,18 @@ UsuariosDataSource.prototype = {
 
 function createUser(){
     console.log( $("#userForm" ).serialize());
-    $.post("/api/users", $( "#userForm" ).serialize())
+    var email = $("#email").val();
+    var displayName = $("#display_name").val();
+    var password = $("#password").val();
+
+    toggleLoading(true);
+    $.post("/api/users",  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
         .done(function(data){
             console.log(data);
             $('#GridUsuarios').datagrid('reload');
-            $("#modal-form").modal("hide")
-//            search();
+            $("#modal-form").modal("hide");
+            toggleLoading(false);
+            loadUsers();
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
@@ -86,7 +92,25 @@ function loadUsers() {
                             label: 'Rol',
                             sortable: true
                         },
+                        {
+                            property: 'edit',
+                            label: 'Editar',
+                            sortable: true
+                        },
+                        {
+                            property: 'delete',
+                            label: 'Borrar',
+                            sortable: true
+                        },
                     ],
+
+                    // Create IMG tag for each returned image
+                    formatter: function (items) {
+                        $.each(items, function (index, item) {
+                            item.edit = '<a target="_blank" href=""><center><i class="fa fa-user-md"></i></center></a>';
+                            item.delete = '<a href="" onclick=""><center><i class="fa fa-trash-o"></i></center></a>';
+                        });
+                    },
 
                     resultsId: ids
                 })

@@ -279,18 +279,22 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 b-r">
-                            <h3 class="m-t-none m-b">Enfermedad</h3>
+                            <h3 class="m-t-none m-b">Usuarios</h3>
 
                             <p>Ingresa una nuevo usuario</p>
 
                             <form id="userForm" onsubmit="createDisease()">
                                 <div class="form-group">
+                                    <label>Nombre de Usuario</label>
+                                    <input name="display_name"  id="display_name" type="text" class="form-control" placeholder="Usuario">
+                                </div>
+                                <div class="form-group">
                                     <label>Email</label>
-                                    <input name="email" type="email" class="form-control" placeholder="email">
+                                    <input name="email" id="email" type="email" class="form-control" placeholder="Email">
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input name="password" type="password" class="form-control" placeholder="password">
+                                    <input name="password" id="password" type="password" class="form-control" placeholder="password">
                                 </div>
                                 <div class="checkbox m-t-lg">
                                     <button type="button" onclick="createUser()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
