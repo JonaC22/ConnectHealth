@@ -22,8 +22,14 @@ class Disease < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: { case_sentitive: false }
   before_create :create_node
+  before_update :validate_patients_dont_exist
+  before_destroy :validate_patients_dont_exist
   before_destroy :delete_node
   enum gender: { F: 0, M: 1, B: 2 }
+
+  def validate_patients_dont_exist
+    fail PatientsExistException unless patients.empty?
+  end
 
   def create_node
     node = neo.create_node('nombre' => name)

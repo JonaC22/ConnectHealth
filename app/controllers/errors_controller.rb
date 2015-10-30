@@ -10,6 +10,7 @@ class ErrorsController < BaseController
     return imposible_relation error if error.is_a? ImposibleRelationException
     return duplicated_relation error if error.is_a? DuplicatedRelationException
     return unauthorized_user error if error.is_a? ForbiddenUserException
+    return patients_exist error if error.is_a? PatientsExistException
     exception error
   end
 
@@ -44,6 +45,10 @@ class ErrorsController < BaseController
   end
 
   def duplicated_relation(error)
+    render json: { error: error.message }, status: 400
+  end
+
+  def patients_exist
     render json: { error: error.message }, status: 400
   end
 
