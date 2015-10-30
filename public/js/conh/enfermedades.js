@@ -1,10 +1,10 @@
-var PubMedDataSource = function (options) {
+var EnfermedadesDataSource = function (options) {
     this._formatter = options.formatter;
     this._columns = options.columns;
     this._resultsId = options.resultsId
 };
 
-PubMedDataSource.prototype = {
+EnfermedadesDataSource.prototype = {
 
     /**
      * Returns stored column metadata
@@ -69,7 +69,7 @@ function search() {
 
         $('#GridEnfermedades').each(function () {
             $(this).datagrid({
-                dataSource: new PubMedDataSource({
+                dataSource: new EnfermedadesDataSource({
                     // Column definitions for Datagrid
                     columns: [
                         {
