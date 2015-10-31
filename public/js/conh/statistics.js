@@ -43,7 +43,11 @@ EstadisticasDataSource.prototype = {
         // Allow client code to format the data
         if (self._formatter) self._formatter(self._resultsId);
         // Return data to Datagrid
-        callback({ data: self._resultsId, start: startIndex, end: end, count: count, pages: pages, page: page });
+        callback({data: self._resultsId, start: startIndex, end: end, count: count, pages: pages, page: page});
+    },
+
+    reset: function () {
+        this._resultsId = [];
     }
 };
 
@@ -78,7 +82,7 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
     function success_get_diseases(data) {
         var diseases = [];
 
-        data.data.diseases.forEach(function(d){
+        data.data.diseases.forEach(function (d) {
             delete d.id;
             d.value = d.name;
             diseases.push(d);
@@ -90,19 +94,19 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
         toggleLoading(false);
     }
 
-    function fail_function(response){
+    function fail_function(response) {
         alert(response);
         console.log(response);
     }
 }]);
 
-function transform_for_grid(data){
+function transform_for_grid(data) {
     var results = [];
     console.log(data);
-    $.each(data.data, function(i){
+    $.each(data.data, function (i) {
         console.log(data.data[i]);
         var obj = {};
-        $.each(data.columns, function(k){
+        $.each(data.columns, function (k) {
             obj[data.columns[k]] = data.data[i][k];
         });
         results.push(obj);
@@ -114,7 +118,7 @@ function fill_grid(data) {
     $('#datagridEstadisticas').show();
     var data_columns = [];
     console.log(data.columns);
-    $.each(data.columns, function(d){
+    $.each(data.columns, function (d) {
         var column = {};
         column.property = data.columns[d];
         column.label = data.columns[d];
@@ -124,13 +128,14 @@ function fill_grid(data) {
     console.log(data_columns);
     data = transform_for_grid(data);
     console.log(data);
-    $('#GridEstadisticas').each(function () {
-            $(this).datagrid({
-                dataSource: new EstadisticasDataSource({
-                    // Column definitions for Datagrid
-                    columns: data_columns,
-                    resultsId: data
-                })
-            });
+
+    if($('#GridEstadisticas').data('datagrid')) $('#GridEstadisticas tr').remove();
+
+    $('#GridEstadisticas').datagrid({
+        dataSource: new EstadisticasDataSource({
+            // Column definitions for Datagrid
+            columns: data_columns,
+            resultsId: data
+        })
     });
 }
