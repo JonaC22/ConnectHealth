@@ -1,3 +1,56 @@
+var EstadisticasDataSource = function (options) {
+    this._formatter = options.formatter;
+    this._columns = options.columns;
+    this._resultsId = options.resultsId
+};
+
+EstadisticasDataSource.prototype = {
+
+    /**
+     * Returns stored column metadata
+     */
+    columns: function () {
+        return this._columns;
+    },
+
+    /**
+     * Called when Datagrid needs data. Logic should check the options parameter
+     * to determine what data to return, then return data by calling the callback.
+     * @param {object} options Options selected in datagrid (ex: {pageIndex:0,pageSize:5,search:'searchterm'})
+     * @param {function} callback To be called with the requested data.
+     */
+    data: function (options, callback) {
+        var self = this;
+        var start = options.pageSize * options.pageIndex;
+        var pagesize = options.pageSize;
+        var pageIndex = options.pageIndex;
+
+        // Prepare data to return to Datagrid
+        var count = self._resultsId.length;
+
+        // SORTING
+        if (options.sortProperty) {
+            self._resultsId = _.sortBy(self._resultsId, options.sortProperty);
+            if (options.sortDirection === 'desc') self._resultsId.reverse();
+        }
+        var startIndex = start;
+        var endIndex = startIndex + pagesize;
+        var end = (endIndex > count) ? count : endIndex;
+        var pages = Math.ceil(count / pagesize);
+        var page = pageIndex + 1;
+
+
+        // Allow client code to format the data
+        if (self._formatter) self._formatter(self._resultsId);
+        // Return data to Datagrid
+        callback({data: self._resultsId, start: startIndex, end: end, count: count, pages: pages, page: page});
+    },
+
+    reset: function () {
+        this._resultsId = [];
+    }
+};
+
 var app = angular.module('statistics', []);
 
 app.controller('StatisticsController', ['$scope', '$http', function ($scope, $http) {
@@ -8,7 +61,8 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
     $scope.results = {};
 
     function success_function(data) {
-        $scope.results = data;
+        //$scope.results = data;
+        fill_grid(data.data);
         toggleLoading(false);
     }
 
@@ -19,16 +73,16 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
         data.disease = $scope.disease.value;
         data.degree = $scope.degree;
         data.options = $scope.options;
-        $http.post('api/statistics/query', data).success(success_function);
+        $http.post('api/statistics/query', data).then(success_function, fail_function);
     };
 
     toggleLoading(true);
-    $http.get('/api/diseases').success(success_get_diseases);
+    $http.get('/api/diseases').then(success_get_diseases, fail_function);
 
     function success_get_diseases(data) {
         var diseases = [];
 
-        data.diseases.forEach(function(d){
+        data.data.diseases.forEach(function (d) {
             delete d.id;
             d.value = d.name;
             diseases.push(d);
@@ -39,5 +93,49 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
 
         toggleLoading(false);
     }
+
+    function fail_function(response) {
+        alert(response);
+        console.log(response);
+    }
 }]);
 
+function transform_for_grid(data) {
+    var results = [];
+    console.log(data);
+    $.each(data.data, function (i) {
+        console.log(data.data[i]);
+        var obj = {};
+        $.each(data.columns, function (k) {
+            obj[data.columns[k]] = data.data[i][k];
+        });
+        results.push(obj);
+    });
+    return results;
+}
+
+function fill_grid(data) {
+    $('#datagridEstadisticas').show();
+    var data_columns = [];
+    console.log(data.columns);
+    $.each(data.columns, function (d) {
+        var column = {};
+        column.property = data.columns[d];
+        column.label = data.columns[d];
+        column.sortable = true;
+        data_columns.push(column);
+    });
+    console.log(data_columns);
+    data = transform_for_grid(data);
+    console.log(data);
+
+    if($('#GridEstadisticas').data('datagrid')) $('#GridEstadisticas tr').remove();
+
+    $('#GridEstadisticas').datagrid({
+        dataSource: new EstadisticasDataSource({
+            // Column definitions for Datagrid
+            columns: data_columns,
+            resultsId: data
+        })
+    });
+}
