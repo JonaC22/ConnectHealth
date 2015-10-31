@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/animate.css" type="text/css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css"/>
     <link rel="stylesheet" href="css/font.css" type="text/css" cache="false"/>
+    <link rel="stylesheet" href="js/fuelux/fuelux.css" type="text/css"/>
     <link rel="stylesheet" href="css/plugin.css" type="text/css"/>
     <link rel="stylesheet" href="css/app.css" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="/css/statistics.css" media="screen">
@@ -192,6 +193,7 @@
             <section class="scrollable" id="pjax-container">
                 <section class="hbox" ng-app="statistics" ng-controller="StatisticsController" style="margin: 20px;">
                     <h1>Reportes</h1>
+
                     <div id="selectDisease" class="col-lg-6">
                         <h3>Seleccionar enfermedad</h3>
                         <select ng-model="disease" ng-options="d.name for d in diseases" ng-cloak>
@@ -223,11 +225,89 @@
                         </select>
                     </div>
 
-                    <div  class="col-lg-12">
-                    <button ng-click="get_results()" style="margin: 12px">Consultar</button>
+                    <div class="col-lg-12">
+                        <button ng-click="get_results()" style="margin: 12px">Consultar</button>
                     </div>
 
-                    <!-- tabla -->
+                    <div class="col-lg-12" id="datagridEstadisticas" style="margin: 15px;">
+                        <section class="panel">
+                            <div class="table-responsive">
+                                <table id="GridEstadisticas" class="table table-striped datagrid m-b-sm">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="row">
+                                                <div class="col-sm-4 m-t-xs m-b-xs">
+                                                    <div class="input-group search datagrid-search">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    </thead>
+
+                                    <tfoot>
+                                    <tr>
+                                        <th class="row">
+                                            <div class="datagrid-footer-left col-sm-6 text-center-xs m-l-n"
+                                                 style="display:none;">
+                                                <div class="grid-controls m-t-sm">
+                              <span>
+                                <span class="grid-start"></span> -
+                                <span class="grid-end"></span> de
+                                <span class="grid-count"></span>
+                              </span>
+
+                                                    <div class="select grid-pagesize dropup" data-resize="auto">
+                                                        <button data-toggle="dropdown"
+                                                                class="btn btn-sm btn-white dropdown-toggle">
+                                                            <span class="dropdown-label"></span>
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            <li data-value="5"><a href="#">5</a></li>
+                                                            <li data-value="10"><a href="#">10</a></li>
+                                                            <li data-value="20" data-selected="true"><a href="#">20</a>
+                                                            </li>
+                                                            <li data-value="50"><a href="#">50</a></li>
+                                                            <li data-value="100"><a href="#">100</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <span>Per Page</span>
+                                                </div>
+                                            </div>
+                                            <div class="datagrid-footer-right col-sm-6 text-right text-center-xs"
+                                                 style="display:none;">
+                                                <div class="grid-pager m-r-n">
+                                                    <button type="button" class="btn btn-sm btn-white grid-prevpage"><i
+                                                            class="fa fa-chevron-left"></i></button>
+                                                    <span>Page</span>
+
+                                                    <div class="inline">
+                                                        <div class="input-group dropdown combobox">
+                                                            <input class="input-sm form-control" type="text">
+
+                                                            <div class="input-group-btn dropup">
+                                                                <button class="btn btn-sm btn-white"
+                                                                        data-toggle="dropdown">
+                                                                    <i class="caret"></i></button>
+                                                                <ul class="dropdown-menu pull-right"></ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <span>of <span class="grid-pages"></span></span>
+                                                    <button type="button" class="btn btn-sm btn-white grid-nextpage"><i
+                                                            class="fa fa-chevron-right"></i></button>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                    <!-- tabla
                     <div  class="col-lg-12">
                         <table class="table table-striped">
                             <th ng-repeat="column in results.columns">
@@ -237,7 +317,7 @@
                                 <td ng-repeat="val in row">{{val}}</td>
                             </tr>
                         </table>
-                    </div>
+                    </div> -->
                 </section>
             </section>
         </section>
@@ -260,6 +340,9 @@
 <script src="js/charts/sparkline/jquery.sparkline.min.js"></script>
 <!-- Easy Pie Chart -->
 <script src="js/charts/easypiechart/jquery.easy-pie-chart.js"></script>
+<!-- fuelux -->
+<script src="js/fuelux/fuelux.js"></script>
+<script src="js/libs/underscore-min.js"></script>
 <!-- Morris -->
 <script src="js/charts/morris/raphael-min.js" cache="false"></script>
 <script src="js/charts/morris/morris.min.js" cache="false"></script>
