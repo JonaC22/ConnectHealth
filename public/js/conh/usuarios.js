@@ -88,6 +88,57 @@ function deleteUser(id){
     }
 }
 
+function showCreateUser(){
+    $("#modal-form").modal("show");
+    $("#rolesDiv").show();
+    $("#createButton").show();
+    $("#editButton").hide();
+    $("#userForm")[0].reset();
+}
+
+var id;
+function showEditUser(idUser){
+    id=idUser;
+    toggleLoading(true);
+    $.getJSON('/api/users/'+id)
+        .done(function(data){
+            toggleLoading(false);
+            console.log(data);
+            $("#modal-form").modal("show");
+            $("#rolesDiv").hide();
+            $("#createButton").hide();
+            $("#editButton").show();
+            $.each(data.user, function (key, value) {
+                if (key != "gender") {
+                    $("#userForm").find("input[name='" + key + "']").val(value);
+                }
+            });
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
+}
+
+function editUser(){
+    toggleLoading(true);
+    $("#modal-form").modal("hide");
+    $("#rolesDiv").show();
+    $("#createButton").show();
+    $("#editButton").hide();
+    var email = $("#email").val();
+    var displayName = $("#display_name").val();
+    var password = $("#password").val();
+    $.put('/api/users/'+id,  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
+        .done(function (data){
+            console.log(data);
+            $("#userForm")[0].reset();
+            reloadData();
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
+}
+
 function loadRoles(){
     $.getJSON('/api/roles')
         .done(function(data){
@@ -148,7 +199,7 @@ function loadUsers() {
             // Create IMG tag for each returned image
             formatter: function (items) {
                 $.each(items, function (index, item) {
-                    item.edit = '<a target="_blank" href=""><center><i class="fa fa-user-md"></i></center></a>';
+                    item.edit = '<a target="_blank" onclick="showEditUser('+item.id+')"><center><i class="fa fa-user-md"></i></center></a>';
                     item.delete = '<a onclick="deleteUser('+item.id+')"><center><i class="fa fa-trash-o"></i></center></a>';
                     item.role = item.roles.map(function(val){return val.name}).join(", ")
                 });
