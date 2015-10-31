@@ -39,6 +39,15 @@ UsuariosDataSource.prototype = {
     }
 };
 
+function reloadData() {
+    $.getJSON('/api/users', {}, function (data) {
+        toggleLoading(false);
+        console.log(data);
+        var ids = data.users;
+        datasource._resultsId = ids;
+        $('#GridUsuarios').datagrid('reload');
+    });
+}
 function createUser(){
     console.log( $("#userForm" ).serialize());
     var email = $("#email").val();
@@ -50,24 +59,33 @@ function createUser(){
     $.post("/api/users",  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
         .done(function(data){
             console.log(data);
-            $('#GridUsuarios').datagrid('reload');
-            $.getJSON('/api/users', {}, function (data) {
-                toggleLoading(false);
-                console.log(data);
-                var ids = data.users;
-                datasource._resultsId = ids;
-                $('#GridUsuarios').datagrid('reload');
-            });
+            reloadData();
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
         });
 }
 
+function deleteUser(id){
+    if(confirm("¿Estás seguro que quieres dar de baja este usuario?")){
+        toggleLoading(true);
+        $.delete("/api/users/"+id)
+            .done(function(data){
+                console.log(data);
+                reloadData()
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                error_catch(jqXHR, textStatus, errorThrown, false);
+            });
+    }
+}
+
 var datasource;
+
 function loadUsers() {
 
     toggleLoading(true);
+
     $.getJSON('/api/users', {}, function (data) {
         console.log(data);
         var ids = data.users;
@@ -110,7 +128,8 @@ function loadUsers() {
             formatter: function (items) {
                 $.each(items, function (index, item) {
                     item.edit = '<a target="_blank" href=""><center><i class="fa fa-user-md"></i></center></a>';
-                    item.delete = '<a href="" onclick=""><center><i class="fa fa-trash-o"></i></center></a>';
+                    item.delete = '<a onclick="deleteUser('+item.id+')"><center><i class="fa fa-trash-o"></i></center></a>';
+                    item.role = item.roles.map(function(val){return val.name}).join(", ")
                 });
             },
 
@@ -129,7 +148,6 @@ function loadUsers() {
         toggleLoading(false);
         alert("Error: " + jqXHR.status + " " + errorThrown);
     });
-
 }
 
 loadUsers();
