@@ -107,10 +107,7 @@ function search() {
         });
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.log(textStatus);
-        console.log(errorThrown);
-        toggleLoading(false);
-        alert("Error: " + jqXHR.status + " " + errorThrown);
+        error_catch(jqXHR, textStatus, errorThrown, false);
     });
 
 }

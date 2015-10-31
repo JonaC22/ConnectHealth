@@ -53,13 +53,21 @@ function createUser(){
     var email = $("#email").val();
     var displayName = $("#display_name").val();
     var password = $("#password").val();
+    var roleId= $("#roles").val();
     $("#modal-form").modal("hide");
     $("#userForm")[0].reset();
     toggleLoading(true);
     $.post("/api/users",  {"user": { "email": email, "password":password, "password_confirmation":password, "display_name" : displayName} })
         .done(function(data){
             console.log(data);
-            reloadData();
+            $.put("/api/users/"+data.user.id+"/roles/"+roleId)
+                .done(function(data){
+                    console.log(data);
+                    reloadData();
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    error_catch(jqXHR, textStatus, errorThrown, false);
+                });
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
@@ -72,13 +80,26 @@ function deleteUser(id){
         $.delete("/api/users/"+id)
             .done(function(data){
                 console.log(data);
-                reloadData()
+                 reloadData()
             })
             .fail(function (jqXHR, textStatus, errorThrown) {
                 error_catch(jqXHR, textStatus, errorThrown, false);
             });
     }
 }
+
+function loadRoles(){
+    $.getJSON('/api/roles')
+        .done(function(data){
+            $.each(data.roles, function (key, val) {
+                $("#roles").append('<option value="'+val.id+'">'+val.description+'</option>');
+            });
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
+}
+
 
 var datasource;
 
@@ -143,11 +164,9 @@ function loadUsers() {
         });
         toggleLoading(false);
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.log(textStatus);
-        console.log(errorThrown);
-        toggleLoading(false);
-        alert("Error: " + jqXHR.status + " " + errorThrown);
+        error_catch(jqXHR, textStatus, errorThrown, false);
     });
 }
 
+loadRoles();
 loadUsers();
