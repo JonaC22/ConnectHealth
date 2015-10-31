@@ -115,27 +115,33 @@ function search() {
 
 }
 
-function showEditDisease() {
+function showEditDisease(id) {
     toggleLoading(true);
-    $.getJSON("/api/diseases/" + currentPatient.id, function (data) {
+    $.getJSON("/api/diseases/" + id, function (data) {
         console.log(data);
         toggleLoading(false);
-        $("#patientForm")[0].reset();
+        $("#diseaseForm")[0].reset();
         $("#createButton").hide();
         $("#editButton").show();
         $("#modal-form").modal("show");
-        $.each(data.patient, function (key, value) {
+        $.each(data.disease, function (key, value) {
             if (key != "gender") {
-                $("#patientForm").find("input[name='" + key + "']").val(value);
+                $("#diseaseForm").find("input[name='" + key + "']").val(value);
             }
         });
-        if (data.patient.gender == "M") {
-            $('input:radio[name=gender]')[0].checked = true;
-        } else {
-            $('input:radio[name=gender]')[1].checked = true;
+        switch(data.disease.gender){
+            case 'M':
+                $('input:radio[name=gender]')[0].checked = true;
+                break;
+            case 'F':
+                $('input:radio[name=gender]')[1].checked = true;
+                break;
+            case 'B':
+                $('input:radio[name=gender]')[2].checked = true;
+                break;
         }
         $("#editButton").click(function(){
-            editPatient(id)
+            editDisease(id);
         });
     });
 }
@@ -160,10 +166,25 @@ function createDisease(){
         .done(function(data){
             console.log(data);
             $('#GridEnfermedades').datagrid('reload');
-            $("#modal-form").modal("hide")
+            $("#modal-form").modal("hide");
 //            search();
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
+            error_catch(jqXHR, textStatus, errorThrown, false);
+        });
+}
+
+function editDisease(id) {
+    console.log($("#diseaseForm").serialize());
+    $("#modal-form").modal("hide");
+    toggleLoading(true);
+    $.put("/api/diseases/"+id, $("#diseaseForm").serialize())
+        .done(function (data) {
+            toggleLoading(false);
+            console.log(data);
+            $('#MyStretchGrid').datagrid('reload');
+            $("#modal-form").modal("hide");
+        }).fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
         });
 }
