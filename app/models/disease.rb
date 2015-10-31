@@ -28,7 +28,7 @@ class Disease < ActiveRecord::Base
   enum gender: { F: 0, M: 1, B: 2 }
 
   def validate_patients_dont_exist
-    fail PatientsExistException unless patients.empty?
+    fail PatientsExistException, 'The disease has at least one patient and cannot be modified' unless patients.empty?
   end
 
   def create_node

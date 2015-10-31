@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       resources :annotations
     end
     resources :patients, only: [:index, :show, :create, :update, :destroy]
-    resources :diseases, only: [:index, :show, :create, :destroy]
+    resources :diseases, only: [:index, :show, :create, :destroy, :update]
     resources :make_pedigrees, only: [:index]
     resources :model_calculator, only: [:index, :show]
     resources :users do

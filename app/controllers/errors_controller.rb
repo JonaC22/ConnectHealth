@@ -48,7 +48,7 @@ class ErrorsController < BaseController
     render json: { error: error.message }, status: 400
   end
 
-  def patients_exist
+  def patients_exist(error)
     render json: { error: error.message }, status: 400
   end
 
