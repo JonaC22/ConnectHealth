@@ -18,7 +18,7 @@ class DiseasesController < BaseController
   end
 
   def update
-    @disease = Disease.find params[id]
+    @disease = Disease.find params[:id]
     @disease.update! disease_update_params
     render json: @disease
   end
