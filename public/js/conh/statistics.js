@@ -27,11 +27,19 @@ EstadisticasDataSource.prototype = {
 
         // Prepare data to return to Datagrid
         var count = self._resultsId.length;
+
+        // SORTING
+        if (options.sortProperty) {
+            self._resultsId = _.sortBy(self._resultsId, options.sortProperty);
+            if (options.sortDirection === 'desc') self._resultsId.reverse();
+        }
         var startIndex = start;
         var endIndex = startIndex + pagesize;
         var end = (endIndex > count) ? count : endIndex;
         var pages = Math.ceil(count / pagesize);
         var page = pageIndex + 1;
+
+
         // Allow client code to format the data
         if (self._formatter) self._formatter(self._resultsId);
         // Return data to Datagrid
