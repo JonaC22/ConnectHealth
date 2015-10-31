@@ -99,36 +99,36 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
 function transform_for_grid(data){
     var results = [];
     console.log(data);
-    for(var i = 0; i < data.data.length; i++){
+    $.each(data.data, function(i){
         console.log(data.data[i]);
         var obj = {};
-        obj.Cantidad = data.data[i][0];
-        obj.Edad = data.data[i][1];
+        $.each(data.columns, function(k){
+            obj[data.columns[k]] = data.data[i][k];
+        });
         results.push(obj);
-    }
+    });
     return results;
 }
 
 function fill_grid(data) {
+    $('#datagridEstadisticas').show();
+    var data_columns = [];
+    console.log(data.columns);
+    $.each(data.columns, function(d){
+        var column = {};
+        column.property = data.columns[d];
+        column.label = data.columns[d];
+        column.sortable = true;
+        data_columns.push(column);
+    });
+    console.log(data_columns);
     data = transform_for_grid(data);
     console.log(data);
     $('#GridEstadisticas').each(function () {
             $(this).datagrid({
                 dataSource: new EstadisticasDataSource({
                     // Column definitions for Datagrid
-                    columns: [
-                        {
-                            property: 'Cantidad',
-                            label: 'Cantidad',
-                            sortable: true
-                        },
-                        {
-                            property: 'Edad',
-                            label: 'Edad',
-                            sortable: true
-                        }
-                    ],
-
+                    columns: data_columns,
                     resultsId: data
                 })
             });
