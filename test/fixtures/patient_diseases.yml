@@ -8,6 +8,12 @@
 #  age        :integer
 #  created_at :datetime
 #  updated_at :datetime
+#  neo_id     :integer
+#
+# Indexes
+#
+#  index_patient_diseases_on_disease_id  (disease_id)
+#  index_patient_diseases_on_patient_id  (patient_id)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

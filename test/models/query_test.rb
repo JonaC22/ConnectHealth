@@ -11,6 +11,11 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+# Indexes
+#
+#  index_queries_on_pedigree_id  (pedigree_id)
+#  index_queries_on_user_id      (user_id)
+#
 
 require 'test_helper'
 

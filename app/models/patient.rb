@@ -17,6 +17,11 @@
 #  status          :integer
 #  patient_type    :integer
 #
+# Indexes
+#
+#  index_patients_on_neo_id       (neo_id)
+#  index_patients_on_pedigree_id  (pedigree_id)
+#
 
 class Patient < ActiveRecord::Base
   include Positionable
@@ -41,7 +46,7 @@ class Patient < ActiveRecord::Base
   scope :patient_lastname, -> (name) { where('lastname like ?', "%#{name}%") }
   scope :patient_gender, -> (gender) { where(gender: gender) }
   scope :type, -> (type) { where(patient_type: type) }
-  VALID_NAME_REGEX = /\A[a-zA-Z]+\z/i
+  VALID_NAME_REGEX = /\A[a-zA-ZñÑ]+( [a-zA-ZñÑ]+)*\z/i
   VALID_DNI_REGEX = /\A[0-9]+\z/
   validates :name, presence: true, format: { with: VALID_NAME_REGEX }
   validates :lastname, presence: true, format: { with: VALID_NAME_REGEX }
@@ -52,6 +57,7 @@ class Patient < ActiveRecord::Base
   before_create :create_node
   before_create :set_defaults
   after_create :save_node_to_index
+  before_destroy :delete_node
 
   def create!(params)
     super
@@ -91,11 +97,15 @@ class Patient < ActiveRecord::Base
     puts disease.inspect
     to_node = disease.node
     from_node = node
-    puts to_node.inspect
-    puts from_node.inspect
     relationship = neo.create_relationship('PADECE', from_node, to_node)
-    PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic
+    PatientDisease.create! patient: self, disease: disease, age: disease_diagnostic, neo_id: relationship['metadata']['id']
     neo.reset_relationship_properties(relationship, 'edad_diagnostico' => disease_diagnostic)
+  end
+
+  def remove_disease(disease_id, disease_diagnostic)
+    disease = Disease.find_by!(id: disease_id)
+    pat_dis = PatientDisease.find_by(patient: self, disease: disease, age: disease_diagnostic)
+    pat_dis.destroy! if pat_dis
   end
 
   def validate_relationship(relationship, relation_receiver)
@@ -242,7 +252,6 @@ class Patient < ActiveRecord::Base
   def first_live_birth_age
     ret = []
     ret.push *node.incoming(:MADRE)
-
     birth_ages = []
     patient_age = age
     rel_ids = ret.map(&:neo_id)
@@ -278,5 +287,9 @@ class Patient < ActiveRecord::Base
 
   def validate_document_number_presence
     errors.add :document_number, 'A patient must have a document number' unless relative? || document_number
+  end
+
+  def delete_node
+    neo.delete_node!(node)
   end
 end

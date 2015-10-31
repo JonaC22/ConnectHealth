@@ -191,20 +191,21 @@
             </header>
             <section class="scrollable" id="pjax-container">
                 <section class="hbox" ng-app="statistics" ng-controller="StatisticsController" style="margin: 20px;">
-                    <div id="selectDisease">
+                    <h1>Reportes</h1>
+                    <div id="selectDisease" class="col-lg-6">
                         <h3>Seleccionar enfermedad</h3>
                         <select ng-model="disease" ng-options="d.name for d in diseases" ng-cloak>
                             {{disease}}
                         </select>
                     </div>
-                    <div id="selectType">
+                    <div id="selectType" class="col-lg-6">
                         <h3>Seleccionar tipo de consulta</h3>
                         <select ng-model="type">
                             <option value="count">Contar casos</option>
                             <option value="avg">Promedio</option>
                         </select>
                     </div>
-                    <div id="selectDegree">
+                    <div id="selectDegree" class="col-lg-6">
                         <h3>Seleccionar grado de parentesco en la herencia de la enfermedad</h3>
                         <select ng-model="degree">
                             <option value="fdr">Primer grado</option>
@@ -213,7 +214,7 @@
                             <option value="none">Sin herencia</option>
                         </select>
                     </div>
-                    <div id="selectOptions" ng-hide="degree == 'none'">
+                    <div id="selectOptions" ng-hide="degree == 'none' || degree == 'fdr'" class="col-lg-6">
                         <h3>Seleccionar opción para parientes intermedios</h3>
                         <select ng-model="options">
                             <option value="with">Con enfermedad</option>
@@ -222,10 +223,12 @@
                         </select>
                     </div>
 
-                    <button ng-click="get_results()">Consultar</button>
+                    <div  class="col-lg-12">
+                    <button ng-click="get_results()" style="margin: 12px">Consultar</button>
+                    </div>
 
                     <!-- tabla -->
-                    <div>
+                    <div  class="col-lg-12">
                         <table class="table table-striped">
                             <th ng-repeat="column in results.columns">
                                 {{column}}

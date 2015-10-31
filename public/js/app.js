@@ -276,3 +276,84 @@ if(Cookies.get('user_display_name')== undefined && window.location.pathname != "
         Cookies.get('user_display_name').replace("+"," ") +
         '<b class="caret"></b>');
 }
+
+$.put = function (url, data, callback, type) {
+
+    if ($.isFunction(data)) {
+        type = type || callback,
+            callback = data,
+            data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'PUT',
+        success: callback,
+        data: data,
+        contentType: type
+    });
+};
+
+$.delete = function (url, data, callback, type) {
+
+    if ($.isFunction(data)) {
+        type = type || callback,
+            callback = data,
+            data = {}
+    }
+
+    return $.ajax({
+        url: url,
+        type: 'DELETE',
+        success: callback,
+        data: data,
+        contentType: type
+    });
+};
+
+function error_catch(jqXHR, textStatus, errorThrown, cont) {
+    if(jqXHR.status==0){
+        return;
+    }
+    try {
+        var res = JSON.parse(jqXHR.responseText);
+    }catch(exception){}
+
+    if (res) {
+        toggleLoading(false);
+        var error_thrown = false;
+        if (cont) error_thrown = cont(jqXHR, textStatus, errorThrown);
+        if(!error_thrown){
+            if(res.error.details){
+                var err_msg = "ERROR: " + res.error.details + ". ";
+                for(var campo in res.error.message) {
+                    err_msg += res.error.message[campo] + ". ";
+                }
+                alert(err_msg);
+                console.log(res);
+            } else {
+                if(res.error) {
+                    alert("ERROR: " + res.error);
+                    console.log(res.error);
+                }
+            }
+        }
+    }
+    else {
+        console.log(textStatus);
+        console.log(errorThrown);
+        toggleLoading(false);
+        alert("Error: " + jqXHR.status + " " + errorThrown);
+    }
+}
+
+function unique(arr) {
+    var hash = {}, result = [];
+    for ( var i = 0, l = arr.length; i < l; ++i ) {
+        if ( !hash.hasOwnProperty(arr[i]) ) { //it works with objects! in FF, at least
+            hash[ arr[i] ] = true;
+            result.push(arr[i]);
+        }
+    }
+    return result;
+}

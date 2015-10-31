@@ -17,6 +17,11 @@
 #  status          :integer
 #  patient_type    :integer
 #
+# Indexes
+#
+#  index_patients_on_neo_id       (neo_id)
+#  index_patients_on_pedigree_id  (pedigree_id)
+#
 
 class PatientSerializer < ActiveModel::Serializer
   attributes :id, :name, :lastname, :document_type, :document_number, :gender, :neo_id, :birth_date, :active, :status, :pedigree_id, :patient_type, :age

@@ -7,6 +7,11 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  neo_id     :integer
+#  gender     :integer
+#
+# Indexes
+#
+#  index_diseases_on_neo_id  (neo_id)
 #
 
 require 'test_helper'

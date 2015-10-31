@@ -6,37 +6,6 @@ $(document).ready(function() {
 	    $this.html(t.replace(/</g, '&lt;').replace(/>/g, '&gt;'));
 	});
 
-	function error_catch(jqXHR, textStatus, errorThrown, cont) {
-		var res = JSON.parse(jqXHR.responseText);
-
-		if (res) {
-			toggleLoading(false);
-			var error_thrown = false;
-			if (cont) error_thrown = cont(jqXHR, textStatus, errorThrown);
-			if(!error_thrown){
-				if(res.error.details){
-					var err_msg = "ERROR: " + res.error.details + ". ";
-					for(var campo in res.error.message) {
-						err_msg += res.error.message[campo] + ". ";
-					}
-					alert(err_msg);
-					console.log(res);
-				} else {
-					if(res.error) {
-						alert("ERROR: " + res.error);
-						console.log(res.error);
-					}
-				}
-			}
-		}
-		else {
-			console.log(textStatus);
-			console.log(errorThrown);
-			toggleLoading(false);
-			alert("Error: " + jqXHR.status + " " + errorThrown);
-		}
-	}
-
 	function getRandomInt(min, max) {
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
@@ -315,20 +284,26 @@ $(document).ready(function() {
 					{
 						property: 'pedigree',
 						label: 'Pedigree',
-						sortable: true
+						sortable: false
 					},
 					{
 						property: 'edit',
 						label: 'Editar',
-						sortable: true
+						sortable: false
+					},
+					{
+						property: 'delete',
+						label: 'Borrar',
+						sortable: false
 					}
 				],
 
 			    // Create IMG tag for each returned image
 			    formatter: function (items) {
 			      $.each(items, function (index, item) {
-			        item.edit = '<a href="#edit?id='+item.id+'"><i class="fa fa-pencil"></i></a>';
-                    item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-eye"></i></a>';
+			        item.edit = '<a onclick="showEditPatient('+item.id+')"><i class="fa fa-pencil"></i></a>';
+			        item.delete = '<a onclick="showDeletePatient('+item.id+')"><i class="fa fa-trash-o"></i></a>';
+                    item.pedigree = '<a href="pedigree.html?id='+item.pedigree_id+'"><i class="fa fa-sitemap"></i></a>';
                   });
 			    },
                 url: '/api/patients?type=patient' //'js/data/patients.json'

@@ -10,6 +10,10 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
+# Indexes
+#
+#  index_statistical_reports_on_user_id  (user_id)
+#
 
 class StatisticalReport < ActiveRecord::Base
   belongs_to :user

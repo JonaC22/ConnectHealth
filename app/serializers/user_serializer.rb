@@ -17,10 +17,7 @@
 #  index_users_on_email  (email) UNIQUE
 #
 
-require 'test_helper'
-
-class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :email, :display_name, :photo_url
+  has_many :roles
 end
