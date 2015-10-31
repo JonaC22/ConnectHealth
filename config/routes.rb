@@ -7,7 +7,9 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
 
   scope '/api' do
-    resources :pedigrees, only: [:index, :show, :create, :update, :destroy]
+    resources :pedigrees, only: [:index, :show, :create, :update, :destroy] do
+      resources :annotations
+    end
     resources :patients, only: [:index, :show, :create, :update, :destroy]
     resources :diseases, only: [:index, :show, :create, :destroy]
     resources :make_pedigrees, only: [:index]
