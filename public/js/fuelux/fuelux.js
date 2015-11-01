@@ -360,7 +360,6 @@
 			this.$searchcontrol = this.$element.find('.search');
 		}
 
-		console.log(this.options);
 		this.columns = this.options.dataSource.columns();
 
 		this.$nextpagebtn.on('click', $.proxy(this.next, this));
@@ -628,7 +627,7 @@
 			var data = $this.data('datagrid');
 			var options = typeof option === 'object' && option;
 
-			$this.data('datagrid', (data = new Datagrid(this, options)));
+			if(!data) $this.data('datagrid', (data = new Datagrid(this, options)));
 			if (typeof option === 'string') data[option]();
 		});
 	};

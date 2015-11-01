@@ -44,10 +44,6 @@ EstadisticasDataSource.prototype = {
         if (self._formatter) self._formatter(self._resultsId);
         // Return data to Datagrid
         callback({data: self._resultsId, start: startIndex, end: end, count: count, pages: pages, page: page});
-    },
-
-    reset: function () {
-        this._resultsId = [];
     }
 };
 
@@ -129,8 +125,7 @@ function fill_grid(data) {
     data = transform_for_grid(data);
     console.log(data);
 
-    if($('#GridEstadisticas').data('datagrid')) $('#GridEstadisticas tr').remove();
-
+    $('#datagridEstadisticas').html(html_grid_estadisticas);
     $('#GridEstadisticas').datagrid({
         dataSource: new EstadisticasDataSource({
             // Column definitions for Datagrid
@@ -139,3 +134,9 @@ function fill_grid(data) {
         })
     });
 }
+
+var html_grid_estadisticas;
+
+$(document).ready(function(){
+    html_grid_estadisticas = $('#datagridEstadisticas').html();
+});
