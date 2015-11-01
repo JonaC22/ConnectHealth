@@ -157,6 +157,11 @@ function showDeleteDisease(id) {
     }
 }
 
+function showCreateDisease(id) {
+    $("#createButton").show();
+    $("#editButton").hide();
+}
+
 function createDisease(){
     console.log( $("#diseaseForm" ).serialize());
     $.post("/api/diseases", $( "#diseaseForm" ).serialize())
