@@ -303,6 +303,9 @@
           </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
   </div>
+  
+  <!-- Scripts -->
+  <script src="js/jquery.min.js"></script>
   <script type="text/javascript">
 
       function toggleLoading(toogle){
@@ -379,12 +382,14 @@
           }
       };
 
-      //TODO limpiar tabla antes de volver a repopular
+      var html_pubmed;
+
       function search(){
+          $('#datagrid').html(html_pubmed);
           var search_term = $('#search-box').val();
           console.log(search_term);
           toggleLoading(true);
-
+    
           $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=10000&term='+search_term,{},function(data){
               console.log(data);
               var ids = data.esearchresult.idlist;
@@ -491,10 +496,13 @@
               alert("Error: " + jqXHR.status + " " + errorThrown);
           });
       }
+      
+      $(document).ready(function(){
+        html_pubmed = $('#datagrid').html();
+      });
 
   </script>
-	<script src="js/jquery.min.js"></script>
-<script src="js/js.cookie.js"></script>
+  <script src="js/js.cookie.js"></script>
   <!-- Bootstrap -->
   <script src="js/bootstrap.js"></script>
   <!-- Sparkline Chart -->
