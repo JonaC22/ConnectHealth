@@ -60,7 +60,8 @@ function replace_affected_genders(data){
 
 function search() {
     toggleLoading(true);
-
+    console.log(html_enfermedades);
+    $('#datagridEnfermedades').html(html_enfermedades);
     $.getJSON('/api/diseases', {}, function (data) {
 
         console.log(data);
@@ -149,7 +150,8 @@ function showDeleteDisease(id) {
         $.delete("/api/diseases/" + id)
             .done(function (data) {
                 toggleLoading(false);
-                $('#MyStretchGrid').datagrid('reload');
+                search();
+                //$('#datagridEnfermedades').datagrid('reload');
                 console.log(data);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 error_catch(jqXHR, textStatus, errorThrown, false);
@@ -167,9 +169,9 @@ function createDisease(){
     $.post("/api/diseases", $( "#diseaseForm" ).serialize())
         .done(function(data){
             console.log(data);
-            $('#GridEnfermedades').datagrid('reload');
+            search();
+            //$('#datagridEnfermedades').datagrid('reload');
             $("#modal-form").modal("hide");
-//            search();
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
@@ -184,11 +186,18 @@ function editDisease(id) {
         .done(function (data) {
             toggleLoading(false);
             console.log(data);
-            $('#MyStretchGrid').datagrid('reload');
+            search();
+            //$('#datagridEnfermedades').datagrid('reload');
             $("#modal-form").modal("hide");
         }).fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
         });
 }
+
+var html_enfermedades;
+
+$(document).ready(function(){
+   html_enfermedades = $('#datagridEnfermedades').html(); 
+});
 
 search();
