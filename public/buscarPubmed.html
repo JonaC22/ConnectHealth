@@ -387,83 +387,87 @@
           $('#datagrid').html(html_pubmed);
           var search_term = $('#search-box').val();
           console.log(search_term);
-
-          if(search_term) {
+          var trim = search_term.trim();
+          if(search_term && trim.length > 0) {
 
               toggleLoading(true);
               $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&retmode=json&retmax=10000&term='+search_term,{},function(data){
                   console.log(data);
                   var ids = data.esearchresult.idlist;
                   console.log(ids);
-
-                  $('#PubMedGrid').each(function() {
-                      $(this).datagrid({
-                          dataSource: new PubMedDataSource({
-                              // Column definitions for Datagrid
-                              columns: [
-                                  {
-                                      property: 'uid',
-                                      label: 'Id',
-                                      sortable: true
-                                  },
-                                  {
-                                      property: 'title',
-                                      label: 'Título',
-                                      sortable: true
-                                  },
-                                  {
-                                      property: 'lastauthor',
-                                      label: 'Último autor',
-                                      sortable: true
-                                  },
-                                  {
-                                      property: 'pubdate',
-                                      label: 'Fecha de Pub.',
-                                      sortable: true
-                                  },
-                                  {
-                                      property: 'ext_link',
-                                      label: 'Pubmed Link',
-                                      sortable: false
-                                  },
-                                  {
-                                      property: 'extract',
-                                      label: 'Extracto',
-                                      sortable: false
-                                  },
-                                  {
-                                      property: 'fullTextArticleLink',
-                                      label: 'Full-text article',
-                                      sortable: false
-                                  }
-                              ],
-
-                              // Create IMG tag for each returned image
-                              formatter: function (items) {
-                                  $.each(items, function (index, item) {
-                                      item.ext_link = '<a target="_blank" href="http://www.ncbi.nlm.nih.gov/pubmed/'+item.uid+'"><center><i class="fa fa-user-md"></i></center></a>';
-                                      item.extract = '<a href="#verExtracto" onclick="verExtracto(\''+item.uid+'\',\''+item.title+'\')"><center><i class="fa fa-eye"></i></center></a>';
-                                      item.fullTextArticleLink = '';
-                                      var bestArticleLink = item.articleids[0];
-                                      switch(bestArticleLink.idtype){
-                                          case "pii":
-                                              item.fullTextArticleLink = '<a target="_blank" href="http://linkinghub.elsevier.com/retrieve/pii/'+bestArticleLink.value+'"><img alt="Icon for Elsevier Science" title="Read full text in Elsevier Science" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--linkinghub.elsevier.com-ihub-images-PubMedLink.gif" border="0" style="width:120px"></a>';
-                                              break;
-                                          case "doi":
-                                              item.fullTextArticleLink = '<a target="_blank" href="http://dx.doi.org/'+bestArticleLink.value+'"><img alt="Icon for Wiley" title="Read full text in Wiley" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--media.wiley.com-assets-2250-98-WileyOnlineLibrary_FullTextOnline_120x27.gif" border="0"></a>';
-                                              break;
-                                          case "pubmed":
-                                              item.fullTextArticleLink = '<a target="_blank" href="http://jcp.bmj.com/cgi/pmidlookup?view=long&pmid='+bestArticleLink.value+'"><img alt="Icon for HighWire" title="Read full text in HighWire" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--highwire.stanford.edu-icons-externalservices-pubmed-custom-bmjjournals_final.gif" border="0"></a>';
-                                              break;
-                                          default:
-                                              break;
+                  if(ids.length > 0){
+                      $('#PubMedGrid').each(function() {
+                          $(this).datagrid({
+                              dataSource: new PubMedDataSource({
+                                  // Column definitions for Datagrid
+                                  columns: [
+                                      {
+                                          property: 'uid',
+                                          label: 'Id',
+                                          sortable: true
+                                      },
+                                      {
+                                          property: 'title',
+                                          label: 'Título',
+                                          sortable: true
+                                      },
+                                      {
+                                          property: 'lastauthor',
+                                          label: 'Último autor',
+                                          sortable: true
+                                      },
+                                      {
+                                          property: 'pubdate',
+                                          label: 'Fecha de Pub.',
+                                          sortable: true
+                                      },
+                                      {
+                                          property: 'ext_link',
+                                          label: 'Pubmed Link',
+                                          sortable: false
+                                      },
+                                      {
+                                          property: 'extract',
+                                          label: 'Extracto',
+                                          sortable: false
+                                      },
+                                      {
+                                          property: 'fullTextArticleLink',
+                                          label: 'Full-text article',
+                                          sortable: false
                                       }
-                                  });
-                              },
-                              resultsId: ids
-                          })
+                                  ],
+
+                                  // Create IMG tag for each returned image
+                                  formatter: function (items) {
+                                      $.each(items, function (index, item) {
+                                          item.ext_link = '<a target="_blank" href="http://www.ncbi.nlm.nih.gov/pubmed/'+item.uid+'"><center><i class="fa fa-user-md"></i></center></a>';
+                                          item.extract = '<a href="#verExtracto" onclick="verExtracto(\''+item.uid+'\',\''+item.title+'\')"><center><i class="fa fa-eye"></i></center></a>';
+                                          item.fullTextArticleLink = '';
+                                          var bestArticleLink = item.articleids[0];
+                                          switch(bestArticleLink.idtype){
+                                              case "pii":
+                                                  item.fullTextArticleLink = '<a target="_blank" href="http://linkinghub.elsevier.com/retrieve/pii/'+bestArticleLink.value+'"><img alt="Icon for Elsevier Science" title="Read full text in Elsevier Science" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--linkinghub.elsevier.com-ihub-images-PubMedLink.gif" border="0" style="width:120px"></a>';
+                                                  break;
+                                              case "doi":
+                                                  item.fullTextArticleLink = '<a target="_blank" href="http://dx.doi.org/'+bestArticleLink.value+'"><img alt="Icon for Wiley" title="Read full text in Wiley" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--media.wiley.com-assets-2250-98-WileyOnlineLibrary_FullTextOnline_120x27.gif" border="0"></a>';
+                                                  break;
+                                              case "pubmed":
+                                                  item.fullTextArticleLink = '<a target="_blank" href="http://jcp.bmj.com/cgi/pmidlookup?view=long&pmid='+bestArticleLink.value+'"><img alt="Icon for HighWire" title="Read full text in HighWire" src="//www.ncbi.nlm.nih.gov/corehtml/query/egifs/http:--highwire.stanford.edu-icons-externalservices-pubmed-custom-bmjjournals_final.gif" border="0"></a>';
+                                                  break;
+                                              default:
+                                                  break;
+                                          }
+                                      });
+                                  },
+                                  resultsId: ids
+                              })
+                          });
                       });
-                  });
+                  }
+                  else {
+                      alert("Atención: No se obtuvieron resultados.");
+                  }
                   toggleLoading(false);
               }).fail(function (jqXHR, textStatus, errorThrown) {
                   console.log(textStatus);
