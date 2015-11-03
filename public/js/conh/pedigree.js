@@ -1,3 +1,11 @@
+//variable global diccionario de enfermedad-color
+
+var diseases_colors = {};
+
+function get_color_id(name){
+    return diseases_colors[name];
+}
+
 function pedigree_not_selected(jqXHR, textStatus, errorThrown) {
     if (errorThrown == 'Not Found') {
         alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
@@ -137,24 +145,22 @@ function getPeopleNodesFromFamily(family) {
 
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
+            var color_id = get_color_id(enf);
             diseasesTemp.push(enf);
             if (jQuery.inArray(enf, diseaseUnchecked) !== -1) {
                 continue;
             }
-            switch (enf) {
-                case "cancer de ovario":
+            switch (color_id) {
+                case 1:
                     val.attributes_go.push("C");
                     break;
-                case "cancer de mama":
-                    val.attributes_go.push("L");
+                case 2:
+                    val.attributes_go.push("J");
                     break;
-                case "cancer colon rectal":
-                    val.attributes_go.push("H");
+                case 3:
+                    val.attributes_go.push("G");
                     break;
-                case "cancer de endometrio":
-                    val.attributes_go.push("F");
-                    break;
-                default:
+                case 4:
                     val.attributes_go.push("E");
                     break;
             }
@@ -184,7 +190,7 @@ function getPeopleNodesFromFamily(family) {
 
     $.each(nodos, function (key, val) {
         var p = {};
-        //si es mayor de 90, tachar con una raya roja
+        //si esta muerto, tachar con una raya roja
         if (val.status == 'dead') {
             val.attributes_go.push("S");
             p.n = val.name + " " + val.lastname;
@@ -637,7 +643,7 @@ function showCreateRelationModal(type) {
         $("#modal-select-member").modal("hide");
         switch (type) {
             case "MOTHER":
-                if (newParent !== undefined && newParent.gender == "F") {//TODO: add age validation
+                if (newParent !== undefined && newParent.gender == "F") {
                     addMother(currentPatient, newParent);
                 } else {
                     alert("Error en la creación");
@@ -661,17 +667,34 @@ function showCreateRelationModal(type) {
 
 function loadCheckbox(diseases) {
     var count = 1;
-
+    var color_id = 1;
     var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function () {
         return $(this).val();
     });
     $("#enfermedadesCheckbox").empty();
-    console.log(diseases)
+    console.log(diseases);
+    diseases_colors = {};
     $.each(diseases, function (key, val) {
         var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1 || count > 4) ? "" : "checked";
         if(checked == "checked") count++;
-        console.log(count);
-        $("#enfermedadesCheckbox").append('<input onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px" value="' + val + '" ' + checked + '> ' + val);
+        var color;
+        switch(color_id){
+            case 1:
+                color = 'red';
+                break;
+            case 2:
+                color = '#00FF00';
+                break;
+            case 3:
+                color = 'blue';
+                break;
+            case 4:
+                color = 'yellow';
+                break;
+        }
+        diseases_colors[val] = color_id;
+        $("#enfermedadesCheckbox").append('<input onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val +'<span style="margin-left: 5px; padding-left: 15px; background-color:'+ color +';"></span>');
+        color_id++;
     });
 }
 
