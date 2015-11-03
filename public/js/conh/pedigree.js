@@ -388,7 +388,7 @@ function selectDisease(cont) {
     toggleLoading(true);
     $.getJSON('/api/diseases', function (data) {
         console.log(data);
-
+        diseases_data = data;
         var $select = $('#disease_id');
         $select.find('option').remove();
         $.each(data.diseases, function (key, value) {
@@ -406,10 +406,35 @@ function validate_disease() {
 
     var _id = $('#disease_id').val();
     var _age = $('#disease_age').val();
+    var _gender = currentPatient.gender;
+    var _disease_gender;
     var err_msg;
+    var wrong_gender = false;
 
-    if ($.inArray(_id, ["2", "12", "22", "52"]) > -1 && currentPatient.gender == "M") {
+    console.log(diseases_data);
+    var _collection = diseases_data.diseases;
+
+    $.each(_collection, function(dis) {
+            console.log(_collection[dis].id, _id);
+            if (_collection[dis].id == _id) {
+                _disease_gender = _collection[dis].gender;
+            }
+        }
+    );
+
+    console.log(_disease_gender);
+
+    if (_disease_gender == "F" && _gender == "M") {
         err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo femenino";
+        wrong_gender = true;
+    }
+
+    if (_disease_gender == "M" && _gender == "F") {
+        err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo masculino";
+        wrong_gender = true;
+    }
+
+    if (wrong_gender){
         $("#modal-add-disease").modal("hide");
         console.log(err_msg);
         alert(err_msg);
@@ -919,6 +944,7 @@ function remove_color_checkbox(input){
 //enum de enfermedad-color
 var diseases_colors = {1: 'red', 2: '#00FF00', 3: 'blue', 4: 'yellow'};
 var checked_diseases = {1: null, 2: null, 3: null, 4: null};
+var diseases_data;
 
 function update_references(name, checked){
     for(var i = 1; i < 5; i++){
