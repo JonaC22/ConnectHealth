@@ -716,15 +716,15 @@ function loadCheckbox(diseases) {
     console.log(diseases);
     $.each(diseases, function (key, val) {
         var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1 || count > 4) ? "" : "checked";
-        var color;
+        var img_tag = "";
         if(checked == "checked"){
             if(!find_reference(val)) update_references(val, true);
             count++;
         }
         var tag_id = 'check_'+total;
         var color_id = find_reference(val);
-        console.log(checked_diseases, diseases_colors[color_id]);
-        $("#enfermedadesCheckbox").append('<input id="'+tag_id+'" onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val +'<span id="color_'+tag_id+'" style="margin-left: 5px; padding-left: 15px; background-color: '+ diseases_colors[color_id] +';"></span>');
+        if(checked == "checked") img_tag = ' <img id="color_'+ tag_id +'" src="/images/'+ diseases_colors[color_id] +'.png" style="width: 14px; height: 14px;">';
+        $("#enfermedadesCheckbox").append('<input id="'+tag_id+'" onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val + img_tag);
         total++;
     });
 }
@@ -936,27 +936,11 @@ function disease_checked_change(input){
     else{
         update_references(input.value, input.checked);
         redraw();
-        toggle_checkbox_color(input);
     }
 }
 
-function toggle_checkbox_color(input){
-    var checked = input.checked;
-    if(checked) add_color_checkbox(input);
-    else remove_color_checkbox(input);
-}
-
-function add_color_checkbox(input){
-    var color_id = find_reference(input.value);
-    document.getElementById('color_'+input.id).style.backgroundColor = diseases_colors[color_id];
-}
-
-function remove_color_checkbox(input){
-    document.getElementById('color_'+input.id).style.backgroundColor = 'none';
-}
-
 //enum de enfermedad-color
-var diseases_colors = {1: 'red', 2: '#00FF00', 3: 'blue', 4: 'yellow'};
+var diseases_colors = {1: 'red', 2: 'green', 3: 'blue', 4: 'yellow'};
 var checked_diseases = {1: null, 2: null, 3: null, 4: null};
 var diseases_data;
 
