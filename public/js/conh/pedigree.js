@@ -452,6 +452,25 @@ function validate_disease() {
     return true;
 }
 
+function validate_gender_change(){
+    var _gender = $('input[name="gender"]:checked').val();
+    var _diseases = currentPatient.patient_diseases;
+    var _diseases_genders = [];
+    var err_msg;
+    $.each(_diseases, function(i){
+        _diseases_genders.push(_diseases[i].disease.gender);
+    });
+    _diseases_genders = _.uniq(_diseases_genders);
+    if(_.contains(_diseases_genders, 'F') && _gender == 'M') err_msg = 'ERROR: el paciente padece una enfermedad valida solamente para sexo femenino';
+    if(_.contains(_diseases_genders, 'M') && _gender == 'F') err_msg = 'ERROR: el paciente padece una enfermedad valida solamente para sexo masculino';
+    if(err_msg){
+        console.log(err_msg);
+        alert(err_msg);
+        return false;
+    }
+    return true;
+}
+
 function createDisease() {
 
     var form = $("#addDiseaseForm");
@@ -481,13 +500,9 @@ function _calculateAge(birthday) { // birthday is a date
 }
 
 function validate_age(birth_date, rel_age, type_rel) {
-
     var bdate = birth_date.split("-");
     var f = new Date(bdate[0], bdate[1] - 1, bdate[2]);
-    console.log(f);
     var age = _calculateAge(f);
-    console.log(age, rel_age);
-
     switch (type_rel) {
         case "CHILD":
             return age < rel_age;
@@ -773,18 +788,20 @@ function showEditPerson() {
 function editPatient() {
     console.log($("#patientForm").serialize());
     $("#modal-create-family-member").modal("hide");
-    toggleLoading(true);
-    $.put("/api/patients/" + currentPatient.id, $("#patientForm").serialize())
-        .done(function (data) {
-            toggleLoading(false);
-            console.log(data);
-            removeFromArray(family.patients, currentPatient);
-            currentPatient = data.patient;
-            family.patients.push(currentPatient);
-            reloadDiagram();
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            error_catch(jqXHR, textStatus, errorThrown, false);
-        });
+    if(validate_gender_change()){
+        toggleLoading(true);
+        $.put("/api/patients/" + currentPatient.id, $("#patientForm").serialize())
+            .done(function (data) {
+                toggleLoading(false);
+                console.log(data);
+                removeFromArray(family.patients, currentPatient);
+                currentPatient = data.patient;
+                family.patients.push(currentPatient);
+                reloadDiagram();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                error_catch(jqXHR, textStatus, errorThrown, false);
+            });
+    }
 }
 
 function loadDeleteRelations() {
