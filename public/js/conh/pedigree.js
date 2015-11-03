@@ -1,11 +1,3 @@
-//variable global diccionario de enfermedad-color
-
-var diseases_colors = {};
-
-function get_color_id(name){
-    return diseases_colors[name];
-}
-
 function pedigree_not_selected(jqXHR, textStatus, errorThrown) {
     if (errorThrown == 'Not Found') {
         alert("Error: no hay un paciente seleccionado, por favor seleccione uno del listado.");
@@ -135,6 +127,18 @@ function getPeopleNodesFromFamily(family) {
         return $(this).val();
     });
     var diseasesTemp = [];
+
+    $.each(family.patients, function (key, val) {
+        for (var i = 0; i < val.patient_diseases.length; i++) {
+            var enf = val.patient_diseases[i].disease.name;
+            diseasesTemp.push(enf);
+        }
+    });
+
+    var diseases = _.uniq(diseasesTemp);
+    console.log(diseases);
+    loadCheckbox(diseases);
+
     $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
@@ -145,11 +149,10 @@ function getPeopleNodesFromFamily(family) {
 
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
-            var color_id = get_color_id(enf);
-            diseasesTemp.push(enf);
             if (jQuery.inArray(enf, diseaseUnchecked) !== -1) {
                 continue;
             }
+            var color_id = find_reference(enf);
             switch (color_id) {
                 case 1:
                     val.attributes_go.push("C");
@@ -167,10 +170,6 @@ function getPeopleNodesFromFamily(family) {
         }
 
     });
-
-    diseases = _.uniq(diseasesTemp);
-    console.log(diseases);
-    loadCheckbox(diseases);
 
     $.each(family.relations, function (key, val) {
         if (val.name == "MADRE") {
@@ -667,34 +666,24 @@ function showCreateRelationModal(type) {
 
 function loadCheckbox(diseases) {
     var count = 1;
-    var color_id = 1;
+    var total = 1;
     var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function () {
         return $(this).val();
     });
     $("#enfermedadesCheckbox").empty();
     console.log(diseases);
-    diseases_colors = {};
     $.each(diseases, function (key, val) {
         var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1 || count > 4) ? "" : "checked";
-        if(checked == "checked") count++;
         var color;
-        switch(color_id){
-            case 1:
-                color = 'red';
-                break;
-            case 2:
-                color = '#00FF00';
-                break;
-            case 3:
-                color = 'blue';
-                break;
-            case 4:
-                color = 'yellow';
-                break;
+        if(checked == "checked"){
+            if(!find_reference(val)) update_references(val, true);
+            count++;
         }
-        diseases_colors[val] = color_id;
-        $("#enfermedadesCheckbox").append('<input onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val +'<span style="margin-left: 5px; padding-left: 15px; background-color:'+ color +';"></span>');
-        color_id++;
+        var tag_id = 'check_'+total;
+        var color_id = find_reference(val);
+        console.log(checked_diseases, diseases_colors[color_id]);
+        $("#enfermedadesCheckbox").append('<input id="'+tag_id+'" onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val +'<span id="color_'+tag_id+'" style="margin-left: 5px; padding-left: 15px; background-color: '+ diseases_colors[color_id] +';"></span>');
+        total++;
     });
 }
 
@@ -797,7 +786,6 @@ function deleteRelation(id){
     updatePedigree();
     loadDeleteRelations();
     reloadDiagram();
-
 }
 
 function showDeleteRelations() {
@@ -897,11 +885,53 @@ function getPeopleCloseNodesFromFamily(family) {
 }
 
 function disease_checked_change(input){
-
     if($("#enfermedadesCheckbox input:checkbox:checked").length > 4){
         input.checked = false;
         alert("Solo pueden mostrarse 4 enfermedades simultaneamente.");
     }
-    else
+    else{
+        update_references(input.value, input.checked);
         reloadDiagram();
+        toggle_checkbox_color(input);
+    }
+}
+
+function toggle_checkbox_color(input){
+    var checked = input.checked;
+    if(checked) add_color_checkbox(input);
+    else remove_color_checkbox(input);
+}
+
+function add_color_checkbox(input){
+    var color_id = find_reference(input.value);
+    document.getElementById('color_'+input.id).style.backgroundColor = diseases_colors[color_id];
+}
+
+function remove_color_checkbox(input){
+    document.getElementById('color_'+input.id).style.backgroundColor = 'none';
+}
+
+//enum de enfermedad-color
+var diseases_colors = {1: 'red', 2: '#00FF00', 3: 'blue', 4: 'yellow'};
+var checked_diseases = {1: null, 2: null, 3: null, 4: null};
+
+function update_references(name, checked){
+    for(var i = 1; i < 5; i++){
+        if(checked_diseases[i] == null && checked){
+            checked_diseases[i] = name;
+            return;
+        }
+        if(checked_diseases[i] == name && !checked){
+            checked_diseases[i] = null;
+            return;
+        }
+    }
+}
+
+function find_reference(name){
+    for(var i = 1; i < 5; i++){
+        if(checked_diseases[i] == name){
+            return i;
+        }
+    }
 }
