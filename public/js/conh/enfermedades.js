@@ -171,6 +171,7 @@ function createDisease(){
             search();
             //$('#datagridEnfermedades').datagrid('reload');
             $("#modal-form").modal("hide");
+            $("#dis_name").val("");
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);

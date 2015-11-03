@@ -16,7 +16,7 @@ class PREMM126
 
   @ls_related_cancers = [
     'cancer de estomago', 'cancer de ovario', 'cancer de tracto urinario',
-    'cancer de intestino delgado', 'cancer de pancreas', 'cancer de vía bilial',
+    'cancer de intestino delgado', 'cancer de pancreas', 'cancer de via bilial',
     'cancer de cerebro', 'cancer de glandulas sebaceas']
 
   @const_lp = {
