@@ -236,6 +236,11 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 });
 
 function reloadDiagram() {
+    clear_references();
+    redraw();
+}
+
+function redraw(){
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
@@ -891,7 +896,7 @@ function disease_checked_change(input){
     }
     else{
         update_references(input.value, input.checked);
-        reloadDiagram();
+        redraw();
         toggle_checkbox_color(input);
     }
 }
@@ -933,5 +938,11 @@ function find_reference(name){
         if(checked_diseases[i] == name){
             return i;
         }
+    }
+}
+
+function clear_references(){
+    for(var i = 1; i < 5; i++){
+        checked_diseases[i] = null;
     }
 }
