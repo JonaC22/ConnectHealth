@@ -60,7 +60,6 @@ function replace_affected_genders(data){
 
 function search() {
     toggleLoading(true);
-    console.log(html_enfermedades);
     $('#datagridEnfermedades').html(html_enfermedades);
     $.getJSON('/api/diseases', {}, function (data) {
 
