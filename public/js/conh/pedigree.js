@@ -411,7 +411,6 @@ function validate_disease() {
     var err_msg;
     var wrong_gender = false;
 
-    console.log(diseases_data);
     var _collection = diseases_data.diseases;
 
     $.each(_collection, function(dis) {
@@ -421,8 +420,6 @@ function validate_disease() {
             }
         }
     );
-
-    console.log(_disease_gender);
 
     if (_disease_gender == "F" && _gender == "M") {
         err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo femenino";
