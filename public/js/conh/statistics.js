@@ -58,7 +58,8 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
 
     function success_function(data) {
         //$scope.results = data;
-        fill_grid(data.data);
+        console.log(data.data);
+        fill_grid(data.data.statistical_report.result);
         toggleLoading(false);
     }
 
@@ -69,7 +70,7 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
         data.disease = $scope.disease.value;
         data.degree = $scope.degree;
         data.options = $scope.options;
-        $http.post('api/statistics/query', data).then(success_function, fail_function);
+        $http.post('api/statistical_reports', data).then(success_function, fail_function);
     };
 
     toggleLoading(true);

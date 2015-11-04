@@ -82,6 +82,7 @@ class StatisticalReport < ActiveRecord::Base
 
   def execute_statement
     result = neo.execute_query statement
+    puts result
     self.result = result
   end
 end
