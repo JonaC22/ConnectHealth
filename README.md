@@ -2,7 +2,7 @@
 
 ### Endpoints
 
-/pacientes
+/api/pacientes
 
 ### Herramientas a utlizar
 
@@ -30,6 +30,9 @@
 
 - Instalar puma  
 	` gem install puma -v '2.9.1' -- --with-opt-dir=c:\Ruby22-x64/openssl `
+	
+- SI hay problemas con bcrpt_ext desinstalar bcrypt e instalar esta versión	
+	` gem install bcrypt --platform=ruby `
 
 - Instalar Heroku Toolbelt  
 

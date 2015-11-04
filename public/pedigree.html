@@ -19,6 +19,13 @@
     <script src="js/ie/html5.js" cache="false"></script>
     <script src="js/ie/fix.js" cache="false"></script>
     <![endif]-->
+    <style type="text/css">
+        @media print
+        {
+            .noprint {display:none;}
+            @page { size: landscape; }
+        }
+    </style>
 </head>
 <body>
 <section class="hbox stretch">
@@ -27,14 +34,14 @@
         <section class="vbox">
             <header class="bg-black nav-bar">
                 <a class="btn btn-link visible-xs" data-toggle="class:nav-off-screen" data-target="#nav">
-                    <i class="fa fa-bars"></i>
+                    <i class="fa fa-bars noprint"></i>
                 </a>
                 <a href="#" class="nav-brand" data-toggle="fullscreen"><img src="./images/logo_notext.png"></a>
                 <a class="btn btn-link visible-xs" data-toggle="collapse" data-target=".navbar-collapse">
-                    <i class="fa fa-comment-o"></i>
+                    <i class="fa fa-comment-o noprint"></i>
                 </a>
             </header>
-            <section>
+            <section class="noprint">
                 <!-- nav -->
                 <nav class="nav-primary hidden-xs">
                     <ul class="nav">
@@ -99,11 +106,11 @@
                 <!-- / nav -->
             </section>
             <footer class="footer bg-gradient hidden-xs">
-                <a href="modal.lockme.html" data-toggle="ajaxModal" class="btn btn-sm btn-link m-r-n-xs pull-right">
-                    <i class="fa fa-power-off"></i>
+                <a href="modal.lockme.html" data-toggle="ajaxModal" class="noprint btn btn-sm btn-link m-r-n-xs pull-right">
+                    <i class="fa fa-power-off noprint"></i>
                 </a>
                 <a href="#nav" data-toggle="class:nav-vertical" class="btn btn-sm btn-link m-l-n-sm">
-                    <i class="fa fa-bars"></i>
+                    <i class="fa fa-bars noprint"></i>
                 </a>
             </footer>
         </section>
@@ -114,7 +121,20 @@
         <section class="vbox">
             <header class="header bg-black navbar navbar-inverse">
                 <div class="collapse navbar-collapse pull-in">
-
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" onclick="window.print()" value="Imprimir">
+                                <i class="fa fa-flask  text-white"></i>
+                                <span class="text-white">Imprimir Pedigree</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" onclick="showAnnotations()">
+                                <i class="fa fa-file-text text-white"></i>
+                                <span class="text-white" >Notas</span>
+                            </a>
+                        </li>
+                    </ul>
                     <!--<form class="navbar-form navbar-left m-t-sm" role="search">-->
                         <!--<div class="form-group">-->
                             <!--<div class="input-group input-s">-->
@@ -164,6 +184,7 @@
                                 John.Smith <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu animated fadeInLeft">
+                                <!--
                                 <li>
                                     <a href="#">Settings</a>
                                 </li>
@@ -179,6 +200,7 @@
                                 <li>
                                     <a href="docs.html">Help</a>
                                 </li>
+                                -->
                                 <li>
                                     <a id="logout"> Logout</a>
                                 </li>
@@ -290,15 +312,16 @@
                             <div class="col-lg-8">
                                 <section class="panel clearfix">
                                     <div class="panel-body">
-                                        <label>Enfermedades</label>
+                                        <label class="noprint">Enfermedades</label>
                                         <div id="enfermedadesCheckbox">
                                             <input type="checkbox" style="margin:14px" checked>
                                         </div>
                                     </div>
                                 </section>
-                                <div id="myDiagram" style="border: solid 1px blue; width:100%; height:79vh; "></div>
+                                <!--<input class="noprint" type="button" onclick="window.print()" value="Imprimir">-->
+                                <div class="print_pedigree" id="myDiagram" style="border: solid 1px blue; width:100%; height:79vh; "></div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 noprint">
                                 <section class="panel clearfix">
                                     <div class="panel-body">
                                         <a href="#" class="thumb pull-left m-r">
@@ -312,7 +335,7 @@
                                     </div>
                                 </section>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 noprint">
                                 <div class="panel">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne" aria-expanded="false">
                                         <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de Cáncer de Mama">
@@ -338,7 +361,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 noprint">
                                 <div class="panel">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" aria-expanded="false">
                                         <a class="accordion-toggle collapsed font-bold" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Riesgo de mutación en genes MLH1, MSH2, MSH6">
@@ -356,7 +379,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 noprint">
                                 <div class="panel panel-default">
                                     <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseZero" >
                                         Acciones
@@ -399,7 +422,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-12 noprint">
                                 <div id="current_patient" style="font-size: 20px;"></div>
                             </div>
                         </div>
@@ -522,6 +545,65 @@
     <!-- /.modal-dialog -->
 </div>
 
+<div class="modal fade" id="modal-add-annotation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b">Notas</h3>
+                        <form id="annotationsForm" onsubmit="updateAnnotations()">
+
+                            <div class="checkbox m-t-lg" >
+                                <ul id="note-items" class="list-group" style="">
+                                    <li class="list-group-item hover active col-lg-12" >
+                                    <div class="view" id="note-1">
+                                        <button class="destroy close hover-action">×</button>
+                                        <div class="note-name">
+                                            <strong>
+                                                New note
+                                            </strong>
+                                        </div>
+                                        <div class="note-desc">
+                                            empty note
+                                        </div>
+                                    </div>
+                                    </li>
+
+                                    <li class="list-group-item hover active col-lg-12" >
+                                        <div class="view" id="note-2">
+                                            <button class="destroy close hover-action">×</button>
+                                            <div class="note-name">
+                                                <strong>
+                                                    New note
+                                                </strong>
+                                            </div>
+                                            <div class="note-desc">
+                                                empty note
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="form-group">
+                                <textarea id="annotation" style="margin-top: 20px; width: 100%; height: 50px;"></textarea>
+                            </div>
+                            <div class="checkbox m-t-lg">
+                                <button type="button" onclick="updateAnnotations()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Agregar Nota</strong>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 
 <div class="modal fade" id="modal-remove-relations">
     <div class="modal-dialog">
@@ -567,7 +649,7 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/slimscroll/jquery.slimscroll.min.js" cache="false"></script>
 <script src="js/js.cookie.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+<script src="js/libs/underscore-min.js"></script>
 <!-- Bootstrap -->
 <script src="js/bootstrap.js"></script>
 <!-- Sparkline Chart -->

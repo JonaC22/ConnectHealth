@@ -627,7 +627,7 @@
 			var data = $this.data('datagrid');
 			var options = typeof option === 'object' && option;
 
-			if (!data) $this.data('datagrid', (data = new Datagrid(this, options)));
+			if(!data) $this.data('datagrid', (data = new Datagrid(this, options)));
 			if (typeof option === 'string') data[option]();
 		});
 	};

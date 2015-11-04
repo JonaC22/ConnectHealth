@@ -36,9 +36,9 @@ function editPatient(id) {
         });
 }
 
-function showEditPatient() {
+function showEditPatient(id) {
     toggleLoading(true);
-    $.getJSON("/api/patients/" + currentPatient.id, function (data) {
+    $.getJSON("/api/patients/" + id, function (data) {
         console.log(data);
         toggleLoading(false);
         $("#patientForm")[0].reset();

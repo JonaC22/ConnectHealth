@@ -127,6 +127,18 @@ function getPeopleNodesFromFamily(family) {
         return $(this).val();
     });
     var diseasesTemp = [];
+
+    $.each(family.patients, function (key, val) {
+        for (var i = 0; i < val.patient_diseases.length; i++) {
+            var enf = val.patient_diseases[i].disease.name;
+            diseasesTemp.push(enf);
+        }
+    });
+
+    var diseases = _.uniq(diseasesTemp);
+    console.log(diseases);
+    loadCheckbox(diseases);
+
     $.each(family.patients, function (key, val) {
         nodos[val.neo_id] = val;
         val.attributes_go = [];
@@ -137,34 +149,27 @@ function getPeopleNodesFromFamily(family) {
 
         for (var i = 0; i < val.patient_diseases.length; i++) {
             var enf = val.patient_diseases[i].disease.name;
-            diseasesTemp.push(enf);
             if (jQuery.inArray(enf, diseaseUnchecked) !== -1) {
                 continue;
             }
-            switch (enf) {
-                case "cancer de ovario":
+            var color_id = find_reference(enf);
+            switch (color_id) {
+                case 1:
                     val.attributes_go.push("C");
                     break;
-                case "cancer de mama":
-                    val.attributes_go.push("L");
+                case 2:
+                    val.attributes_go.push("J");
                     break;
-                case "cancer colon rectal":
-                    val.attributes_go.push("H");
+                case 3:
+                    val.attributes_go.push("G");
                     break;
-                case "cancer de endometrio":
-                    val.attributes_go.push("F");
-                    break;
-                default:
+                case 4:
                     val.attributes_go.push("E");
                     break;
             }
         }
 
     });
-
-    diseases = _.uniq(diseasesTemp);
-    console.log(diseases);
-    loadCheckbox(diseases);
 
     $.each(family.relations, function (key, val) {
         if (val.name == "MADRE") {
@@ -184,7 +189,7 @@ function getPeopleNodesFromFamily(family) {
 
     $.each(nodos, function (key, val) {
         var p = {};
-        //si es mayor de 90, tachar con una raya roja
+        //si esta muerto, tachar con una raya roja
         if (val.status == 'dead') {
             val.attributes_go.push("S");
             p.n = val.name + " " + val.lastname;
@@ -207,9 +212,12 @@ function getPeopleNodesFromFamily(family) {
     console.log(people);
     return people;
 }
-$.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
+
+var idPedigree = $.urlParam('id');
+$.getJSON("api/pedigrees/" + idPedigree, function (data) {
 
     family = data.pedigree;
+    idPedigree=family.id;
     $("#pedigreeId").val(family.id);
     console.log(data);
     currentPatient = (data.pedigree.current);
@@ -231,6 +239,11 @@ $.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
 });
 
 function reloadDiagram() {
+    clear_references();
+    redraw();
+}
+
+function redraw(){
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
 }
@@ -378,7 +391,7 @@ function selectDisease(cont) {
     toggleLoading(true);
     $.getJSON('/api/diseases', function (data) {
         console.log(data);
-
+        diseases_data = data;
         var $select = $('#disease_id');
         $select.find('option').remove();
         $.each(data.diseases, function (key, value) {
@@ -396,10 +409,32 @@ function validate_disease() {
 
     var _id = $('#disease_id').val();
     var _age = $('#disease_age').val();
+    var _gender = currentPatient.gender;
+    var _disease_gender;
     var err_msg;
+    var wrong_gender = false;
 
-    if ($.inArray(_id, ["2", "12", "22", "52"]) > -1 && currentPatient.gender == "M") {
+    var _collection = diseases_data.diseases;
+
+    $.each(_collection, function(dis) {
+            console.log(_collection[dis].id, _id);
+            if (_collection[dis].id == _id) {
+                _disease_gender = _collection[dis].gender;
+            }
+        }
+    );
+
+    if (_disease_gender == "F" && _gender == "M") {
         err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo femenino";
+        wrong_gender = true;
+    }
+
+    if (_disease_gender == "M" && _gender == "F") {
+        err_msg = "ERROR: la enfermedad solo afecta a pacientes de sexo masculino";
+        wrong_gender = true;
+    }
+
+    if (wrong_gender){
         $("#modal-add-disease").modal("hide");
         console.log(err_msg);
         alert(err_msg);
@@ -414,6 +449,25 @@ function validate_disease() {
         return false;
     }
 
+    return true;
+}
+
+function validate_gender_change(){
+    var _gender = $('input[name="gender"]:checked').val();
+    var _diseases = currentPatient.patient_diseases;
+    var _diseases_genders = [];
+    var err_msg;
+    $.each(_diseases, function(i){
+        _diseases_genders.push(_diseases[i].disease.gender);
+    });
+    _diseases_genders = _.uniq(_diseases_genders);
+    if(_.contains(_diseases_genders, 'F') && _gender == 'M') err_msg = 'ERROR: el paciente padece una enfermedad valida solamente para sexo femenino';
+    if(_.contains(_diseases_genders, 'M') && _gender == 'F') err_msg = 'ERROR: el paciente padece una enfermedad valida solamente para sexo masculino';
+    if(err_msg){
+        console.log(err_msg);
+        alert(err_msg);
+        return false;
+    }
     return true;
 }
 
@@ -446,13 +500,9 @@ function _calculateAge(birthday) { // birthday is a date
 }
 
 function validate_age(birth_date, rel_age, type_rel) {
-
     var bdate = birth_date.split("-");
     var f = new Date(bdate[0], bdate[1] - 1, bdate[2]);
-    console.log(f);
     var age = _calculateAge(f);
-    console.log(age, rel_age);
-
     switch (type_rel) {
         case "CHILD":
             return age < rel_age;
@@ -637,7 +687,7 @@ function showCreateRelationModal(type) {
         $("#modal-select-member").modal("hide");
         switch (type) {
             case "MOTHER":
-                if (newParent !== undefined && newParent.gender == "F") {//TODO: add age validation
+                if (newParent !== undefined && newParent.gender == "F") {
                     addMother(currentPatient, newParent);
                 } else {
                     alert("Error en la creación");
@@ -661,17 +711,24 @@ function showCreateRelationModal(type) {
 
 function loadCheckbox(diseases) {
     var count = 1;
-
+    var total = 1;
     var diseaseUnchecked = $("#enfermedadesCheckbox input:checkbox:not(:checked)").map(function () {
         return $(this).val();
     });
     $("#enfermedadesCheckbox").empty();
-    console.log(diseases)
+    console.log(diseases);
     $.each(diseases, function (key, val) {
         var checked = (jQuery.inArray(val, diseaseUnchecked) !== -1 || count > 4) ? "" : "checked";
-        if(checked == "checked") count++;
-        console.log(count);
-        $("#enfermedadesCheckbox").append('<input onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px" value="' + val + '" ' + checked + '> ' + val);
+        var img_tag = "";
+        if(checked == "checked"){
+            if(!find_reference(val)) update_references(val, true);
+            count++;
+        }
+        var tag_id = 'check_'+total;
+        var color_id = find_reference(val);
+        if(checked == "checked") img_tag = ' <img id="color_'+ tag_id +'" src="/images/'+ diseases_colors[color_id] +'.png" style="width: 14px; height: 14px;">';
+        $("#enfermedadesCheckbox").append('<input id="'+tag_id+'" onclick="disease_checked_change(this)" name="diseaseCheck" type="checkbox" style="margin:14px;" value="' + val + '" ' + checked + '>'+ val + img_tag);
+        total++;
     });
 }
 
@@ -731,18 +788,20 @@ function showEditPerson() {
 function editPatient() {
     console.log($("#patientForm").serialize());
     $("#modal-create-family-member").modal("hide");
-    toggleLoading(true);
-    $.put("/api/patients/" + currentPatient.id, $("#patientForm").serialize())
-        .done(function (data) {
-            toggleLoading(false);
-            console.log(data);
-            removeFromArray(family.patients, currentPatient);
-            currentPatient = data.patient;
-            family.patients.push(currentPatient);
-            reloadDiagram();
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            error_catch(jqXHR, textStatus, errorThrown, false);
-        });
+    if(validate_gender_change()){
+        toggleLoading(true);
+        $.put("/api/patients/" + currentPatient.id, $("#patientForm").serialize())
+            .done(function (data) {
+                toggleLoading(false);
+                console.log(data);
+                removeFromArray(family.patients, currentPatient);
+                currentPatient = data.patient;
+                family.patients.push(currentPatient);
+                reloadDiagram();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                error_catch(jqXHR, textStatus, errorThrown, false);
+            });
+    }
 }
 
 function loadDeleteRelations() {
@@ -774,7 +833,6 @@ function deleteRelation(id){
     updatePedigree();
     loadDeleteRelations();
     reloadDiagram();
-
 }
 
 function showDeleteRelations() {
@@ -874,11 +932,96 @@ function getPeopleCloseNodesFromFamily(family) {
 }
 
 function disease_checked_change(input){
-
     if($("#enfermedadesCheckbox input:checkbox:checked").length > 4){
         input.checked = false;
         alert("Solo pueden mostrarse 4 enfermedades simultaneamente.");
     }
-    else
-        reloadDiagram();
+    else{
+        update_references(input.value, input.checked);
+        redraw();
+    }
+}
+
+//enum de enfermedad-color
+var diseases_colors = {1: 'red', 2: 'green', 3: 'blue', 4: 'yellow'};
+var checked_diseases = {1: null, 2: null, 3: null, 4: null};
+var diseases_data;
+
+function update_references(name, checked){
+    for(var i = 1; i < 5; i++){
+        if(checked_diseases[i] == null && checked){
+            checked_diseases[i] = name;
+            return;
+        }
+        if(checked_diseases[i] == name && !checked){
+            checked_diseases[i] = null;
+            return;
+        }
+    }
+}
+
+function find_reference(name){
+    for(var i = 1; i < 5; i++){
+        if(checked_diseases[i] == name){
+            return i;
+        }
+    }
+}
+
+function clear_references(){
+    for(var i = 1; i < 5; i++){
+        checked_diseases[i] = null;
+    }
+}
+
+function showAnnotations(){
+    toggleLoading(true);
+    $.getJSON("/api/pedigrees/"+idPedigree+"/annotations")
+        .done(function(data){
+            console.log(data);
+            $("#note-items").empty();
+            $.each(data.annotations,function(key,value){
+                $("#note-items").append('<li class="list-group-item hover col-lg-12" >' +
+                    '                    <div class="view" id="note-1">' +
+                    '                    <button class="destroy close hover-action" onclick="deleteAnnotation('+value.id+')">×</button>' +
+                    '                    <div class="note-name">' +
+                    '                    </div>' +
+                    '                <div class="note-desc">' +
+                    value.text +
+                    '                </div>' +
+                    '                </div>' +
+                    '                </li>')
+            });
+            toggleLoading(false);
+            $("#modal-add-annotation").modal("show");
+        }
+    )
+}
+
+function updateAnnotations(){
+    $.post("/api/pedigrees/"+idPedigree+"/annotations",{pedigree_id: idPedigree,text:$("#annotation").val()})
+        .done(function(data){
+            console.log(data);
+            $("#note-items").append('<li class="list-group-item hover col-lg-12" >' +
+                '                    <div class="view" id="note-1">' +
+                '                    <button class="destroy close hover-action" onclick="deleteAnnotation('+data.annotation.id+')">×</button>' +
+                '                    <div class="note-name">' +
+                '                    </div>' +
+                '                <div class="note-desc">' +
+                $("#annotation").val() +
+                '                </div>' +
+                '                </div>' +
+                '                </li>');
+            $("#annotation").text('')
+        }
+    )
+}
+
+function deleteAnnotation(id){
+    toggleLoading(true);
+    $.delete("/api/pedigrees/"+idPedigree+"/annotations/"+id)
+        .done(function(data) {
+            console.log(data);
+            showAnnotations()
+        });
 }
