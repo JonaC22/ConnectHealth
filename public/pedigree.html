@@ -121,7 +121,20 @@
         <section class="vbox">
             <header class="header bg-black navbar navbar-inverse">
                 <div class="collapse navbar-collapse pull-in">
-
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" >
+                                <i class="fa fa-flask  text-white"></i>
+                                <span class="text-white">Imprimir Pedigree</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" onclick="showAnnotations()">
+                                <i class="fa fa-file-text text-white"></i>
+                                <span class="text-white" >Notas</span>
+                            </a>
+                        </li>
+                    </ul>
                     <!--<form class="navbar-form navbar-left m-t-sm" role="search">-->
                         <!--<div class="form-group">-->
                             <!--<div class="input-group input-s">-->
@@ -520,6 +533,32 @@
                             <div class="checkbox m-t-lg">
                                 <button type="button" onclick="createDisease()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
                                     <strong>Crear</strong>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-add-annotation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <h3 class="m-t-none m-b">Notas</h3>
+                        <form id="annotationsForm" onsubmit="updateAnnotations()">
+                            <div class="form-group">
+                                <textarea id="annotation" style="margin: 0px; width: 100%; height: 223px;"></textarea>
+                            </div>
+                            <div class="checkbox m-t-lg">
+                                <button type="button" onclick="updateAnnotations()" class="btn btn-sm btn-success pull-right text-uc m-t-n-xs">
+                                    <strong>Actualizar</strong>
                                 </button>
                             </div>
                         </form>

@@ -212,9 +212,12 @@ function getPeopleNodesFromFamily(family) {
     console.log(people);
     return people;
 }
-$.getJSON("api/pedigrees/" + $.urlParam('id'), function (data) {
+
+var idPedigree = $.urlParam('id');
+$.getJSON("api/pedigrees/" + idPedigree, function (data) {
 
     family = data.pedigree;
+    idPedigree=family.id;
     $("#pedigreeId").val(family.id);
     console.log(data);
     currentPatient = (data.pedigree.current);
@@ -969,4 +972,25 @@ function clear_references(){
     for(var i = 1; i < 5; i++){
         checked_diseases[i] = null;
     }
+}
+
+function showAnnotations(){
+    toggleLoading(true);
+    $.getJSON("/api/pedigrees/"+idPedigree+"/annotations")
+        .done(function(data){
+            console.log(data);
+            $("#annotation").text(data.annotations[0].text);
+            toggleLoading(false);
+            $("#modal-add-annotation").modal("show");
+        }
+    )
+}
+
+function updateAnnotations(){
+    $.post("/api/pedigrees/"+idPedigree+"/annotations",{pedigree_id: idPedigree,text:"Test"})
+        .done(function(data){
+            console.log(data);
+            $("#modal-add-annotation").modal("hide");
+        }
+    )
 }
