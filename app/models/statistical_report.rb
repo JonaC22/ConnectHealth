@@ -19,7 +19,12 @@ class StatisticalReport < ActiveRecord::Base
   belongs_to :user
   before_create :execute_statement
 
-  def self.generate_query(disease, query_type, degree, options)
+  def self.generate_query(params)
+    disease = params[:disease]
+    query_type = params[:query_type]
+    degree = params[:degree]
+    options = params[:options]
+
     @query = "match (e:ENFERMEDAD{nombre:'#{disease}'})-[r:PADECE]-(n)"
 
     # con o sin enfermedad en parientes intermedios de la relacion
