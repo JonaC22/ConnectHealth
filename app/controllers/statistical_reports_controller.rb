@@ -31,8 +31,13 @@ class StatisticalReportsController < BaseController
   def statistical_report_create_params
     {
       statement: StatisticalReport.generate_query(query_params),
+      description: params[:description],
       user_id: current_user.id
     }
+  end
+
+  def statistical_report_update_params
+    params.permit(:description)
   end
 
   def query_params
@@ -42,4 +47,5 @@ class StatisticalReportsController < BaseController
       degree: params.require(:degree),
       options: params[:options]
     }
+  end
 end
