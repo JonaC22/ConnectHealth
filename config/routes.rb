@@ -21,13 +21,9 @@ Rails.application.routes.draw do
       resources :functions, only: [:update]
     end
     resources :functions, only: [:index, :show]
+    resources :statistical_reports
     scope '/pedigrees' do
       get '/query' => 'pedigree#query'
-    end
-    scope '/statistics' do
-      get '/' => 'statistics#index'
-      post '/query' => 'statistics#get_results'
-      get '/reports' => 'statistics#get_reports'
     end
     get '/flushGraphDB' => 'pedigree#delete_all_nodes'
     get 'login' => 'sessions#new'
