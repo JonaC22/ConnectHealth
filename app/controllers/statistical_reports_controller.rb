@@ -1,4 +1,6 @@
 class StatisticalReportsController < BaseController
+  before_action :authenticate!
+  
   def index
     @statistical_reports = current_user.statistical_reports
     render json: @statistical_reports
@@ -47,5 +49,9 @@ class StatisticalReportsController < BaseController
       degree: params.require(:degree),
       options: params[:options]
     }
+  end
+
+  def required_permission
+    'Statistics'
   end
 end
