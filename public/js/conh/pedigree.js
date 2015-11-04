@@ -979,7 +979,19 @@ function showAnnotations(){
     $.getJSON("/api/pedigrees/"+idPedigree+"/annotations")
         .done(function(data){
             console.log(data);
-            $("#annotation").text(data.annotations[0].text);
+            $("#note-items").empty();
+            $.each(data.annotations,function(key,value){
+                $("#note-items").append('<li class="list-group-item hover col-lg-12" >' +
+                    '                    <div class="view" id="note-1">' +
+                    '                    <button class="destroy close hover-action" onclick="deleteAnnotation('+value.id+')">×</button>' +
+                    '                    <div class="note-name">' +
+                    '                    </div>' +
+                    '                <div class="note-desc">' +
+                    value.text +
+                    '                </div>' +
+                    '                </div>' +
+                    '                </li>')
+            });
             toggleLoading(false);
             $("#modal-add-annotation").modal("show");
         }
@@ -987,10 +999,29 @@ function showAnnotations(){
 }
 
 function updateAnnotations(){
-    $.post("/api/pedigrees/"+idPedigree+"/annotations",{pedigree_id: idPedigree,text:"Test"})
+    $.post("/api/pedigrees/"+idPedigree+"/annotations",{pedigree_id: idPedigree,text:$("#annotation").val()})
         .done(function(data){
             console.log(data);
-            $("#modal-add-annotation").modal("hide");
+            $("#note-items").append('<li class="list-group-item hover active col-lg-12" >' +
+                '                    <div class="view" id="note-1">' +
+                '                    <button class="destroy close hover-action" onclick="deleteAnnotation('+data.annotation.id+')">×</button>' +
+                '                    <div class="note-name">' +
+                '                    </div>' +
+                '                <div class="note-desc">' +
+                $("#annotation").val() +
+                '                </div>' +
+                '                </div>' +
+                '                </li>');
+            $("#annotation").text('')
         }
     )
+}
+
+function deleteAnnotation(id){
+    toggleLoading(true);
+    $.delete("/api/pedigrees/"+idPedigree+"/annotations/"+id)
+        .done(function(data) {
+            console.log(data);
+            showAnnotations()
+        });
 }
