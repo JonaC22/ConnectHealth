@@ -1002,7 +1002,7 @@ function updateAnnotations(){
     $.post("/api/pedigrees/"+idPedigree+"/annotations",{pedigree_id: idPedigree,text:$("#annotation").val()})
         .done(function(data){
             console.log(data);
-            $("#note-items").append('<li class="list-group-item hover active col-lg-12" >' +
+            $("#note-items").append('<li class="list-group-item hover col-lg-12" >' +
                 '                    <div class="view" id="note-1">' +
                 '                    <button class="destroy close hover-action" onclick="deleteAnnotation('+data.annotation.id+')">×</button>' +
                 '                    <div class="note-name">' +
