@@ -45,7 +45,7 @@ class StatisticalReportsController < BaseController
   def query_params
     {
       disease: params.require(:disease),
-      query_type: params.require(:query_type),
+      query_type: params.require(:type),
       degree: params.require(:degree),
       options: params[:options]
     }
