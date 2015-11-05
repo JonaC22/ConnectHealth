@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       resources :roles, only: [:index, :update, :destroy, :show]
     end
     resources :roles, only: [:index, :create, :update, :destroy, :show] do
-      resources :functions, only: [:update]
+      resources :functions, only: [:update, :destroy]
     end
     resources :functions, only: [:index, :show]
     resources :statistical_reports
