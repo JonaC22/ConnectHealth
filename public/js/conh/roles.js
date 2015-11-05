@@ -127,9 +127,18 @@ function agregarFuncion(){
     var func = functions.find(function (el) {
         return el.id == $("#functions").val()
     });
+    var duplicated = currentFuntions.find(function (el) {
+        return el.id == func.id
+    });
+    if(duplicated!=undefined){
+        alert("Error: Función duplicada");
+        return;
+    }
     console.log(func.name);
     appendFunctionTag(func);
     if(currentRole!=undefined){
+        currentRole.functions= currentFuntions;
+        reloadData(roles);
         $.put("/api/roles/"+currentRole.id+"/functions/"+func.id)
             .done(function(data){
                 console.log(data);
@@ -200,7 +209,7 @@ function createRol() {
             });
             console.log(data);
             toggleLoading(false);
-            data.role.functions= data.role.functions.concat(currentFuntions);
+            data.role.functions= currentFuntions;
             roles.push(data.role);
             reloadData(roles);
 
