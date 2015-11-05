@@ -993,7 +993,9 @@ function showAnnotations(){
                     '                </li>')
             });
             toggleLoading(false);
-            $("#modal-add-annotation").modal("show");
+            if(!$('#modal-add-annotation').hasClass('in')){
+                $("#modal-add-annotation").modal("show");
+            }
         }
     )
 }
@@ -1022,6 +1024,7 @@ function deleteAnnotation(id){
     $.delete("/api/pedigrees/"+idPedigree+"/annotations/"+id)
         .done(function(data) {
             console.log(data);
+            toggleLoading(false);
             showAnnotations()
         });
 }
