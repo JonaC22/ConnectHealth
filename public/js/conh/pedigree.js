@@ -772,7 +772,7 @@ function showEditPerson() {
     $("#diagnosticos").show();
     $("#modal-create-family-member").modal("show");
     $.each(currentPatient, function (key, value) {
-        if (key != "gender") {
+        if (key != "gender" && key != "status") {
             $("#patientForm").find("input[name='" + key + "']").val(value);
         }
     });
@@ -781,6 +781,13 @@ function showEditPerson() {
         $('input:radio[name=gender]')[0].checked = true;
     } else {
         $('input:radio[name=gender]')[1].checked = true;
+    }
+
+
+    if (currentPatient.status == "alive") {
+        $('input:radio[name=status]')[0].checked = true;
+    } else {
+        $('input:radio[name=status]')[1].checked = true;
     }
     var id = currentPatient;
 }
