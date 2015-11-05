@@ -193,13 +193,14 @@ function createRol() {
     $.post("/api/roles",{name:$("#name").val(),description:$("#description").val()})
         .done(function(data){
             $.each(currentFuntions,function(index,func){
-                $.put("/api/roles/"+dara.role.id+"/functions/"+func.id)
+                $.put("/api/roles/"+data.role.id+"/functions/"+func.id)
                     .done(function(data){
                         console.log(data);
                     })
             });
             console.log(data);
             toggleLoading(false);
+            data.role.functions= data.role.functions.concat(currentFuntions);
             roles.push(data.role);
             reloadData(roles);
 
@@ -216,7 +217,9 @@ function editRol(){
         .done(function(data){
             console.log(data);
             toggleLoading(false);
-            roles.push(data.role);
+            currentRole.name=data.role.name;
+            currentRole.description=data.role.description;
+//            roles.push(data.role);
             reloadData(roles);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
