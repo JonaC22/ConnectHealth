@@ -265,18 +265,6 @@ $( "#logout" ).click(function() {
     logout();
 });
 
-
-
-if(Cookies.get('user_display_name')== undefined && window.location.pathname != "/signin.html" && window.location.pathname != "/signup.html"){
-    window.location = "/signin.html";
-}else{
-    $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
-        '<img src="images/avatar_default.jpg">' +
-        '</span>' +
-        Cookies.get('user_display_name').replace("+"," ") +
-        '<b class="caret"></b>');
-}
-
 $.put = function (url, data, callback, type) {
 
     if ($.isFunction(data)) {
@@ -357,3 +345,29 @@ function unique(arr) {
     }
     return result;
 }
+
+if(Cookies.get('user_display_name')== undefined && window.location.pathname != "/signin.html" && window.location.pathname != "/signup.html"){
+    window.location = "/signin.html";
+}else{
+    $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
+        '<img src="images/avatar_default.jpg">' +
+        '</span>' +
+        Cookies.get('user_display_name').replace("+"," ") +
+        '<b class="caret"></b>');
+
+    if(Cookies.get('user_role')== "Doctor"){
+        $( "nav li" ).each(function( index ,el) {
+            if($.text(el).indexOf("Usuarios")>0){
+                $(el).hide();
+            }
+        });
+    }
+    if(Cookies.get('user_role')== "Analyst"){
+        $( "nav li" ).each(function( index ,el) {
+            if($.text(el).indexOf("Pedigree")>0 || $.text(el).indexOf("Pacientes")>0 || $.text(el).indexOf("Usuarios")>0 || $.text(el).indexOf("Enfermedades")>0){
+                $(el).hide();
+            }
+        });
+    }
+}
+
