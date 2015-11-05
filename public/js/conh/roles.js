@@ -118,11 +118,31 @@ function loadRoles() {
 function appendFunctionTag(func) {
     currentFuntions.push(func);
     $("#currentFunctions").append('<div class="alert alert-info alert-block">' +
-        '        <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>' +
+        '        <button type="button" class="close" onclick="deleteFuncion('+func.id+')"><i class="fa fa-times"></i></button>' +
         '    <h4><i class="fa fa-bell-alt"></i>' + func.name + '</h4>' +
         '        <p>' + func.description + '</p>' +
         '    </div>')
 }
+
+function deleteFuncion(id){
+    currentFuntionsTemp=currentFuntions.filter(function(func){
+        return func.id != id
+    });
+    currentFuntions=[];
+    $("#currentFunctions").empty();
+    $.each(currentFuntionsTemp,function(index,el){
+        appendFunctionTag(el);
+    });
+    if(currentRole!=undefined){
+        currentRole.functions= currentFuntions;
+        reloadData(roles);
+        $.delete("/api/roles/"+currentRole.id+"/functions/"+id)
+            .done(function(data){
+                console.log(data);
+            })
+    }
+}
+
 function agregarFuncion(){
     var func = functions.find(function (el) {
         return el.id == $("#functions").val()
@@ -173,11 +193,11 @@ function showEditRol(id){
 
     currentFuntions=[];
     $("#currentFunctions").empty();
-    $("#createButton").hide();
-    $("#editButton").show();
     $.each(rol.functions,function(index,el){
         appendFunctionTag(el);
     });
+    $("#createButton").hide();
+    $("#editButton").show();
     $.each(rol, function (key, value) {
         if (key != "gender") {
             $("#roleForm").find("input[name='" + key + "']").val(value);
