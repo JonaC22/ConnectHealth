@@ -11,6 +11,7 @@ class ErrorsController < BaseController
     return duplicated_relation error if error.is_a? DuplicatedRelationException
     return unauthorized_user error if error.is_a? ForbiddenUserException
     return patients_exist error if error.is_a? PatientsExistException
+    return patients_exist error if error.is_a? UsersExistException
     exception error
   end
 
