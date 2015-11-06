@@ -129,7 +129,7 @@ function deleteFuncion(id){
         return func.id != id
     });
     currentFuntions=[];
-    $("#currentFunctions").empty();
+    $("#currentFunctions").empty();d
     $.each(currentFuntionsTemp,function(index,el){
         appendFunctionTag(el);
     });
@@ -170,14 +170,17 @@ function deleteRol(id){
     var rol = roles.find(function (rol) {
         return rol.id == id
     });
-    roles=roles.filter(function(rol){
-        return rol.id != id
-    });
-    reloadData(roles);
     console.log(rol.name);
+    toggleLoading(true);
     $.delete("/api/roles/"+id)
         .done(function(data){
             console.log(data);
+            roles=roles.filter(function(rol){
+                return rol.id != id
+            });
+            reloadData(roles);
+
+            toggleLoading(false);
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
             error_catch(jqXHR, textStatus, errorThrown, false);
