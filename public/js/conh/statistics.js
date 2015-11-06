@@ -136,11 +136,24 @@ function fill_grid(data) {
         })
     });
 
-    $('#hero-area').hide();
+    $('#charts').hide();
     if(res.columns.length > 1 && res.data.length > 1){
 
+        var buildMorris = function($re){
+            if($re){
+                $('.graph').html('');
+            }
+            var data_donut = transform_data_donut(res);
+            console.log(data_donut);
+            Morris.Donut({
+                element: 'hero-donut',
+                data: data_donut,
+                colors:['#afcf6f'],
+                formatter: function (y) { return y + "%" }
+            });
+        };
+
         var data_chart = transform_data_chart(res);
-        console.log(data_chart);
         var ykeys = [];
         ykeys.push(res.columns[0]);
 
@@ -164,9 +177,16 @@ function fill_grid(data) {
             });
         };
 
-        $('#hero-area').show();
+        $('#charts').show();
 
-        $('#tab1 #hero-area').each(function(){
+        buildMorris(false);
+        var morrisResize;
+        $(window).resize(function(e) {
+            clearTimeout(morrisResize);
+            morrisResize = setTimeout(function(){buildMorris(true)}, 500);
+        });
+
+        $('#charts #hero-area').each(function(){
             buildArea();
             var morrisResizes;
             $(window).resize(function(e) {
@@ -182,7 +202,6 @@ function fill_grid(data) {
 
 function transform_data_chart(data){
     var array = [];
-
     for(var i=0; i < data.data.length; i++) {
         var json = {};
         for (var k = 0; k < data.columns.length; k++) {
@@ -193,11 +212,27 @@ function transform_data_chart(data){
     return array;
 }
 
+function transform_data_donut(data){
+    var array = [];
+    res = transform_data_chart(data);
+    var total = 0;
+    for(var i = 0; i < res.length; i++){
+        total += res[i][data.columns[0]];
+    }
+    for(var i = 0; i < res.length; i++){
+        var json = {};
+        json.label = res[i][data.columns[1]];
+        json.value = res[i][data.columns[0]] * 100 / total;
+        array.push(json);
+    }
+    return array;
+}
+
 var html_grid_estadisticas;
 
 $(document).ready(function(){
     html_grid_estadisticas = $('#datagridEstadisticas').html();
-    $('#hero-area').hide();
+    $('#charts').hide();
 });
 
 
