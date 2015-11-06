@@ -352,7 +352,7 @@ if(Cookies.get('user_display_name')== undefined && window.location.pathname != "
     $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
         '<img src="images/avatar_default.jpg">' +
         '</span>' +
-        Cookies.get('user_display_name').replace("+"," ") +
+        Cookies.get('user_display_name').split("+").join(" ") +
         '<b class="caret"></b>');
     var functions = Cookies.get('user_functions').split("&");
     if($.inArray('All', functions) == -1){
