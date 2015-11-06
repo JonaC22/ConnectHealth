@@ -67,13 +67,6 @@ function calculateGail() {
 
         console.log(data);
         var result = $("#calc_results");
-        //DEPRECADO
-        /*
-         if (data.status == "ERROR") {
-         $("#statsWidgets").hide();
-         result.append("ERROR: " + data.message);
-         }
-         */
         var calc = data.model_calculator.calculations;
         $("#statsWidgets").show();
         $('#text_chart_group1').show();
@@ -98,9 +91,11 @@ function calculateGail() {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         error_catch(jqXHR, textStatus, errorThrown, false);
     });
-
 }
 
+function limpiarForm(form) {
+    $('#'+form)[0].reset();
+}
 
 $.urlParam = function (name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
