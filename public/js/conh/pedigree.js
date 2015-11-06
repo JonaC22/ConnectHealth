@@ -247,6 +247,7 @@ function reloadDiagram() {
 function redraw(){
     var people = getPeopleNodesFromFamily(family);
     setupDiagram(myDiagram, people, currentPatient.neo_id);
+    set_current_patient(currentPatient);
 }
 
 function addNode(newPerson) {
