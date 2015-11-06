@@ -92,7 +92,7 @@ app.controller('StatisticsController', ['$scope', '$http', function ($scope, $ht
     }
 
     function fail_function(response) {
-        alert(response);
+        alert(response.data.error);
         console.log(response);
     }
 }]);
