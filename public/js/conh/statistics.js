@@ -123,6 +123,7 @@ function fill_grid(data) {
         data_columns.push(column);
     });
     console.log(data_columns);
+    var res = data;
     data = transform_for_grid(data);
     console.log(data);
 
@@ -134,10 +135,104 @@ function fill_grid(data) {
             resultsId: data
         })
     });
+
+    $('#charts').hide();
+    if(res.columns.length > 1 && res.data.length > 1){
+
+        var buildMorris = function($re){
+            if($re){
+                $('.graph').html('');
+            }
+            var data_donut = transform_data_donut(res);
+            console.log(data_donut);
+            Morris.Donut({
+                element: 'hero-donut',
+                data: data_donut,
+                colors:['#afcf6f'],
+                formatter: function (y) { return y + "%" }
+            });
+        };
+
+        var data_chart = transform_data_chart(res);
+        var ykeys = [];
+        ykeys.push(res.columns[0]);
+
+        var buildArea = function(){
+            Morris.Area({
+                element: 'hero-area',
+                data: data_chart,
+                xkey: res.columns[1],
+                ykeys: ykeys,
+                labels: ykeys,
+                hideHover: 'auto',
+                lineWidth: 2,
+                pointSize: 4,
+                lineColors: ['#59dbbf'],
+                fillOpacity: 0.5,
+                smooth: true,
+                hoverCallback: function(index, options, content) {
+                    var data = options.data[index];
+                    $(".morris-hover").html('<div>'+ykeys[0]+': '+ data[ykeys[0]]+'<br>'+res.columns[1]+': '+ data[res.columns[1]] + '</div>');
+                }
+            });
+        };
+
+        $('#charts').show();
+
+        buildMorris(false);
+        var morrisResize;
+        $(window).resize(function(e) {
+            clearTimeout(morrisResize);
+            morrisResize = setTimeout(function(){buildMorris(true)}, 500);
+        });
+
+        $('#charts #hero-area').each(function(){
+            buildArea();
+            var morrisResizes;
+            $(window).resize(function(e) {
+                clearTimeout(morrisResizes);
+                morrisResizes = setTimeout(function(){
+                    $('.graph').html('');
+                    buildArea();
+                }, 500);
+            });
+        });
+    }
+}
+
+function transform_data_chart(data){
+    var array = [];
+    for(var i=0; i < data.data.length; i++) {
+        var json = {};
+        for (var k = 0; k < data.columns.length; k++) {
+            json[data.columns[k]] = data.data[i][k];
+        }
+        array.push(json);
+    }
+    return array;
+}
+
+function transform_data_donut(data){
+    var array = [];
+    res = transform_data_chart(data);
+    var total = 0;
+    for(var i = 0; i < res.length; i++){
+        total += res[i][data.columns[0]];
+    }
+    for(var i = 0; i < res.length; i++){
+        var json = {};
+        json.label = res[i][data.columns[1]];
+        json.value = res[i][data.columns[0]] * 100 / total;
+        array.push(json);
+    }
+    return array;
 }
 
 var html_grid_estadisticas;
 
 $(document).ready(function(){
     html_grid_estadisticas = $('#datagridEstadisticas').html();
+    $('#charts').hide();
 });
+
+

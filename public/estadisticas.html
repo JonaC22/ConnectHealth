@@ -221,8 +221,13 @@
                     </div>
 
                     <div class="col-lg-12" hidden id="datagridEstadisticas" style="margin: 15px;">
-                        <section class="panel">
+                        <section id="tab1" class="panel">
+                            <div id="charts" class="row">
+                                <div id="hero-area" class="graph col-lg-6"></div>
+                                <div id="hero-donut" class="graph col-lg-6"></div>
+                            </div>
                             <div class="table-responsive">
+
                                 <table id="GridEstadisticas" class="table table-striped datagrid m-b-sm">
                                     <thead>
                                     </thead>
@@ -293,6 +298,9 @@
     <!-- /.vbox -->
 </section>
 <script src="js/jquery.min.js"></script>
+<!-- Morris -->
+<script src="js/charts/morris/raphael-min.js" cache="false"></script>
+<script src="js/charts/morris/morris.min.js" cache="false"></script>
 <script type="text/javascript" src="/js/conh/statistics.js"></script>
 <script src="js/js.cookie.js"></script>
 <!-- Bootstrap -->
@@ -311,8 +319,5 @@
 <!-- fuelux -->
 <script src="js/fuelux/fuelux.js"></script>
 <script src="js/libs/underscore-min.js"></script>
-<!-- Morris -->
-<script src="js/charts/morris/raphael-min.js" cache="false"></script>
-<script src="js/charts/morris/morris.min.js" cache="false"></script>
 </body>
 </html>
