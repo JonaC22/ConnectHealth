@@ -9,6 +9,7 @@ module SessionsHelper
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:user_display_name] = user.display_name
     cookies.permanent[:user_role] = user.roles.map(&:name)
+    cookies.permanent[:user_functions] = user.roles.map(&:functions).flatten.map(&:name)
     cookies.permanent[:remember_token] = user.remember_token
   end
 
@@ -34,6 +35,9 @@ module SessionsHelper
 
   def forget(user)
     user.forget
+    cookies.delete(:id)
+    cookies.delete(:user_role)
+    cookies.delete(:user_functions)
     cookies.delete(:user_id)
     cookies.delete(:user_display_name)
     cookies.delete(:remember_token)

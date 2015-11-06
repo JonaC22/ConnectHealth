@@ -1,5 +1,5 @@
 class RolesController < BaseController
-  before_action :authenticate!, only: [:create]
+  before_action :authenticate!, only: [:create, :destroy, :update]
 
   def index
     if params[:user_id]

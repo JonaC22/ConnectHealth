@@ -17,6 +17,12 @@ class FunctionsController < BaseController
     render json: @function
   end
 
+  def destroy
+    @function = Function.find(params[:id])
+    Role.find(params[:role_id]).functions.delete(@function)
+    render json: @function
+  end
+
   private
 
   def required_permission

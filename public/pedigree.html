@@ -124,7 +124,7 @@
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" onclick="window.print()" value="Imprimir">
-                                <i class="fa fa-flask  text-white"></i>
+                                <i class="fa fa-print  text-white"></i>
                                 <span class="text-white">Imprimir Pedigree</span>
                             </a>
                         </li>
@@ -355,6 +355,7 @@
                                                         <input type="number" id="gailBiopsies" class="form-control" placeholder="Biopsias">
                                                     </div>
                                                     <button type="button" id="gailAccept" value="Calcular" onclick="calculateGail()" class="btn btn-sm btn-default">Calcular</button>
+                                                    <button type="button" id="gailClean" value="Limpiar" onclick="limpiarForm('gailForm')" class="btn btn-sm btn-default">Limpiar</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -473,11 +474,16 @@
                             </div>
 
                             <div class="form-group">
-                                <label></label>
+                                <label>Estado</label>
 
                                 <div class="checkbox m-t-lg">
-                                    <label><input name="status" type="checkbox" value="dead"> ¿Ha Fallecido?</label>
+                                    <label><input name="status" type="radio" value="alive"> Vivo</label>
+                                    <label><input name="status" type="radio" value="dead"> Fallecido</label>
                                 </div>
+
+                                <!--<div class="checkbox m-t-lg">-->
+                                    <!--<label><input name="status" type="checkbox" value="dead"> ¿Ha Fallecido?</label>-->
+                                <!--</div>-->
 
                             </div>
                             <div id="diagnosticos" class="form-group">
@@ -552,7 +558,7 @@
                 <div class="row">
                     <div class="col-sm-12 b-r">
                         <h3 class="m-t-none m-b">Notas</h3>
-                        <form id="annotationsForm" onsubmit="updateAnnotations()">
+                        <form id="annotationsForm" onsubmit="">
 
                             <div class="checkbox m-t-lg" >
                                 <ul id="note-items" class="list-group" style="">
@@ -568,20 +574,6 @@
                                             empty note
                                         </div>
                                     </div>
-                                    </li>
-
-                                    <li class="list-group-item hover active col-lg-12" >
-                                        <div class="view" id="note-2">
-                                            <button class="destroy close hover-action">×</button>
-                                            <div class="note-name">
-                                                <strong>
-                                                    New note
-                                                </strong>
-                                            </div>
-                                            <div class="note-desc">
-                                                empty note
-                                            </div>
-                                        </div>
                                     </li>
                                 </ul>
 

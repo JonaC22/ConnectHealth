@@ -67,13 +67,6 @@ function calculateGail() {
 
         console.log(data);
         var result = $("#calc_results");
-        //DEPRECADO
-        /*
-         if (data.status == "ERROR") {
-         $("#statsWidgets").hide();
-         result.append("ERROR: " + data.message);
-         }
-         */
         var calc = data.model_calculator.calculations;
         $("#statsWidgets").show();
         $('#text_chart_group1').show();
@@ -98,9 +91,11 @@ function calculateGail() {
     }).fail(function (jqXHR, textStatus, errorThrown) {
         error_catch(jqXHR, textStatus, errorThrown, false);
     });
-
 }
 
+function limpiarForm(form) {
+    $('#'+form)[0].reset();
+}
 
 $.urlParam = function (name) {
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -335,6 +330,9 @@ function showCreateModal(type) {
         case "CHILD":
             $("#padreMadreSeleccionar").show();
             $("#radio_gender").show();
+            if(currentPatient.gender=="M"){
+                $('input[name="lastname"]').val(currentPatient.lastname);
+            }
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
@@ -347,6 +345,7 @@ function showCreateModal(type) {
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
+            $('input[name="lastname"]').val(currentPatient.lastname);
             $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
@@ -772,7 +771,7 @@ function showEditPerson() {
     $("#diagnosticos").show();
     $("#modal-create-family-member").modal("show");
     $.each(currentPatient, function (key, value) {
-        if (key != "gender") {
+        if (key != "gender" && key != "status") {
             $("#patientForm").find("input[name='" + key + "']").val(value);
         }
     });
@@ -781,6 +780,13 @@ function showEditPerson() {
         $('input:radio[name=gender]')[0].checked = true;
     } else {
         $('input:radio[name=gender]')[1].checked = true;
+    }
+
+
+    if (currentPatient.status == "alive") {
+        $('input:radio[name=status]')[0].checked = true;
+    } else {
+        $('input:radio[name=status]')[1].checked = true;
     }
     var id = currentPatient;
 }
@@ -993,7 +999,9 @@ function showAnnotations(){
                     '                </li>')
             });
             toggleLoading(false);
-            $("#modal-add-annotation").modal("show");
+            if(!$('#modal-add-annotation').hasClass('in')){
+                $("#modal-add-annotation").modal("show");
+            }
         }
     )
 }
@@ -1022,6 +1030,7 @@ function deleteAnnotation(id){
     $.delete("/api/pedigrees/"+idPedigree+"/annotations/"+id)
         .done(function(data) {
             console.log(data);
+            toggleLoading(false);
             showAnnotations()
         });
 }

@@ -265,18 +265,6 @@ $( "#logout" ).click(function() {
     logout();
 });
 
-
-
-if(Cookies.get('user_display_name')== undefined && window.location.pathname != "/signin.html" && window.location.pathname != "/signup.html"){
-    window.location = "/signin.html";
-}else{
-    $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
-        '<img src="images/avatar_default.jpg">' +
-        '</span>' +
-        Cookies.get('user_display_name').replace("+"," ") +
-        '<b class="caret"></b>');
-}
-
 $.put = function (url, data, callback, type) {
 
     if ($.isFunction(data)) {
@@ -357,3 +345,45 @@ function unique(arr) {
     }
     return result;
 }
+
+if(Cookies.get('user_display_name')== undefined && window.location.pathname != "/signin.html" && window.location.pathname != "/signup.html"){
+    window.location = "/signin.html";
+}else{
+    $("#userDisplayName").html('<span class="thumb-sm avatar pull-left m-t-n-xs m-r-xs">' +
+        '<img src="images/avatar_default.jpg">' +
+        '</span>' +
+        Cookies.get('user_display_name').split("+").join(" ") +
+        '<b class="caret"></b>');
+    var functions = Cookies.get('user_functions').split("&");
+    if($.inArray('All', functions) == -1){
+        if($.inArray('Patient', functions) == -1) {
+            hideFunction("Pacientes")
+        }
+        if($.inArray('Pedigree', functions) == -1) {
+            hideFunction("Pedigree")
+        }
+        if($.inArray('Disease', functions) == -1) {
+            hideFunction("Enfermedades")
+        }
+        if($.inArray('Statistics', functions) == -1) {
+            hideFunction("Estadísticas")
+        }
+        if($.inArray('User', functions) == -1) {
+            hideFunction("Usuarios")
+        }
+        if($.inArray('Role', functions) == -1) {
+            $( "#roleAccess" ).each(function( index ,el) {
+                    $(el).hide();
+            });
+        }
+    }
+}
+
+function hideFunction(name){
+        $( "nav li" ).each(function( index ,el) {
+            if($.text(el).indexOf(name)>0){
+                $(el).hide();
+            }
+        });
+}
+
