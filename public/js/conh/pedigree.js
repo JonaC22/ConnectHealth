@@ -228,6 +228,12 @@ $.getJSON("api/pedigrees/" + idPedigree, function (data) {
         });
 
     toggleLoading(false);
+    var current = data.pedigree.patients.find(function(person){
+        return person.id==currentPatient.id
+    });
+    if(current!=undefined){
+        currentPatient = current;
+    }
     set_current_patient(currentPatient);
 }).fail(function (jqXHR, textStatus, errorThrown) {
     error_catch(jqXHR, textStatus, errorThrown, pedigree_not_selected);
