@@ -144,6 +144,13 @@ function fill_grid(data) {
                 $('.graph').html('');
             }
             var data_donut = transform_data_donut(res);
+            data_donut.sort(function (a,b) {
+                if (a.value < b.value)
+                    return -1;
+                if (a.value > b.value)
+                    return 1;
+                return 0;
+            });
             console.log(data_donut);
             Morris.Donut({
                 element: 'hero-donut',
@@ -156,6 +163,14 @@ function fill_grid(data) {
         var data_chart = transform_data_chart(res);
         var ykeys = [];
         ykeys.push(res.columns[0]);
+
+        data_chart.sort(function (a,b) {
+            if (a[res.columns[1]] < b[res.columns[1]])
+                return -1;
+            if (a[res.columns[1]] > b[res.columns[1]])
+                return 1;
+            return 0;
+        });
 
         var buildArea = function(){
             Morris.Area({
@@ -223,6 +238,7 @@ function transform_data_donut(data){
         var json = {};
         json.label = res[i][data.columns[1]];
         json.value = res[i][data.columns[0]] * 100 / total;
+        json.value = json.value.toFixed(2);
         array.push(json);
     }
     return array;
