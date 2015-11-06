@@ -335,6 +335,9 @@ function showCreateModal(type) {
         case "CHILD":
             $("#padreMadreSeleccionar").show();
             $("#radio_gender").show();
+            if(currentPatient.gender=="M"){
+                $('input[name="lastname"]').val(currentPatient.lastname);
+            }
             $("input[type=radio]").attr('disabled', false);
             $("#modal-create-family-member").modal("show")
             break;
@@ -347,6 +350,7 @@ function showCreateModal(type) {
         case "FATHER":
             $("#padreMadreSeleccionar").hide();
             $('input:radio[name=gender]')[0].checked = true;
+            $('input[name="lastname"]').val(currentPatient.lastname);
             $("#radio_gender").hide();
             $("#modal-create-family-member").modal("show")
             break;
