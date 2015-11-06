@@ -129,7 +129,7 @@ function deleteFuncion(id){
         return func.id != id
     });
     currentFuntions=[];
-    $("#currentFunctions").empty();d
+    $("#currentFunctions").empty();
     $.each(currentFuntionsTemp,function(index,el){
         appendFunctionTag(el);
     });
