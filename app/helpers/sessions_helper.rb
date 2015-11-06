@@ -35,6 +35,9 @@ module SessionsHelper
 
   def forget(user)
     user.forget
+    cookies.delete(:id)
+    cookies.delete(:user_role)
+    cookies.delete(:user_functions)
     cookies.delete(:user_id)
     cookies.delete(:user_display_name)
     cookies.delete(:remember_token)
